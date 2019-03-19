@@ -242,8 +242,8 @@
         "wR" 'w/rotate-windows-backward
         "w/" 'split-window-right
         "w/" '((lambda () (interactive) (split-window-right) (other-window 1)) :which-key "split-window-right")
-        "w-" 'split-window-below
-        "wv" 'split-window-right
+        "w-" '((lambda () (interactive) (split-window-below) (other-window 1)) :which-key "split-window-below")
+        "wv" '((lambda () (interactive) (split-window-right) (other-window 1)) :which-key "split-window-right")
         "ws" '((lambda () (interactive) (split-window-below) (other-window 1)) :which-key "split-window-below")
         "wd" 'delete-window
         "wm" 'toggle-maximize-buffer
@@ -251,7 +251,8 @@
         "wk" 'evil-window-up
         "wh" 'evil-window-left
         "wl" 'evil-window-right
-        "wF" 'make-frame
+        "wc" 'evil-window-delete
+        "wF" 'w/make-frame
         "wo" 'other-frame
         "wO" 'select-frame-number
         "w C-m" 'toggle-frame-maximized
@@ -270,6 +271,29 @@
          (which-key-add-key-based-replacements ",t" "ruby/test")
          )
        (add-hook 'ruby-mode-hook 'w/remap-ruby-mode-leader-key)
+       (general-define-key
+        :states '(normal visual emacs)
+        "C-w v" '((lambda () (interactive) (split-window-right) (other-window 1)) :which-key "split-window-right")
+        "C-w s" '((lambda () (interactive) (split-window-below) (other-window 1)) :which-key "split-window-below") "tab" 'evil-avy-goto-word-or-subword-1
+        )
+       (general-define-key
+        :states '(normal visual emacs)
+        "H" 'evil-digit-argument-or-evil-beginning-of-line
+        "L" 'evil-end-of-line
+        "s-p" 'helm-projectile-find-file
+        "s-P" 'w/helm-M-x
+        "s-w" 'evil-window-delete
+        "s-W" 'evil-quit
+        "s-s" 'save-buffer
+        "s-j" 'evil-avy-goto-word-or-subword-1
+        "s-d" 'kill-whole-line
+        "s-f" 'evil-search-forward
+        "s-F" 'helm-do-ag-project-root
+        "s-n" 'evil-window-new
+        "s-N" 'w/make-frame
+        "<C-s-268632079>" 'w/projectile-switch-project ;; super+ctrl+p
+        "<C-s-268632080>" 'w/projectile-switch-project ;; super+ctrl+o
+        )
        (general-define-key
         :states '(normal visual insert emacs)
         :prefix w/secondary-leader-key
@@ -733,10 +757,12 @@
      ;; hide toolbar in emacs GUI
      (tool-bar-mode -1) 
      (global-display-line-numbers-mode)
+     (global-auto-revert-mode 1)
+     (add-hook 'dired-mode-hook 'auto-revert-mode)
      (defun w/setup-font-and-window ()
        (progn
-         ;;Font size 16pt
-         (set-face-attribute 'default nil :font "Source Code Pro-16" )
+         ;;Font size 13pt
+         (set-face-attribute 'default nil :font "Inconsolata Nerd Font Mono-14" )
          (menu-bar-mode -1) 
          ;;Disable scrollbar in UI mode
          (tool-bar-mode -1)
@@ -832,10 +858,17 @@
        (with-persp-buffer-list ()
                                (helm-mini)))
 
+     (defun w/make-frame ()
+     (interactive)
+     (make-frame)
+     (delete-other-windows)
+     )
      (defun w/projectile-switch-project ()
        (interactive)
        (helm-projectile-configs-load)
        (helm-projectile-switch-project)
+       (delete-other-windows)
+       (neotree-hide)
        )
 
      (defun w/projectile-dired ()
@@ -877,7 +910,7 @@
         (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
         (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
         (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
-        (evil-define-key 'normal neotree-mode-map (kbd "H") 'neotree-hidden-file-toggle)
+        (evil-define-key 'normal neotree-mode-map (kbd "T") 'neotree-hidden-file-toggle)
         (evil-define-key 'normal neotree-mode-map (kbd "m") 'neotree-rename-node)
         (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node))
