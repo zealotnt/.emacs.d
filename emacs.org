@@ -310,6 +310,7 @@
         "s-n" 'evil-window-new
         "s-N" 'w/make-frame
         "s-R" 'delete-trailing-whitespace
+        "s-b" 'toggle-maximize-buffer
 
         ;; navigation
         "M-[" 'evil-jump-backward
@@ -322,6 +323,7 @@
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-p" 's/show-buffer-file-path
         "s-k s-i" 's/show-buffer-file-name
+        "s-k s-r" 'sync-config
 
         "s-1" 'customize ;;before, it is "s-,"
         "s-0" '(lambda () (interactive) (neotree-project-dir-toggle) (neotree-quick-look))
@@ -511,6 +513,10 @@
          (revert-buffer)
          (message
           (format "%d file/dir(s) pasted into current directory." (length stored-file-list)))))
+   #+END_SRC
+** Avy config
+   #+BEGIN_SRC emacs-lisp
+   (setq avy-background t)
    #+END_SRC
 ** Which key config
    #+BEGIN_SRC emacs-lisp
@@ -990,6 +996,13 @@
         (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node))
       )
+
+    (custom-set-faces
+    '(cursor ((t (:background "gold" :foreground "#151718"))))
+    '(mode-line ((t (:background "black" :foreground "#4499FF"))))
+    '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata Nerd Font Mono"))))
+    '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata Nerd Font Mono"))))
+    )
 
     (defun neotree-project-dir-toggle ()
       "Open NeoTree using the project root, using find-file-in-project,
