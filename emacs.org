@@ -514,7 +514,7 @@
                  (evil-define-key 'normal comint-mode-map (kbd "C-d") 'evil-scroll-down)
                  ))
 
-     ;; evil-paste-after for shell mode 
+     ;; evil-paste-after for shell mode
      (defun w/shell-evil-paste-after ()
        (interactive)
        (w/go-to-the-last-shell-prompt-maybe)
@@ -530,7 +530,7 @@
 
      ;;Prevent RET sending input from anywhere
      (defun w/my-comint-send-input-maybe ()
-       "Only `comint-send-input' when point is after the latest prompt. 
+       "Only `comint-send-input' when point is after the latest prompt.
      Otherwise move to the end of the buffer."
        (interactive)
        (let ((proc (get-buffer-process (current-buffer))))
@@ -753,9 +753,9 @@
      ;; Theme colors for shell
      (set-face-attribute 'comint-highlight-prompt nil
                          :inherit nil)
-     (menu-bar-mode -1) 
+     (menu-bar-mode -1)
      ;; hide toolbar in emacs GUI
-     (tool-bar-mode -1) 
+     (tool-bar-mode -1)
      (global-display-line-numbers-mode)
      (global-auto-revert-mode 1)
      (add-hook 'dired-mode-hook 'auto-revert-mode)
@@ -763,7 +763,7 @@
        (progn
          ;;Font size 13pt
          (set-face-attribute 'default nil :font "Inconsolata Nerd Font Mono-14" )
-         (menu-bar-mode -1) 
+         (menu-bar-mode -1)
          ;;Disable scrollbar in UI mode
          (tool-bar-mode -1)
          (scroll-bar-mode -1))
@@ -778,7 +778,7 @@
        (if (display-graphic-p frame)
            (w/setup-font-and-window)
          )
-       (set-frame-parameter frame 'menu-bar-lines 
+       (set-frame-parameter frame 'menu-bar-lines
                             (if (display-graphic-p frame)
                                 1 0)))
 
@@ -968,7 +968,7 @@
      (setq flycheck-disabled-checkers '(haml)) ;; Disable for haml
      (setq flycheck-highlighting-mode nil)
      (setq flycheck-ruby-rubocop-executable (replace-regexp-in-string  "\n\+$" "" (shell-command-to-string "which rubocop")))
-     ;;Issue: flycheck syntax checking makes editing files really slow 
+     ;;Issue: flycheck syntax checking makes editing files really slow
      (setq flycheck-check-syntax-automatically '(save idle-change mode-enabled))
      (setq flycheck-idle-change-delay 60) ;; Set delay based on what suits you the best
      (add-hook 'flycheck-mode-hook #'w/flycheck-setup)
@@ -1042,7 +1042,7 @@
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Auto Complete
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     (use-package company               
+     (use-package company
        :ensure t
        :defer t
        :init (global-company-mode)
@@ -1229,7 +1229,7 @@
 
 ** Annotate(Git blame)
    - Mapping evil bindings for git blame
-   - Basic bindings: Toggle detail ~A~, Copy revision ~W~ 
+   - Basic bindings: Toggle detail ~A~, Copy revision ~W~
    #+BEGIN_SRC emacs-lisp
      (evil-set-initial-state 'vc-annotate-mode 'normal)
      (general-define-key
@@ -1383,7 +1383,7 @@
        )
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;; Fix slow LSP flycheck 
+     ;; Fix slow LSP flycheck
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
      (defvar lsp-ui-flycheck--stale-diagnostics nil)
@@ -1513,7 +1513,7 @@
             (add-to-list 'company-backends 'company-robe))))
     #+END_SRC
 
-*** ruby language server protocol (solargraph) 
+*** ruby language server protocol (solargraph)
     - Robe mode may confict with solargraph
     - Dependencies: lsp-mode
     - To make this config work, you will need to:
@@ -1589,7 +1589,7 @@
      (use-package import-js
        :ensure t
        :after js2-mode)
-       
+
      (use-package smartparens
        :ensure t
        :after js2-mode)
