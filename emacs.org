@@ -1004,6 +1004,13 @@
     '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata Nerd Font Mono"))))
     )
 
+    (setq neo-window-fixed-size nil)
+
+    (defcustom neo-window-width 50
+        "*Specifies the width of the NeoTree window."
+        :type 'integer
+        :group 'neotree)
+
     (defun neotree-project-dir-toggle ()
       "Open NeoTree using the project root, using find-file-in-project,
       or the current buffer directory."
@@ -1025,6 +1032,7 @@
                 (neotree-dir project-dir))
             (if file-name
                 (neotree-find file-name))))))
+
    #+END_SRC
 
 ** Fzf search config
