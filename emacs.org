@@ -48,6 +48,10 @@
       (interactive);; "Prompt\n shell name:")
       (let ((shell-name (read-string "shell name: " nil)))
         (shell (concat "*" shell-name "*"))))
+    (defun z/open-emacs-config-file ()
+      "Open the init file."
+      (interactive)
+      (find-file "/Users/zealot/workspace_mine/w_emacs_dotfiles/emacs.org"))
 
     (defun create-shell-with-name (name)
       (shell (concat "*" name "*")))
@@ -307,7 +311,9 @@
         "s-k s-p" 's/show-buffer-file-path
         "s-k s-i" 's/show-buffer-file-name
 
-        "s-. s-." 'w/open-emacs-dotfiles-project
+        "s-1" 'customize ;;before, it is "s-,"
+        "s-, s-," 'z/open-emacs-config-file
+        "s-. s-." 'z/open-emacs-config-file
 
         ;; 3 key stroke with super
         "<C-s-268632087>" 'delete-other-windows
