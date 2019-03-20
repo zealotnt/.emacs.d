@@ -163,7 +163,7 @@
         "f" '(:ignore t :which-key "Files")
         "ff" 'helm-find-files
         "fy" '(:ignore t :which-key "yank path")
-        "fyY" 'w/projectile-copy-file-path
+        "fyY" 'w/projectile-copy-relative-file-path
         "fyy" 's/show-buffer-file-path
         "fyn" 's/show-buffer-file-name
         "fyN" 'w/show-buffer-file-name-base
@@ -953,7 +953,7 @@
        (when-let (file-name (buffer-file-name))
          (file-relative-name (file-truename file-name) (projectile-project-root))))
 
-     (defun w/projectile-copy-file-path ()
+     (defun w/projectile-copy-relative-file-path ()
        "Copy and show the file path relative to project root."
        (interactive)
        (if-let (file-path (w/projectile-file-path))
