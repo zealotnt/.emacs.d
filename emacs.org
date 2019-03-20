@@ -280,6 +280,8 @@
         :states '(normal visual emacs)
         "H" 'evil-digit-argument-or-evil-beginning-of-line
         "L" 'evil-end-of-line
+
+        ;; single super key mappings
         "s-p" 'helm-projectile-find-file
         "s-P" 'w/helm-M-x
         "s-w" 'evil-window-delete
@@ -291,6 +293,23 @@
         "s-F" 'helm-do-ag-project-root
         "s-n" 'evil-window-new
         "s-N" 'w/make-frame
+        "s-R" 'delete-trailing-whitespace
+
+        ;; navigation
+        "M-[" 'evil-jump-backward
+        "M-]" 'evil-jump-forward
+        "<M-return>" 'find-my-tag
+        "<s-return>" 'find-my-tag
+
+        ;; combination with super+s
+        "s-k s-s" 'neotree-project-dir-toggle
+        "s-k s-w" 'toggle-truncate-lines
+        "s-k s-p" 's/show-buffer-file-path
+        "s-k s-i" 's/show-buffer-file-name
+
+        "s-. s-." 'w/open-emacs-dotfiles-project
+
+        ;; 3 key stroke with super
         "<C-s-268632087>" 'delete-other-windows
         "<C-s-268632079>" 'w/projectile-switch-project ;; super+ctrl+p
         "<C-s-268632080>" 'w/projectile-switch-project ;; super+ctrl+o
@@ -868,9 +887,19 @@
        (interactive)
        (helm-projectile-configs-load)
        (helm-projectile-switch-project)
-       (delete-other-windows)
+       ;;(delete-other-windows)
        (neotree-hide)
        )
+     (defun w/cleanup-after-switch-project ()
+       ;;(delete-other-windows)
+       (neotree-hide)
+     )
+     ;;TODO
+     (defun w/open-emacs-dotfiles-project
+       (interactive)
+       (message "TODO open emacs dotfiles project")
+     )
+     (add-hook 'projectile-after-switch-project-hook 'w/cleanup-after-switch-project)
 
      (defun w/projectile-dired ()
        (interactive)
@@ -913,6 +942,7 @@
         (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
         (evil-define-key 'normal neotree-mode-map (kbd "T") 'neotree-hidden-file-toggle)
         (evil-define-key 'normal neotree-mode-map (kbd "m") 'neotree-rename-node)
+        (evil-define-key 'normal neotree-mode-map (kbd "r") 'neotree-rename-node)
         (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node))
       )
