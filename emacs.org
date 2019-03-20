@@ -291,6 +291,7 @@
         "s-F" 'helm-do-ag-project-root
         "s-n" 'evil-window-new
         "s-N" 'w/make-frame
+        "<C-s-268632087>" 'delete-other-windows
         "<C-s-268632079>" 'w/projectile-switch-project ;; super+ctrl+p
         "<C-s-268632080>" 'w/projectile-switch-project ;; super+ctrl+o
         )
