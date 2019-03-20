@@ -312,6 +312,7 @@
         "s-k s-i" 's/show-buffer-file-name
 
         "s-1" 'customize ;;before, it is "s-,"
+        "s-0" '(lambda () (interactive) (neotree-project-dir-toggle) (neotree-quick-look))
         "s-, s-," 'z/open-emacs-config-file
         "s-. s-." 'z/open-emacs-config-file
 
@@ -783,6 +784,11 @@
      ;; hide toolbar in emacs GUI
      (tool-bar-mode -1)
      (global-display-line-numbers-mode)
+     (define-globalized-minor-mode global-highlight-parentheses-mode
+       highlight-parentheses-mode
+       (lambda ()
+         (highlight-parentheses-mode t)))
+     (global-highlight-parentheses-mode t)
      (global-auto-revert-mode 1)
      (add-hook 'dired-mode-hook 'auto-revert-mode)
      (defun w/setup-font-and-window ()
@@ -799,7 +805,7 @@
        )
      (defun contextual-menubar (&optional frame)
        "Display the menubar in FRAME (default: selected frame) if on a
-         graphical display, but hide it if in terminal."
+              graphical display, but hide it if in terminal."
        (interactive)
        (if (display-graphic-p frame)
            (w/setup-font-and-window)
