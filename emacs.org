@@ -5,6 +5,7 @@
 - [[#helpers][Helpers]]
 - [[#my-general-configs][My general configs]]
   - [[#evil-config][Evil config]]
+  - [[#avy-config][Avy config]]
   - [[#which-key-config][Which key config]]
   - [[#shell-config][Shell config]]
   - [[#terminal-multi-libvterm-config][Terminal (multi-libvterm) config]]
@@ -26,6 +27,7 @@
 - [[#my-ui-configs][My ui configs]]
   - [[#space-line-config][space line config]]
   - [[#indent-guide-config][indent guide config]]
+  - [[#highlight-indent-guides-config][highlight-indent-guides config]]
 - [[#other-tools-configs][Other tools configs]]
   - [[#language-server-protocol-lsp-mode][language server protocol (lsp-mode)]]
   - [[#workspacepersp-mode-config][workspace(PERSP MODE) config]]
@@ -257,10 +259,10 @@
         "w=" 'balance-windows
         "wr" 'w/rotate-windows-forward
         "wR" 'w/rotate-windows-backward
-        "w/" '((lambda () (interactive) (split-window-right) (other-window 1)) :which-key "split-window-right")
-        "w-" '((lambda () (interactive) (split-window-below) (other-window 1)) :which-key "split-window-below")
-        "wv" '((lambda () (interactive) (split-window-right) (other-window 1)) :which-key "split-window-right")
-        "ws" '((lambda () (interactive) (split-window-below) (other-window 1)) :which-key "split-window-below")
+        "w/" 'z/split-window-right
+        "w-" 'z/split-window-below
+        "wv" 'z/split-window-right
+        "ws" 'z/split-window-below
         "wd" 'delete-window
         "wm" 'toggle-maximize-buffer
         "wj" 'evil-window-down
@@ -281,6 +283,17 @@
         "xdw" 'delete-trailing-whitespace
         )
 
+        (defun z/split-window-right ()
+        (interactive)
+         (split-window-right)
+         (other-window 1)
+         )
+        (defun z/split-window-below ()
+        (interactive)
+         (split-window-below)
+         (other-window 1)
+         )
+
        ;;Mapping for ruby mode
        (defun w/remap-ruby-mode-leader-key ()
          (interactive)
@@ -289,13 +302,24 @@
        (add-hook 'ruby-mode-hook 'w/remap-ruby-mode-leader-key)
        (general-define-key
         :states '(normal visual emacs)
-        "C-w v" '((lambda () (interactive) (split-window-right) (other-window 1)) :which-key "split-window-right")
-        "C-w s" '((lambda () (interactive) (split-window-below) (other-window 1)) :which-key "split-window-below") "tab" 'evil-avy-goto-word-or-subword-1
+        "C-w v" 'z/split-window-right
+        "C-w s" 'z/split-window-below "tab" 'evil-avy-goto-word-or-subword-1
         )
        (general-define-key
         :states '(normal visual emacs)
         "H" 'evil-digit-argument-or-evil-beginning-of-line
         "L" 'evil-end-of-line
+
+        ;; map to be like tmux
+        "C-a h" 'evil-window-left
+        "C-a j" 'evil-window-down
+        "C-a k" 'evil-window-up
+        "C-a l" 'evil-window-right
+        "C-a x" 'evil-quit
+        "C-a m" 'toggle-maximize-buffer
+        "C-a c" 'w/make-frame
+        "C-a -" 'z/split-window-below
+        "C-a _" 'z/split-window-right
 
         ;; single super key mappings
         "s-p" 'helm-projectile-find-file
@@ -315,7 +339,6 @@
         ;; navigation
         "M-[" 'evil-jump-backward
         "M-]" 'evil-jump-forward
-        "<M-return>" 'find-my-tag
         "<s-return>" 'find-my-tag
 
         ;; combination with super+s
@@ -812,7 +835,7 @@
      (defun w/setup-font-and-window ()
        (progn
          ;;Font size 13pt
-         (set-face-attribute 'default nil :font "Inconsolata Nerd Font Mono-14" )
+         (set-face-attribute 'default nil :font "Inconsolata for Powerline-14" )
          (menu-bar-mode -1)
          ;;Disable scrollbar in UI mode
          (tool-bar-mode -1)
@@ -976,6 +999,7 @@
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;; Neo tree
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;;(use-package all-the-icons)
     (use-package neotree
       :commands (neotree-mode)
       :config
@@ -1000,11 +1024,13 @@
     (custom-set-faces
     '(cursor ((t (:background "gold" :foreground "#151718"))))
     '(mode-line ((t (:background "black" :foreground "#4499FF"))))
-    '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata Nerd Font Mono"))))
-    '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata Nerd Font Mono"))))
+    '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata for Powerline"))))
+    '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata for Powerline"))))
     )
 
     (setq neo-window-fixed-size nil)
+
+    ;;(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
     (defcustom neo-window-width 50
         "*Specifies the width of the NeoTree window."
@@ -1393,6 +1419,12 @@
                   )))
             date)))
    #+END_SRC
+** Forge
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package forge
+    :after magit)
+   #+END_SRC
 * My ui configs
 ** space line config
    #+BEGIN_SRC emacs-lisp
@@ -1438,8 +1470,13 @@
           (indent-guide-global-mode)
           (put 'indent-guide-toggle-flag 'state t))
         ))
-
-   #+END_SRC
+    #+END_SRC
+ 
+** highlight-indent-guides config
+    #+BEGIN_SRC emacs-lisp
+    (setq highlight-indent-guides-method 'character)
+    (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+    #+END_SRC
 
 * Other tools configs
 ** language server protocol (lsp-mode)
