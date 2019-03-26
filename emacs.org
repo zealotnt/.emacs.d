@@ -194,7 +194,6 @@
         "saa" 'helm-do-ag-this-file
                                              ;Toggle
         "t" '(:ignore t :which-key "toggles")
-        "tn" 'display-line-numbers-mode
         "ti" 'indent-guide-toggle
         "ts" 'flycheck-toggle
         "tn" 'global-display-line-numbers-mode
@@ -808,6 +807,8 @@
    #+END_SRC
 ** Setup editor config
    #+BEGIN_SRC emacs-lisp
+     (global-display-line-numbers-mode 1)
+
      ;; welcome screen splash image
      (setq w/fancy-splash-image-number (random 3))
      (setq fancy-splash-image (format "%s/logo_%s.png" w-dotfiles-folder-path w/fancy-splash-image-number))
@@ -824,7 +825,6 @@
      (menu-bar-mode -1)
      ;; hide toolbar in emacs GUI
      (tool-bar-mode -1)
-     (global-display-line-numbers-mode)
      (define-globalized-minor-mode global-highlight-parentheses-mode
        highlight-parentheses-mode
        (lambda ()
