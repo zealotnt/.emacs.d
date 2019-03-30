@@ -24,6 +24,7 @@
 - [[#my-git-tools-config][My git tools config]]
   - [[#magit-config][Magit config]]
   - [[#annotategit-blame][Annotate(Git blame)]]
+  - [[#forge][Forge]]
 - [[#my-ui-configs][My ui configs]]
   - [[#space-line-config][space line config]]
   - [[#indent-guide-config][indent guide config]]
@@ -333,9 +334,13 @@
 
         ;; map to be like tmux
         "C-a h" 'evil-window-left
+        "M-h" 'evil-window-left
         "C-a j" 'evil-window-down
+        "M-j" 'evil-window-down
         "C-a k" 'evil-window-up
+        "M-k" 'evil-window-up
         "C-a l" 'evil-window-right
+        "M-l" 'evil-window-right
         "C-a x" 'evil-quit
         "C-a m" 'toggle-maximize-buffer
         "C-a c" 'w/make-frame
