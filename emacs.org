@@ -190,7 +190,7 @@
         "fyn" 's/show-buffer-file-name
         "fyN" 'w/show-buffer-file-name-base
         "fyl" 'w/show-buffer-file-path-with-line
-        "fyL" 'w/projectile-copy-file-path-with-line
+        "fyL" 'w/projectile-copy-relative-file-path-with-line
         "ft" 'neotree-project-dir-toggle
         "fw" 'save-buffer
         "fx" 'evil-quit
@@ -369,6 +369,8 @@
 
         ;; combination with super+s
         "s-k s-s" 'neotree-project-dir-toggle
+        "s-k s-f" 'w/projectile-copy-relative-file-path
+        "s-k s-l" 'w/projectile-copy-relative-file-path-with-line
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-p" 's/show-buffer-file-path
         "s-k s-i" 's/show-buffer-file-name
@@ -1039,7 +1041,7 @@
        (when-let (file-path (w/projectile-file-path))
          (concat file-path ":" (number-to-string (line-number-at-pos)))))
 
-     (defun w/projectile-copy-file-path-with-line ()
+     (defun w/projectile-copy-relative-file-path-with-line ()
        "Copy and show the file path relative to project root."
        (interactive)
        (if-let (file-path (w/projectile-file-path-with-line))
@@ -1067,7 +1069,7 @@
         (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
         (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
         (evil-define-key 'normal neotree-mode-map (kbd "gg") 'evil-goto-first-line)
-        (evil-define-key 'normal neotree-mode-map (kbd "r") 'neotree-refresh)
+        (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-refresh)
         (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
         (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
         (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
