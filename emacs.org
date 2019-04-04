@@ -361,6 +361,7 @@
         "s-N" 'w/make-frame
         "s-R" 'delete-trailing-whitespace
         "s-b" 'toggle-maximize-buffer
+        "s-/" 'evilnc-comment-or-uncomment-lines
 
         ;; navigation
         "M-[" 'evil-jump-backward
@@ -460,6 +461,7 @@
        :init
        (with-eval-after-load "evil"
          (define-key evil-visual-state-map "gc" 'evilnc-comment-or-uncomment-lines)
+         (define-key evil-normal-state-map "gc" 'evilnc-comment-or-uncomment-lines)
          ))
 
 
