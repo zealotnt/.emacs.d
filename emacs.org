@@ -360,8 +360,9 @@
         "s-n" 'evil-window-new
         "s-N" 'w/make-frame
         "s-R" 'delete-trailing-whitespace
-        "s-b" 'toggle-maximize-buffer
+        "s-b s-b" 'toggle-maximize-buffer
         "s-/" 'evilnc-comment-or-uncomment-lines
+        "s-l" 'evil-avy-goto-line
 
         ;; navigation
         "M-[" 'evil-jump-backward
@@ -376,6 +377,11 @@
         "s-k s-p" 's/show-buffer-file-path
         "s-k s-i" 's/show-buffer-file-name
         "s-k s-r" 'sync-config
+
+        "s-k s-j" 'git-gutter:next-hunk
+        "s-k s-k" 'git-gutter:previous-hunk
+        "s-b s-j" 'git-gutter:next-hunk
+        "s-b s-k" 'git-gutter:previous-hunk
 
         "s-1" 'customize ;;before, it is "s-,"
         "s-0" '(lambda () (interactive) (neotree-project-dir-toggle) (neotree-quick-look))
@@ -1659,6 +1665,7 @@
        :init (setq rbenv-show-active-ruby-in-modeline nil)
        :config (progn
                  (global-rbenv-mode)
+                 (add-hook 'enh-ruby-mode-hook 'rbenv-use-corresponding)
                  (add-hook 'enh-ruby-mode-hook 'rbenv-use-corresponding)
                  (add-hook 'ruby-mode-hook 'rbenv-use-corresponding)
                  ))
