@@ -162,7 +162,10 @@
    #+BEGIN_SRC emacs-lisp
      (setq evil-want-C-u-scroll t)
      (setq w/main-leader-key "SPC")
+     (global-hl-line-mode +1)
      (setq w/secondary-leader-key ",")
+     (setq confirm-kill-emacs #'y-or-n-p) ; or yes-or-no-p is you're really paranoid
+     (modify-syntax-entry ?_ "w" (standard-syntax-table))
 
                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Evil
@@ -348,7 +351,7 @@
         "C-a _" 'z/split-window-right
 
         ;; single super key mappings
-        "s-p" 'helm-projectile-find-file
+        "s-p" 'fzf
         "s-P" 'w/helm-M-x
         "s-w" 'evil-window-delete
         "s-W" 'evil-quit
@@ -1400,7 +1403,7 @@
          (set-face-foreground 'git-gutter:added "#546E00"))
        )
                                              ;Init git gutter when saving
-     (add-hook 'after-save-hook 'git-gutter-mode)
+     (global-git-gutter-mode +1)
 
      (eval-after-load 'git-timemachine
        '(progn
