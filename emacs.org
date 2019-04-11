@@ -54,7 +54,10 @@
     (defun z/open-emacs-config-file ()
       "Open the init file."
       (interactive)
-      (find-file "/Users/zealot/workspace_mine/w_emacs_dotfiles/emacs.org"))
+      (progn
+        (w/make-frame)
+        (find-file "/Users/zealot/workspace_mine/w_emacs_dotfiles/emacs.org")
+        (toggle-frame-maximized)))
 
     (defun create-shell-with-name (name)
       (shell (concat "*" name "*")))
@@ -359,6 +362,8 @@
         "s-j" 'evil-avy-goto-word-or-subword-1
         "s-d" 'kill-whole-line
         "s-f" 'evil-search-forward
+        "s-g" 'evil-search-word-forward
+        "s-G" 'evil-search-word-backward
         "s-F" 'helm-do-ag-project-root
         "s-n" 'evil-window-new
         "s-N" 'w/make-frame
@@ -393,8 +398,8 @@
 
         ;; 3 key stroke with super
         "<C-s-268632087>" 'delete-other-windows
-        "<C-s-268632079>" 'w/projectile-switch-project ;; super+ctrl+p
-        "<C-s-268632080>" 'w/projectile-switch-project ;; super+ctrl+o
+        "<C-s-268632079>" 'w/projectile-switch-project ;; super+ctrl+o
+        "<C-s-268632080>" 'w/projectile-switch-project-in-new-frame ;; super+ctrl+p
         )
        (general-define-key
         :states '(normal visual insert emacs)
@@ -984,17 +989,25 @@
                                (helm-mini)))
 
      (defun w/make-frame ()
-     (interactive)
-     (make-frame)
-     (delete-other-windows)
-     )
+       (interactive)
+       (make-frame)
+       (delete-other-windows))
+
      (defun w/projectile-switch-project ()
        (interactive)
        (helm-projectile-configs-load)
        (helm-projectile-switch-project)
        ;;(delete-other-windows)
-       (neotree-hide)
+       ;;(neotree-hide)
        )
+
+     (defun w/projectile-switch-project-in-new-frame ()
+       (interactive)
+       (progn
+       (w/make-frame)
+       (helm-projectile-configs-load)
+       (helm-projectile-switch-project)))
+
      (defun w/cleanup-after-switch-project ()
        ;;(delete-other-windows)
        (neotree-hide)
