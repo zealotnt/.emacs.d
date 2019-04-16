@@ -57,7 +57,7 @@
       (progn
         (w/make-frame)
         (find-file "/Users/zealot/workspace_mine/w_emacs_dotfiles/emacs.org")
-        (toggle-frame-maximized)))
+        ))
 
     (defun create-shell-with-name (name)
       (shell (concat "*" name "*")))
@@ -398,8 +398,8 @@
 
         ;; 3 key stroke with super
         "<C-s-268632087>" 'delete-other-windows
-        "<C-s-268632079>" 'w/projectile-switch-project ;; super+ctrl+o
-        "<C-s-268632080>" 'w/projectile-switch-project-in-new-frame ;; super+ctrl+p
+        "<C-s-268632079>" 'w/projectile-switch-project-in-new-frame ;; super+ctrl+o
+        "<C-s-268632080>" 'w/projectile-switch-project ;; super+ctrl+p
         )
        (general-define-key
         :states '(normal visual insert emacs)
@@ -1005,6 +1005,7 @@
        (interactive)
        (progn
        (w/make-frame)
+       (delete-other-windows)
        (helm-projectile-configs-load)
        (helm-projectile-switch-project)))
 
