@@ -168,7 +168,13 @@
      (global-hl-line-mode +1)
      (setq w/secondary-leader-key ",")
      (setq confirm-kill-emacs #'y-or-n-p) ; or yes-or-no-p is you're really paranoid
-     (modify-syntax-entry ?_ "w" (standard-syntax-table))
+     (defun z/customize-syntax-table ()
+        (interactive)
+        (modify-syntax-entry ?_ "w" (standard-syntax-table))
+        (modify-syntax-entry ?_ "w" (syntax-table)))
+
+     (add-hook 'after-change-major-mode-hook 'z/customize-syntax-table)
+     (add-hook 'change-major-mode-hook 'z/customize-syntax-table)
 
                ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Evil
@@ -991,6 +997,7 @@
      (defun w/make-frame ()
        (interactive)
        (make-frame)
+       (toggle-frame-maximized)
        (delete-other-windows))
 
      (defun w/projectile-switch-project ()
@@ -1102,6 +1109,8 @@
         (evil-define-key 'normal neotree-mode-map (kbd "m") 'neotree-rename-node)
         (evil-define-key 'normal neotree-mode-map (kbd "r") 'neotree-rename-node)
         (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
+        (evil-define-key 'normal neotree-mode-map (kbd "v") 'neotree-enter-vertical-split)
+        (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node))
       )
 
