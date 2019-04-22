@@ -371,7 +371,10 @@
         "s-g" 'evil-search-word-forward
         "s-G" 'evil-search-word-backward
         "s-F" 'helm-do-ag-project-root
-        "s-n" 'evil-window-new
+        "s-n s-s" 'evil-window-new
+        "s-n s" 'evil-window-new
+        "s-n s-v" 'evil-window-vnew
+        "s-n v" 'evil-window-vnew
         "s-N" 'w/make-frame
         "s-R" 'delete-trailing-whitespace
         "s-b s-b" 'toggle-maximize-buffer
@@ -1262,10 +1265,12 @@
        :defer t
        :init (global-company-mode)
        :config
-       (setq company-idle-delay 1)
        (define-key company-active-map (kbd "C-n") 'company-select-next)
+       (define-key company-active-map (kbd "C-j") 'company-select-next)
        (define-key company-active-map (kbd "C-p") 'company-select-previous)
+       (define-key company-active-map (kbd "C-k") 'company-select-previous)
        (define-key company-active-map (kbd "C-l") 'company-complete)
+       (define-key company-active-map (kbd "C-f") 'company-complete)
        (setq company-backends
              '(company-bbdb company-nxml company-css company-eclim
                             company-semantic company-xcode company-cmake
@@ -1273,13 +1278,17 @@
                             (company-dabbrev-code company-gtags company-etags
                                                   company-keywords)
                             company-oddmuse company-files company-dabbrev))
-       (setq company-minimum-prefix-length 2
+       (setq company-idle-delay 0.1
+             company-minimum-prefix-length 2
              company-selection-wrap-around t
              company-show-numbers t
              company-tooltip-align-annotations t
              company-dabbrev-downcase nil
+             company-dabbrev-other-buffers t
+             company-dabbrev-code-other-buffers 'all
              company-dabbrev-code-everywhere t
-             company-dabbrev-ignore-case nil)
+             company-dabbrev-code-ingore-case t
+             company-dabbrev-ignore-case t)
        ;;Trigger auto complete menu
        (with-eval-after-load "evil"
          (define-key evil-insert-state-map (kbd "C-f") 'company-dabbrev-code)
