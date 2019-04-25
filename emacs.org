@@ -72,6 +72,8 @@
               (kill-new file-name))
           (error "Buffer not visiting a file"))))
 
+          (defalias 'z/absolute-path 's/show-buffer-file-path)
+
     (defun w/show-buffer-project-path ()
       "Show the full path to the current project in the minibuffer."
       (interactive)
@@ -387,11 +389,14 @@
         "<s-return>" 'find-my-tag
 
         ;; combination with super+s
-        "s-k s-s" 'neotree-project-dir-toggle
-        "s-k s-f" 'w/projectile-copy-relative-file-path
-        "s-k s-l" 'w/projectile-copy-relative-file-path-with-line
+        "s-k s-s"   'neotree-project-dir-toggle
+        "s-k s-f r"   'w/projectile-copy-relative-file-path
+        "s-k s-f s-r" 'w/projectile-copy-relative-file-path
+        "s-k s-f a"    'z/absolute-path
+        "s-k s-f s-a"  'z/absolute-path
+        "s-k s-f l"   'w/projectile-copy-relative-file-path-with-line
+        "s-k s-f s-l" 'w/projectile-copy-relative-file-path-with-line
         "s-k s-w" 'toggle-truncate-lines
-        "s-k s-p" 's/show-buffer-file-path
         "s-k s-i" 's/show-buffer-file-name
         "s-k s-r" 'sync-config
 
@@ -856,8 +861,9 @@
    #+BEGIN_SRC emacs-lisp
      (add-to-list 'load-path (format "%s/themes" w-dotfiles-folder-path))
      (add-to-list 'custom-theme-load-path (format "%s/themes" w-dotfiles-folder-path))
-     ;(load-theme 'monokai t)
-     (load-theme 'gruvbox-dark-medium t)
+     (load-theme 'monokai t)
+     ;(load-theme 'gruvbox-dark-medium t)
+     ;(load-theme 'dracula t)
    #+END_SRC
 ** Setup editor config
    #+BEGIN_SRC emacs-lisp
