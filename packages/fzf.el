@@ -139,8 +139,14 @@
     (switch-to-buffer buf)
     (if fzf/evil-esc-to-kill-buffer
         (progn
-          (evil-local-set-key 'normal (kbd "C-k") 'fzf/term-send-up)
+          (evil-local-set-key 'normal (kbd "C-p") 'fzf/term-send-up)
+          (evil-local-set-key 'normal (kbd "C-p") 'fzf/term-send-up)
           (evil-local-set-key 'insert (kbd "C-k") 'fzf/term-send-up)
+          (evil-local-set-key 'insert (kbd "C-k") 'fzf/term-send-up)
+          (evil-local-set-key 'normal (kbd "C-n") 'fzf/term-send-down)
+          (evil-local-set-key 'normal (kbd "C-n") 'fzf/term-send-down)
+          (evil-local-set-key 'normal (kbd "C-j") 'fzf/term-send-down)
+          (evil-local-set-key 'normal (kbd "C-j") 'fzf/term-send-down)
           (evil-local-set-key 'normal (kbd "<escape>") 'term-kill-subjob)
           (evil-local-set-key 'insert (kbd "<escape>") 'term-kill-subjob)))
     (linum-mode 0)

@@ -165,6 +165,7 @@
 * My general configs
 ** Evil config
    #+BEGIN_SRC emacs-lisp
+     (define-key isearch-mode-map (kbd "s-v") 'isearch-yank-kill)
      (setq evil-want-C-u-scroll t)
      (setq w/main-leader-key "SPC")
      (global-hl-line-mode +1)
