@@ -200,12 +200,12 @@
         "f" '(:ignore t :which-key "Files")
         "ff" 'helm-find-files
         "fy" '(:ignore t :which-key "yank path")
-        "fyY" 'w/projectile-copy-relative-file-path
+        "fyY" 'w/copy-relative-file-path
         "fyy" 's/show-buffer-file-path
         "fyn" 's/show-buffer-file-name
         "fyN" 'w/show-buffer-file-name-base
         "fyl" 'w/show-buffer-file-path-with-line
-        "fyL" 'w/projectile-copy-relative-file-path-with-line
+        "fyL" 'w/copy-relative-file-path-with-line
         "ft" 'neotree-project-dir-toggle
         "fw" 'save-buffer
         "fx" 'evil-quit
@@ -391,12 +391,12 @@
 
         ;; combination with super+s
         "s-k s-s"   'neotree-project-dir-toggle
-        "s-k s-f r"   'w/projectile-copy-relative-file-path
-        "s-k s-f s-r" 'w/projectile-copy-relative-file-path
+        "s-k s-f r"   'w/copy-relative-file-path
+        "s-k s-f s-r" 'w/copy-relative-file-path
         "s-k s-f a"    'z/absolute-path
         "s-k s-f s-a"  'z/absolute-path
-        "s-k s-f l"   'w/projectile-copy-relative-file-path-with-line
-        "s-k s-f s-l" 'w/projectile-copy-relative-file-path-with-line
+        "s-k s-f l"   'w/copy-relative-file-path-with-line
+        "s-k s-f s-l" 'w/copy-relative-file-path-with-line
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
         "s-k s-r" 'sync-config
@@ -1065,7 +1065,7 @@
        (when-let (file-name (buffer-file-name))
          (file-relative-name (file-truename file-name) (projectile-project-root))))
 
-     (defun w/projectile-copy-relative-file-path ()
+     (defun w/copy-relative-file-path ()
        "Copy and show the file path relative to project root."
        (interactive)
        (if-let (file-path (w/projectile-file-path))
@@ -1083,7 +1083,7 @@
        (when-let (file-path (w/projectile-file-path))
          (concat file-path ":" (number-to-string (line-number-at-pos)))))
 
-     (defun w/projectile-copy-relative-file-path-with-line ()
+     (defun w/copy-relative-file-path-with-line ()
        "Copy and show the file path relative to project root."
        (interactive)
        (if-let (file-path (w/projectile-file-path-with-line))
