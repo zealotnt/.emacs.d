@@ -1929,6 +1929,26 @@
        "Q" 'dap-disconnect
        )
     #+END_SRC
+*** hs-minor-mode-ruby
+    #+BEGIN_SRC emacs-lisp
+    (add-hook 'ruby-mode-hook
+      (lambda () (hs-minor-mode)))
+
+    (eval-after-load "hideshow"
+      '(add-to-list 'hs-special-modes-alist
+        `(ruby-mode
+          ,(rx (or "def" "class" "module" "do" "{" "[")) ; Block start
+          ,(rx (or "}" "]" "end"))                       ; Block end
+          ,(rx (or "#" "=begin"))                        ; Comment start
+          ruby-forward-sexp nil)))
+
+    (global-set-key (kbd "C-c h") 'hs-hide-block)
+    (global-set-key (kbd "C-c s") 'hs-show-block)
+    #+END_SRC
+
+    #+RESULTS:
+    : hs-show-block
+
 ** js config
    #+BEGIN_SRC emacs-lisp
      (use-package js2-mode
