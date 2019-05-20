@@ -389,14 +389,18 @@
         "M-]" 'evil-jump-forward
         "<s-return>" 'find-my-tag
 
-        ;; combination with super+s
+        ;; combination with super+k
         "s-k s-s"   'neotree-project-dir-toggle
+        "s-k s-f n" 's/show-buffer-file-name
+        "s-k s-f s-n" 's/show-buffer-file-name
         "s-k s-f r"   'w/copy-relative-file-path
         "s-k s-f s-r" 'w/copy-relative-file-path
         "s-k s-f a"    'z/absolute-path
         "s-k s-f s-a"  'z/absolute-path
         "s-k s-f l"   'w/copy-relative-file-path-with-line
         "s-k s-f s-l" 'w/copy-relative-file-path-with-line
+        "s-k s-f o" 'xah-open-in-chrome
+        "s-k s-f s-o" 'xah-open-in-chrome
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
         "s-k s-r" 'sync-config
