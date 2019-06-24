@@ -768,14 +768,19 @@
    #+BEGIN_SRC emacs-lisp
      ;; Projectile project name as frame title
      (setq frame-title-format
-           '(""
-             "%b"
-             (:eval
-              (let ((project-name (projectile-project-name))
-                    (persp-name (safe-persp-name (get-current-persp)))
-                    )
-                (unless (string= "-" project-name)
-                  (format " in [%s] - persp [%s]" project-name persp-name))))))
+           '((:eval (if (buffer-file-name)
+                        (abbreviate-file-name (buffer-file-name))
+                      "%b")))
+           )
+     ;; (setq frame-title-format
+     ;;       '(""
+     ;;         "%b"
+     ;;         (:eval
+     ;;          (let ((project-name (projectile-project-name))
+     ;;                (persp-name (safe-persp-name (get-current-persp)))
+     ;;                )
+     ;;            (unless (string= "-" project-name)
+     ;;              (format " in [%s] - persp [%s]" project-name persp-name))))))
 
      (defface frame-number-face
        '((t (:background "black" :foreground "red" )))
@@ -994,60 +999,62 @@
 * My search configs
 ** Helm config
    #+BEGIN_SRC emacs-lisp
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        ;; Helm
-        ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-        (use-package helm-projectile
-          :commands (helm-projectile-configs-load helm-mode helm-projectile-find-file projectile-switch-project)
-          :config
-          (defun helm-projectile-configs-load ()
-            t)
-          (run-with-timer 3 nil
-                          (lambda ()
-                            (message "Loading helm configs...")))
-          (require 'helm-projectile)
-          (helm-projectile-on)
-          (projectile-mode +1)
-          (setq projectile-enable-caching t)
-          (add-to-list 'exec-path "/usr/local/bin/") ;;Path for running ag ...
-          (global-set-key (kbd "<escape>")      'keyboard-escape-quit)
-          (load "my-helm-clear-projectile-cache-config")
-          ;;Using ESC (ctrl+G) to quit helm command
-          (with-eval-after-load "helm-command"
-            (define-key helm-M-x-map (kbd "ESC") 'helm-keyboard-quit)
-            )
 
-          (add-hook 'helm-after-initialize-hook
-                    (lambda()
-                      (require 'dash)
-                      (require 's)
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; Helm
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-                      (add-hook 'ido-make-buffer-list-hook 'my/ido-stars-to-end)
-                      (defun my/ido-stars-to-end ()
-                        "Put \"*starred*\" buffers at the end of the ido candidates list."
-                        (ido-to-end (--filter (s-starts-with-p "*" it)
-                                              ido-temp-list)))
+     (use-package helm-projectile
+       :commands (helm-projectile-configs-load helm-mode helm-projectile-find-file projectile-switch-project)
+       :config
+       (defun helm-projectile-configs-load ()
+         t)
+       (run-with-timer 3 nil
+                       (lambda ()
+                         (message "Loading helm configs...")))
+       (require 'helm-projectile)
+       (helm-projectile-on)
+       (projectile-mode +1)
+       (setq projectile-enable-caching t)
+       (add-to-list 'exec-path "/usr/local/bin/") ;;Path for running ag ...
+       (global-set-key (kbd "<escape>")      'keyboard-escape-quit)
+       (load "my-helm-clear-projectile-cache-config")
+       ;;Using ESC (ctrl+G) to quit helm command
+       (with-eval-after-load "helm-command"
+         (define-key helm-M-x-map (kbd "ESC") 'helm-keyboard-quit)
+         )
 
-                      (define-key helm-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
-                      (define-key helm-map (kbd "C--") 'helm-ext-ff-buffer-execute-horizontal-split)
-                      (define-key helm-map (kbd "C-v") 'helm-ext-ff-buffer-execute-vertical-split)
-                      (define-key helm-map (kbd "C-u") 'helm-previous-page)
-                      (define-key helm-map (kbd "C-d") 'helm-next-page)
-                      (define-key helm-map (kbd "C-j") 'helm-next-line)
-                      (define-key helm-map (kbd "C-k") 'helm-previous-line)))
-     (helm-add-action-to-source
-      "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-files-list)
-     (helm-add-action-to-source
-      "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-buffers-list)
-     (helm-add-action-to-source
-      "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-projects)
-     (helm-add-action-to-source
-      "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-files-list)
-     (helm-add-action-to-source
-      "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-buffers-list)
-     (helm-add-action-to-source
-      "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-projects)
-          )
+       (add-hook 'helm-after-initialize-hook
+                 (lambda()
+                   (require 'dash)
+                   (require 's)
+
+                   (add-hook 'ido-make-buffer-list-hook 'my/ido-stars-to-end)
+                   (defun my/ido-stars-to-end ()
+                     "Put \"*starred*\" buffers at the end of the ido candidates list."
+                     (ido-to-end (--filter (s-starts-with-p "*" it)
+                                           ido-temp-list)))
+
+                   (define-key helm-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
+                   (define-key helm-map (kbd "C--") 'helm-ext-ff-buffer-execute-horizontal-split)
+                   (define-key helm-map (kbd "C-v") 'helm-ext-ff-buffer-execute-vertical-split)
+                   (define-key helm-map (kbd "C-u") 'helm-previous-page)
+                   (define-key helm-map (kbd "C-d") 'helm-next-page)
+                   (define-key helm-map (kbd "C-j") 'helm-next-line)
+                   (define-key helm-map (kbd "C-k") 'helm-previous-line)))
+       (helm-add-action-to-source
+        "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-files-list)
+       (helm-add-action-to-source
+        "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-buffers-list)
+       (helm-add-action-to-source
+        "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-projects)
+       (helm-add-action-to-source
+        "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-files-list)
+       (helm-add-action-to-source
+        "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-buffers-list)
+       (helm-add-action-to-source
+        "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-projects)
+       )
 
      (use-package helm-ext
        :defer t
@@ -1066,102 +1073,102 @@
         "Split Vertical" 'helm-ext-ff-helm-bookmark-action-vertical-split my--helm-source-bookmark-project) )
 
 
-        (setq helm-mini-default-sources '(helm-source-buffers-list
-                                          helm-source-recentf
-                                          helm-source-buffer-not-found))
-        (defun w/persp-helm-mini ()
-          "As `helm-mini' but restricts visible buffers by perspective."
-          (interactive)
-          (with-persp-buffer-list ()
-                                  (helm-mini)))
+     (setq helm-mini-default-sources '(helm-source-buffers-list
+                                       helm-source-recentf
+                                       helm-source-buffer-not-found))
+     (defun w/persp-helm-mini ()
+       "As `helm-mini' but restricts visible buffers by perspective."
+       (interactive)
+       (with-persp-buffer-list ()
+                               (helm-mini)))
 
-        (defun w/make-frame ()
-          (interactive)
-          (make-frame)
-          (toggle-frame-maximized)
-          (delete-other-windows))
+     (defun w/make-frame ()
+       (interactive)
+       (make-frame)
+       (toggle-frame-maximized)
+       (delete-other-windows))
 
-        (defun w/projectile-switch-project ()
-          (interactive)
-          (helm-projectile-configs-load)
-          (helm-projectile-switch-project)
-          ;;(delete-other-windows)
-          ;;(neotree-hide)
-          )
+     (defun w/projectile-switch-project ()
+       (interactive)
+       (helm-projectile-configs-load)
+       (helm-projectile-switch-project)
+       ;;(delete-other-windows)
+       ;;(neotree-hide)
+       )
 
-        (defun w/projectile-switch-project-in-new-frame ()
-          (interactive)
-          (progn
-          (w/make-frame)
-          (delete-other-windows)
-          (helm-projectile-configs-load)
-          (helm-projectile-switch-project)))
+     (defun w/projectile-switch-project-in-new-frame ()
+       (interactive)
+       (progn
+         (w/make-frame)
+         (delete-other-windows)
+         (helm-projectile-configs-load)
+         (helm-projectile-switch-project)))
 
-        (defun w/cleanup-after-switch-project ()
-          ;;(delete-other-windows)
-          (neotree-hide)
-        )
-        ;;TODO
-        (defun w/open-emacs-dotfiles-project
-          (interactive)
-          (message "TODO open emacs dotfiles project")
-        )
-        (add-hook 'projectile-after-switch-project-hook 'w/cleanup-after-switch-project)
+     (defun w/cleanup-after-switch-project ()
+       ;;(delete-other-windows)
+       (neotree-hide)
+       )
+     ;;TODO
+     (defun w/open-emacs-dotfiles-project
+         (interactive)
+       (message "TODO open emacs dotfiles project")
+       )
+     (add-hook 'projectile-after-switch-project-hook 'w/cleanup-after-switch-project)
 
-        (defun w/projectile-dired ()
-          (interactive)
-          (helm-projectile-configs-load)
-          (projectile-dired)
-          )
+     (defun w/projectile-dired ()
+       (interactive)
+       (helm-projectile-configs-load)
+       (projectile-dired)
+       )
 
-        (defun w/helm-M-x ()
-          (interactive)
-          (helm-projectile-configs-load)
-          (call-interactively 'helm-M-x)
-          )
+     (defun w/helm-M-x ()
+       (interactive)
+       (helm-projectile-configs-load)
+       (call-interactively 'helm-M-x)
+       )
 
-        (defun w/helm-mini ()
-          (interactive)
-          (helm-projectile-configs-load)
-          (persp-mode)
-          (call-interactively 'w/persp-helm-mini)
-          )
+     (defun w/helm-mini ()
+       (interactive)
+       (helm-projectile-configs-load)
+       (persp-mode)
+       (call-interactively 'w/persp-helm-mini)
+       )
 
-        (defun w/projectile-file-path ()
-          "Retrieve the file path relative to project root.
-
-        Returns:
-          - A string containing the file path in case of success.
-          - `nil' in case the current buffer does not visit a file."
-          (when-let (file-name (buffer-file-name))
-            (file-relative-name (file-truename file-name) (projectile-project-root))))
-
-        (defun w/copy-relative-file-path ()
-          "Copy and show the file path relative to project root."
-          (interactive)
-          (if-let (file-path (w/projectile-file-path))
-              (progn
-                (message file-path)
-                (kill-new file-path))
-            (message "WARNING: Current buffer is not visiting a file!")))
-
-        (defun w/projectile-file-path-with-line ()
-          "Retrieve the file path relative to project root, including line number.
+     (defun w/projectile-file-path ()
+       "Retrieve the file path relative to project root.
 
         Returns:
           - A string containing the file path in case of success.
           - `nil' in case the current buffer does not visit a file."
-          (when-let (file-path (w/projectile-file-path))
-            (concat file-path ":" (number-to-string (line-number-at-pos)))))
+       (when-let (file-name (buffer-file-name))
+         (file-relative-name (file-truename file-name) (projectile-project-root))))
 
-        (defun w/copy-relative-file-path-with-line ()
-          "Copy and show the file path relative to project root."
-          (interactive)
-          (if-let (file-path (w/projectile-file-path-with-line))
-              (progn
-                (message file-path)
-                (kill-new file-path))
-            (message "WARNING: Current buffer is not visiting a file!")))
+     (defun w/copy-relative-file-path ()
+       "Copy and show the file path relative to project root."
+       (interactive)
+       (if-let (file-path (w/projectile-file-path))
+           (progn
+             (message file-path)
+             (kill-new file-path))
+         (message "WARNING: Current buffer is not visiting a file!")))
+
+     (defun w/projectile-file-path-with-line ()
+       "Retrieve the file path relative to project root, including line number.
+
+        Returns:
+          - A string containing the file path in case of success.
+          - `nil' in case the current buffer does not visit a file."
+       (when-let (file-path (w/projectile-file-path))
+         (concat file-path ":" (number-to-string (line-number-at-pos)))))
+
+     (defun w/copy-relative-file-path-with-line ()
+       "Copy and show the file path relative to project root."
+       (interactive)
+       (if-let (file-path (w/projectile-file-path-with-line))
+           (progn
+             (message file-path)
+             (kill-new file-path))
+         (message "WARNING: Current buffer is not visiting a file!")))
 
    #+END_SRC
 
