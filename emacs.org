@@ -343,6 +343,13 @@
         "C-w v" 'z/split-window-right
         "C-w s" 'z/split-window-below "tab" 'evil-avy-goto-word-or-subword-1
         )
+
+       (general-define-key
+        :states '(normal visual emacs insert)
+        "M-d" 'evil-delete-backward-word
+        "M-DEL" 'evil-delete-backward-word
+        )
+
        (general-define-key
         :states '(normal visual emacs)
         "H" 'evil-digit-argument-or-evil-beginning-of-line
@@ -382,6 +389,7 @@
         "s-n v" 'evil-window-vnew
         "s-N" 'w/make-frame
         "s-R" 'delete-trailing-whitespace
+        "s-O" 'select-frame-number
         "s-b s-b" 'toggle-maximize-buffer
         "s-/" 'evilnc-comment-or-uncomment-lines
         "s-l" 'evil-avy-goto-line
