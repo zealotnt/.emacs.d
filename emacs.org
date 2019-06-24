@@ -184,6 +184,10 @@
      ;; Evil
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+     (require 'evil-visualstar)
+     (global-evil-visualstar-mode)
+     (setq evil-visualstar/persistent t)
+
      (use-package general
        :config
        (require 'general)
