@@ -364,7 +364,8 @@
         "C-a _" 'z/split-window-right
 
         ;; single super key mappings
-        "s-p" 'fzf
+        ;;"s-p" 'fzf
+        "s-p" 'helm-projectile-find-file
         "s-P" 'w/helm-M-x
         "s-w" 'evil-window-delete
         "s-W" 'evil-quit
@@ -388,7 +389,7 @@
         ;; navigation
         "M-[" 'evil-jump-backward
         "M-]" 'evil-jump-forward
-        "<s-return>" 'find-my-tag
+        "<s-return>" 'evil-goto-definition
 
         ;; combination with super+k
         "s-k s-s"   'neotree-project-dir-toggle
@@ -402,9 +403,10 @@
         "s-k s-f s-l" 'w/copy-relative-file-path-with-line
         "s-k s-f o" 'xah-open-in-chrome
         "s-k s-f s-o" 'xah-open-in-chrome
+
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
-        "s-k s-r" 'sync-config
+        "s-k s-r" 'z/sync-config
 
         "s-k s-j" 'git-gutter:next-hunk
         "s-k s-k" 'git-gutter:previous-hunk
@@ -873,8 +875,8 @@
      (add-to-list 'load-path (format "%s/themes" w-dotfiles-folder-path))
      (add-to-list 'custom-theme-load-path (format "%s/themes" w-dotfiles-folder-path))
      (load-theme 'monokai t)
-     ;(load-theme 'gruvbox-dark-medium t)
-     ;(load-theme 'dracula t)
+     ;; (load-theme 'gruvbox-dark-medium t)
+     ;; (load-theme 'dracula t)
    #+END_SRC
 ** Setup editor config
    #+BEGIN_SRC emacs-lisp
@@ -1061,7 +1063,7 @@
        (helm-add-action-to-source
         "Split Horizontal" 'helm-ext-ff-helm-bookmark-action-horizontal-split my--helm-source-bookmark-project)
        (helm-add-action-to-source
-        "Split Vertical" 'helm-ext-ff-helm-bookmark-action-vertical-split my--helm-source-bookmark-project) ))
+        "Split Vertical" 'helm-ext-ff-helm-bookmark-action-vertical-split my--helm-source-bookmark-project) )
 
 
         (setq helm-mini-default-sources '(helm-source-buffers-list
