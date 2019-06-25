@@ -56,7 +56,7 @@
       "Open the init file."
       (interactive)
       (progn
-        (w/make-frame)
+        (w/make-current-frame)
         (find-file "/Users/zealot/workspace_mine/w_emacs_dotfiles/emacs.org")
         ))
 
@@ -541,9 +541,15 @@
      ;; from https://gist.github.com/3402786
      (defun toggle-maximize-buffer ()
        "Maximize buffer"
+       ;; https://github.com/syl20bnr/spacemacs/issues/8107
        (interactive)
-       (if (and (= 1 (length (window-list)))
-                (assoc ?_ register-alist))
+       (if (let ((window-count (length (window-list))))
+             (and
+              (or ( = 1 window-count)
+                  (and
+                   ( = 2 window-count)
+                   (neo-global--window-exists-p)))
+              (assoc ?_ register-alist)))
            (jump-to-register ?_)
          (progn
            (window-configuration-to-register ?_)
@@ -793,6 +799,7 @@
      ;;                )
      ;;            (unless (string= "-" project-name)
      ;;              (format " in [%s] - persp [%s]" project-name persp-name))))))
+     (setq projectile-switch-project-action 'neotree-projectile-action)
 
      (defface frame-number-face
        '((t (:background "black" :foreground "red" )))
@@ -892,6 +899,8 @@
      (add-to-list 'load-path (format "%s/themes" w-dotfiles-folder-path))
      (add-to-list 'custom-theme-load-path (format "%s/themes" w-dotfiles-folder-path))
      (load-theme 'monokai t)
+     (set-face-attribute 'region nil :background "#666")
+
      ;; (load-theme 'gruvbox-dark-medium t)
      ;; (load-theme 'dracula t)
    #+END_SRC
@@ -1094,11 +1103,19 @@
        (with-persp-buffer-list ()
                                (helm-mini)))
 
-     (defun w/make-frame ()
+     (defun w/make-current-frame ()
        (interactive)
        (make-frame)
        (toggle-frame-maximized)
        (delete-other-windows))
+
+     (defun w/make-frame ()
+       "Create a new frame with a new empty buffer."
+       ;; https://stackoverflow.com/questions/25791605/emacs-how-do-i-create-a-new-empty-buffer-whenever-creating-a-new-frame
+       (interactive)
+       (let ((buffer (generate-new-buffer "untitled")))
+         (set-buffer-major-mode buffer)
+         (display-buffer buffer '(display-buffer-pop-up-frame . nil))))
 
      (defun w/projectile-switch-project ()
        (interactive)
