@@ -371,6 +371,7 @@
         "C-a x" 'evil-quit
         "C-a m" 'toggle-maximize-buffer
         "C-a c" 'w/make-frame
+        "C-a +" 'w/make-current-frame
         "C-a -" 'z/split-window-below
         "C-a _" 'z/split-window-right
 
@@ -909,8 +910,7 @@
      (global-display-line-numbers-mode 1)
 
      ;; welcome screen splash image
-     (setq w/fancy-splash-image-number (random 3))
-     (setq fancy-splash-image (format "%s/logo_%s.png" w-dotfiles-folder-path w/fancy-splash-image-number))
+     (setq fancy-splash-image (format "%s/logo.png" w-dotfiles-folder-path))
      ;;ensure environment variables inside Emacs look the same as in the user's shell
      (when (memq window-system '(mac ns x))
        (exec-path-from-shell-initialize))
@@ -965,6 +965,8 @@
      ;; Indent
      (setq-default indent-tabs-mode nil)
      (setq-default tab-width 2)
+     (setq-default evil-shift-width 2)
+     (global-visual-line-mode t)
      (setq-default standard-indent 2)
      (setq-default js-indent-level 2)
      (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
@@ -990,7 +992,7 @@
      (put 'upcase-region 'disabled nil)
    #+END_SRC
 ** xdg config
-   #+BEGIN_SRC emacshelm-projectile-configs-load-lisp
+   #+BEGIN_SRC emacs-lisp
     (defun xah-open-in-chrome ()
     "Open the current file or `dired' marked files in Mac's Safari browser.
 
@@ -1050,12 +1052,7 @@
                    (require 'dash)
                    (require 's)
 
-                   (add-hook 'ido-make-buffer-list-hook 'my/ido-stars-to-end)
-                   (defun my/ido-stars-to-end ()
-                     "Put \"*starred*\" buffers at the end of the ido candidates list."
-                     (ido-to-end (--filter (s-starts-with-p "*" it)
-                                           ido-temp-list)))
-
+                   (define-key helm-find-files-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "C--") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "C-v") 'helm-ext-ff-buffer-execute-vertical-split)
@@ -1115,7 +1112,9 @@
        (interactive)
        (let ((buffer (generate-new-buffer "untitled")))
          (set-buffer-major-mode buffer)
-         (display-buffer buffer '(display-buffer-pop-up-frame . nil))))
+         (display-buffer buffer '(display-buffer-pop-up-frame . nil)))
+         (toggle-frame-maximized)
+         (delete-other-windows))
 
      (defun w/projectile-switch-project ()
        (interactive)
@@ -1128,7 +1127,7 @@
      (defun w/projectile-switch-project-in-new-frame ()
        (interactive)
        (progn
-         (w/make-frame)
+         (w/make-current-frame)
          (delete-other-windows)
          (helm-projectile-configs-load)
          (helm-projectile-switch-project)))
@@ -1218,7 +1217,7 @@
         (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
         (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
         (evil-define-key 'normal neotree-mode-map (kbd "gg") 'evil-goto-first-line)
-        (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-refresh)
+        (evil-define-key 'normal neotree-mode-map (kbd "C-g") 'neotree-refresh)
         (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
         (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
         (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
@@ -1229,6 +1228,7 @@
         (evil-define-key 'normal neotree-mode-map (kbd "v") 'neotree-enter-vertical-split)
         (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node))
+        (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
       )
 
     (custom-set-faces
@@ -1372,9 +1372,11 @@
 ** Auto complete config
    - Basic bindings(evil edit mode): C-g to abort, C-f to show the menu, C-p C-n to select previous or next, C-l to complete
    #+BEGIN_SRC emacs-lisp
+
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Auto Complete
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
      (use-package company
        :ensure t
        :defer t
@@ -1409,6 +1411,9 @@
          (define-key evil-insert-state-map (kbd "C-f") 'company-dabbrev-code)
          )
        )
+
+     ; https://emacs.stackexchange.com/questions/14802/never-keep-current-list-of-tags-tables-also
+     (setq tags-add-tables nil)
    #+END_SRC
 
 ** COMMENT Auto complete fuzzy config using company-flx
