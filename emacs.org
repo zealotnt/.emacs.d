@@ -132,6 +132,17 @@
            (unless selective-display
              (1+ (current-column))))))
 
+    (defun aj-toggle-fold ()
+      "Toggle fold all lines larger than indentation on current line
+      soutce: https://blog.chmouel.com/2016/09/07/dealing-with-yaml-in-emacs/"
+      (interactive)
+      (let ((col 1))
+        (save-excursion
+          (back-to-indentation)
+          (setq col (+ 1 (current-column)))
+          (set-selective-display
+          (if selective-display nil (or col 1))))))
+
     (defun toggle-camelcase-underscores ()
       "Toggle between camelcase and underscore notation for the symbol at point."
       (interactive)
@@ -169,7 +180,6 @@
      (define-key isearch-mode-map (kbd "s-v") 'isearch-yank-kill)
      (setq evil-want-C-u-scroll t)
      (setq w/main-leader-key "SPC")
-     (global-hl-line-mode +1)
      (setq w/secondary-leader-key ",")
      (setq confirm-kill-emacs #'y-or-n-p) ; or yes-or-no-p is you're really paranoid
      (defun z/customize-syntax-table ()
@@ -344,6 +354,7 @@
        (add-hook 'ruby-mode-hook 'w/remap-ruby-mode-leader-key)
        (general-define-key
         :states '(normal visual emacs)
+        "C-w m" 'toggle-maximize-buffer
         "C-w v" 'z/split-window-right
         "C-w s" 'z/split-window-below "tab" 'evil-avy-goto-word-or-subword-1
         )
@@ -359,6 +370,11 @@
         "H" 'evil-digit-argument-or-evil-beginning-of-line
         "L" 'evil-end-of-line
 
+        "g(" 'evil-previous-open-paren
+        "g{" 'evil-previous-open-brace
+        "g)" 'evil-next-close-paren
+        "g}" 'evil-next-close-brace
+
         ;; map to be like tmux
         "C-a h" 'evil-window-left
         "M-h" 'evil-window-left
@@ -373,7 +389,10 @@
         "C-a c" 'w/make-frame
         "C-a +" 'w/make-current-frame
         "C-a -" 'z/split-window-below
+        "C-a s" 'z/split-window-below
         "C-a _" 'z/split-window-right
+        "C-a v" 'z/split-window-right
+        "C-a =" 'balance-windows
 
         ;; single super key mappings
         ;;"s-p" 'fzf
@@ -416,6 +435,7 @@
         "s-k s-f s-l" 'w/copy-relative-file-path-with-line
         "s-k s-f o" 'xah-open-in-chrome
         "s-k s-f s-o" 'xah-open-in-chrome
+        "s-k s-[" 'aj-toggle-fold
 
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
@@ -995,9 +1015,7 @@
    #+BEGIN_SRC emacs-lisp
     (defun xah-open-in-chrome ()
     "Open the current file or `dired' marked files in Mac's Safari browser.
-
     If the file is not saved, save it first.
-
     URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
     Version 2018-02-26"
     (interactive)
@@ -1052,7 +1070,7 @@
                    (require 'dash)
                    (require 's)
 
-                   (define-key helm-find-files-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
+                   (define-key helm-projectile-find-file-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "C--") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "C-v") 'helm-ext-ff-buffer-execute-vertical-split)
@@ -1223,12 +1241,14 @@
         (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
         (evil-define-key 'normal neotree-mode-map (kbd "T") 'neotree-hidden-file-toggle)
         (evil-define-key 'normal neotree-mode-map (kbd "m") 'neotree-rename-node)
+        (evil-define-key 'normal neotree-mode-map (kbd "e") 'neotree-rename-node)
         (evil-define-key 'normal neotree-mode-map (kbd "r") 'neotree-rename-node)
         (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
         (evil-define-key 'normal neotree-mode-map (kbd "v") 'neotree-enter-vertical-split)
         (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
-        (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node))
+        (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node)
         (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
+        (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'neotree-enter))
       )
 
     (custom-set-faces
@@ -2057,6 +2077,11 @@
 
     (global-set-key (kbd "C-c h") 'hs-hide-block)
     (global-set-key (kbd "C-c s") 'hs-show-block)
+    (global-set-key (kbd "C-c 3") 'z/eval-region)
+    (defun z/eval-region(beg end)
+      (interactive "r")
+      (eval-region beg end)
+      (message "Eval region !!!"))
     #+END_SRC
 
     #+RESULTS:
