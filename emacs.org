@@ -359,11 +359,33 @@
         "C-w s" 'z/split-window-below "tab" 'evil-avy-goto-word-or-subword-1
         )
 
+       (defun z/cut-text-region(beg end)
+        (interactive "r")
+        (evil-yank beg end)
+        (evil-delete-char beg end))
+
+       (general-define-key
+        :states '(normal visual)
+        "X" 'z/cut-text-region
+        )
+
        (general-define-key
         :states '(normal visual emacs insert)
         "M-d" 'evil-delete-backward-word
         "M-DEL" 'evil-delete-backward-word
         )
+
+       (evil-define-motion evil-next-close-bracket (count)
+         "Go to [count] next unmatched ']'."
+         :type exclusive
+         (forward-char)
+         (evil-up-paren ?\[ ?\] (or count 1))
+         (backward-char))
+
+       (evil-define-motion evil-previous-open-bracket (count)
+         "Go to [count] previous unmatched '['."
+         :type exclusive
+         (evil-up-paren ?\[ ?\] (- (or count 1))))
 
        (general-define-key
         :states '(normal visual emacs)
@@ -372,8 +394,10 @@
 
         "g(" 'evil-previous-open-paren
         "g{" 'evil-previous-open-brace
+        "g[" 'evil-previous-open-bracket
         "g)" 'evil-next-close-paren
         "g}" 'evil-next-close-brace
+        "g]" 'evil-next-close-bracket
 
         ;; map to be like tmux
         "C-a h" 'evil-window-left
