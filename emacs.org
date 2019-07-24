@@ -841,6 +841,39 @@
                       "%b")))
            )
 
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; winum-mode setup
+     ;; https://github.com/deb0ch/emacs-winum
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     (general-define-key
+      :states '(normal visual insert emacs)
+      "s-1" 'winum-select-window-1
+      "s-2" 'winum-select-window-2
+      "s-3" 'winum-select-window-3
+      "s-4" 'winum-select-window-4
+      "s-5" 'winum-select-window-5
+      "s-6" 'winum-select-window-6
+      "s-7" 'winum-select-window-7
+      "s-8" 'winum-select-window-8
+      "s-9" 'winum-select-window-9
+      )
+    (require 'winum)
+    (winum-mode)
+    (defun winum-assign-0-to-neotree ()
+      (when (string-match-p (buffer-name) ".*\\*NeoTree\\*.*") 10))
+    (add-to-list 'winum-assign-functions #'winum-assign-0-to-neotree)
+    (setq window-numbering-scope            'global
+          winum-reverse-frame-list          nil
+          winum-auto-assign-0-to-minibuffer t
+          winum-assign-func                 'my-winum-assign-func
+          winum-auto-setup-mode-line        nil
+          winum-format                      " %s "
+          winum-mode-line-position          1
+          winum-ignored-buffers             '(" *which-key*"))
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; end of winum-mode setup
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
     ; Text-mode is default mode: https://groups.google.com/forum/#!topic/gnu.emacs.help/AUpnVjsSpfc
     (setq-default major-mode 'text-mode)
 
