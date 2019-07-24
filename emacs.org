@@ -352,8 +352,11 @@
          (which-key-add-key-based-replacements ",t" "ruby/test")
          )
        (add-hook 'ruby-mode-hook 'w/remap-ruby-mode-leader-key)
+
        (general-define-key
         :states '(normal visual emacs)
+        "C-w r" 'w/rotate-windows-forward
+        "C-w R" 'w/rotate-windows-backward
         "C-w m" 'toggle-maximize-buffer
         "C-w v" 'z/split-window-right
         "C-w s" 'z/split-window-below "tab" 'evil-avy-goto-word-or-subword-1
@@ -410,6 +413,8 @@
         "M-l" 'evil-window-right
         "C-a x" 'evil-quit
         "C-a m" 'toggle-maximize-buffer
+        "C-a r" 'w/rotate-windows-forward
+        "C-a R" 'w/rotate-windows-backward
         "C-a c" 'w/make-frame
         "C-a +" 'w/make-current-frame
         "C-a -" 'z/split-window-below
@@ -441,6 +446,7 @@
         "s-b s-b" 'toggle-maximize-buffer
         "s-/" 'evilnc-comment-or-uncomment-lines
         "s-l" 'evil-avy-goto-line
+        "s-t" 'lsp-ui-imenu
 
         ;; navigation
         "M-[" 'evil-jump-backward
@@ -581,7 +587,6 @@
         Dedicated (locked) windows are left untouched."
        (interactive "p")
        (w/rotate-windows-forward (* -1 count)))
-
 
      ;; from https://gist.github.com/3402786
      (defun toggle-maximize-buffer ()
@@ -835,6 +840,10 @@
                         (abbreviate-file-name (buffer-file-name))
                       "%b")))
            )
+
+    ; Text-mode is default mode: https://groups.google.com/forum/#!topic/gnu.emacs.help/AUpnVjsSpfc
+    (setq-default major-mode 'text-mode)
+
      ;; (setq frame-title-format
      ;;       '(""
      ;;         "%b"
@@ -1005,7 +1014,10 @@
      (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
      (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
      (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+
+     ;; Moving cursor down at bottom scrolls only a single line, not half page
      (setq scroll-step 1) ;; keyboard scroll one line at a time
+     (setq scroll-conservatively 5)
      ;; Indent
      (setq-default indent-tabs-mode nil)
      (setq-default tab-width 2)
