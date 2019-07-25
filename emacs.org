@@ -184,11 +184,14 @@
      (setq confirm-kill-emacs #'y-or-n-p) ; or yes-or-no-p is you're really paranoid
      (defun z/customize-syntax-table ()
        (interactive)
+       (modify-syntax-entry ?- "w" (standard-syntax-table))
+       (modify-syntax-entry ?- "w" (syntax-table))
        (modify-syntax-entry ?_ "w" (standard-syntax-table))
        (modify-syntax-entry ?_ "w" (syntax-table)))
 
      (add-hook 'after-change-major-mode-hook 'z/customize-syntax-table)
      (add-hook 'change-major-mode-hook 'z/customize-syntax-table)
+     (add-hook 'after-change-major-mode-hook (lambda () (modify-syntax-entry ?- "w")))
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Evil
@@ -476,8 +479,8 @@
         "s-b s-j" 'git-gutter:next-hunk
         "s-b s-k" 'git-gutter:previous-hunk
 
-        "s-1" 'customize ;;before, it is "s-,"
-        "s-0" '(lambda () (interactive) (neotree-project-dir-toggle) (neotree-quick-look))
+        ;;"s-1" 'customize ;;before, it is "s-,"
+        "s-0" '(lambda () (interactive) (neotree-hide) (neotree-project-dir-toggle) (neotree-quick-look))
         "s-, s-," 'z/open-emacs-config-file
         "s-. s-." 'z/open-emacs-config-file
 
@@ -565,7 +568,6 @@
 
 
      ;;Rotate windows
-
      (defun w/rotate-windows-forward (count)
        "Rotate each window forwards.
         A negative prefix argument rotates each window backwards.
@@ -841,6 +843,15 @@
                       "%b")))
            )
 
+    ;; winner mode setup
+    (when (fboundp 'winner-mode)
+      (winner-mode 1))
+    (general-define-key
+      :states '(normal visual insert emacs)
+      "s-T"   'winner-undo
+      "C-c j" 'winner-undo
+      "C-c k" 'winner-redo)
+
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; winum-mode setup
      ;; https://github.com/deb0ch/emacs-winum
@@ -855,8 +866,7 @@
       "s-6" 'winum-select-window-6
       "s-7" 'winum-select-window-7
       "s-8" 'winum-select-window-8
-      "s-9" 'winum-select-window-9
-      )
+      "s-9" 'winum-select-window-9)
     (require 'winum)
     (winum-mode)
     (defun winum-assign-0-to-neotree ()
@@ -873,6 +883,32 @@
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; end of winum-mode setup
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    (defun toggle-window-split ()
+      (interactive)
+      (if (= (count-windows) 2)
+          (let* ((this-win-buffer (window-buffer))
+          (next-win-buffer (window-buffer (next-window)))
+          (this-win-edges (window-edges (selected-window)))
+          (next-win-edges (window-edges (next-window)))
+          (this-win-2nd (not (and (<= (car this-win-edges)
+              (car next-win-edges))
+                (<= (cadr this-win-edges)
+              (cadr next-win-edges)))))
+          (splitter
+            (if (= (car this-win-edges)
+            (car (window-edges (next-window))))
+          'split-window-horizontally
+        'split-window-vertically)))
+      (delete-other-windows)
+      (let ((first-win (selected-window)))
+        (funcall splitter)
+        (if this-win-2nd (other-window 1))
+        (set-window-buffer (selected-window) this-win-buffer)
+        (set-window-buffer (next-window) next-win-buffer)
+        (select-window first-win)
+        (if this-win-2nd (other-window 1))))))
+    (define-key ctl-x-4-map "t" 'toggle-window-split)
 
     ; Text-mode is default mode: https://groups.google.com/forum/#!topic/gnu.emacs.help/AUpnVjsSpfc
     (setq-default major-mode 'text-mode)
@@ -1147,25 +1183,21 @@
                    (define-key helm-map (kbd "C-d") 'helm-next-page)
                    (define-key helm-map (kbd "C-j") 'helm-next-line)
                    (define-key helm-map (kbd "C-k") 'helm-previous-line)))
-       (helm-add-action-to-source
-        "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-files-list)
-       (helm-add-action-to-source
-        "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-buffers-list)
-       (helm-add-action-to-source
-        "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-projects)
-       (helm-add-action-to-source
-        "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-files-list)
-       (helm-add-action-to-source
-        "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-buffers-list)
-       (helm-add-action-to-source
-        "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-projects)
-       )
+       (helm-add-action-to-source "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-files-list)
+       (helm-add-action-to-source "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-buffers-list)
+       (helm-add-action-to-source "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-projects)
+       (helm-add-action-to-source "Split Horizontal" 'helm-ext-ff-helm-ag-action-horizontal-split helm-source-do-ag)
+       (helm-add-action-to-source "Split Vertical" 'helm-ext-ff-helm-ag-action-vertical-split helm-source-do-ag)
+       (helm-add-action-to-source "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-files-list)
+       (helm-add-action-to-source "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-buffers-list)
+       (helm-add-action-to-source "Split Vertical" 'helm-ext-ff-buffer-action-vertical-split helm-source-projectile-projects))
 
      (use-package helm-ext
        :defer t
        :config
        (helm-ext-ff-define-split helm-bookmark horizontal bookmark-jump balance)
        (helm-ext-ff-define-split helm-bookmark vertical bookmark-jump balance)
+       (helm-ext-ff-define-split helm-ag horizontal (lambda (candidate) (helm-ag--find-file-action candidate 'find-file (helm-ag--search-this-file-p))))
 
        (helm-add-action-to-source
         "Split Horizontal" 'helm-ext-ff-helm-bookmark-action-horizontal-split helm-source-bookmarks)
@@ -1175,7 +1207,7 @@
        (helm-add-action-to-source
         "Split Horizontal" 'helm-ext-ff-helm-bookmark-action-horizontal-split my--helm-source-bookmark-project)
        (helm-add-action-to-source
-        "Split Vertical" 'helm-ext-ff-helm-bookmark-action-vertical-split my--helm-source-bookmark-project) )
+        "Split Vertical" 'helm-ext-ff-helm-bookmark-action-vertical-split my--helm-source-bookmark-project))
 
 
      (setq helm-mini-default-sources '(helm-source-buffers-list
