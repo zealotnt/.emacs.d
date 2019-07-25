@@ -450,6 +450,8 @@
         "s-/" 'evilnc-comment-or-uncomment-lines
         "s-l" 'evil-avy-goto-line
         "s-t" 'lsp-ui-imenu
+        "s-=" 'balance-windows
+        "s-m" 'toggle-maximize-buffer
 
         ;; navigation
         "M-[" 'evil-jump-backward
