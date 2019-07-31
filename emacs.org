@@ -188,10 +188,23 @@
        (modify-syntax-entry ?- "w" (syntax-table))
        (modify-syntax-entry ?_ "w" (standard-syntax-table))
        (modify-syntax-entry ?_ "w" (syntax-table)))
+     (defun z/customize-elisp-syntax-table ()
+       (interactive)
+       (modify-syntax-entry ?- "w")
+       (modify-syntax-entry ?/ "w"))
+     (defun z/customize-ruby-mode-table()
+       (interactive)
+       (modify-syntax-entry ?? "w")
+       (modify-syntax-entry ?@ "w")
+       (modify-syntax-entry ?! "w"))
 
      (add-hook 'after-change-major-mode-hook 'z/customize-syntax-table)
      (add-hook 'change-major-mode-hook 'z/customize-syntax-table)
-     (add-hook 'after-change-major-mode-hook (lambda () (modify-syntax-entry ?- "w")))
+     (add-hook 'emacs-lisp-mode-hook 'z/customize-elisp-syntax-table)
+     (add-hook 'ruby-mode-hook 'z/customize-ruby-mode-table)
+
+     ;; https://github.com/syl20bnr/spacemacs/issues/9740
+     (with-eval-after-load 'evil (defalias #'forward-evil-word #'forward-evil-symbol))
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Evil
