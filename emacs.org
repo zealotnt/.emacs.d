@@ -483,6 +483,8 @@
         "s-k s-f s-l" 'w/copy-relative-file-path-with-line
         "s-k s-f o" 'xah-open-in-chrome
         "s-k s-f s-o" 'xah-open-in-chrome
+        "s-k s-f y" 'yaml-path-at-point
+        "s-k s-f s-y" 'yaml-copy-path-at-point
         "s-k s-[" 'aj-toggle-fold
 
         "s-k s-w" 'toggle-truncate-lines

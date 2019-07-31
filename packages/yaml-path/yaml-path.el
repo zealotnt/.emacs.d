@@ -10,6 +10,12 @@
 (defun yaml-path-at-point()
   (interactive)
   (let* ((path (yaml-path-get-path-at-point)))
+    (message "%s" (yaml-path-get-path-at-point)))
+  )
+
+(defun yaml-copy-path-at-point()
+  (interactive)
+  (let* ((path (yaml-path-get-path-at-point)))
     (kill-new path)
     (message "%s" (yaml-path-get-path-at-point)))
   )
