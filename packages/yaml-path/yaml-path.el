@@ -23,13 +23,14 @@
 (defun yaml-path-get-path-at-point(&optional pline pcol)
   (let ((result "???")
         (line (if pline pline (number-to-string (line-number-at-pos))))
+        (sep "/")
         (col  (if pcol  pcol  (number-to-string (current-column))))
         (outbuf (get-buffer-create "*yaml-path-result*")))
 
     (when (= 0 (call-process-region
                 (point-min) (point-max) yaml-path-bin
                 nil outbuf nil
-                "--line" line "--col" col))
+                "--sep" sep "--line" line "--col" col))
       (with-current-buffer outbuf
         (setq result (replace-regexp-in-string "\n+" "" (buffer-string)))
         ))
