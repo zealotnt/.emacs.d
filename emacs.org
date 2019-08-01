@@ -462,7 +462,8 @@
         "s-b s-b" 'toggle-maximize-buffer
         "s-/" 'evilnc-comment-or-uncomment-lines
         "s-l" 'evil-avy-goto-line
-        "s-t" 'lsp-ui-imenu
+        ;lsp-ui-imenu
+        "s-t" 'helm-imenu
         "s-=" 'balance-windows
         "s-m" 'toggle-maximize-buffer
 
@@ -1115,6 +1116,8 @@
      (global-visual-line-mode t)
      (setq-default standard-indent 2)
      (setq-default js-indent-level 2)
+     (setq json-reformat:indent-width 2)
+     (setq x-path-walker-verbose t)
      (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
      ;;Disable lock file
      ;;Emacs automatically creates a temporary symlink in the same directory as the file being edited
@@ -1795,6 +1798,8 @@
 * My ui configs
 ** space line config
    #+BEGIN_SRC emacs-lisp
+     (autoload 'tags-tree "tags-tree" "TAGS tree" t)
+     (autoload 'imenu-tree "imenu-tree" "Imenu tree" t)
      (setq anzu-cons-mode-line-p nil)
      (setq imenu-auto-rescan t)
      (yaml-imenu-enable)
