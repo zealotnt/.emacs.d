@@ -1383,6 +1383,7 @@
     )
 
     (setq neo-window-fixed-size nil)
+    (setq-default neo-show-hidden-files t)
 
     ;;(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
@@ -1795,6 +1796,7 @@
 ** space line config
    #+BEGIN_SRC emacs-lisp
      (setq anzu-cons-mode-line-p nil)
+     (setq imenu-auto-rescan t)
      (yaml-imenu-enable)
      (global-anzu-mode +1)
      (which-function-mode +1)
