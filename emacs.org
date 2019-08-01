@@ -1794,6 +1794,7 @@
 ** space line config
    #+BEGIN_SRC emacs-lisp
      (setq anzu-cons-mode-line-p nil)
+     (yaml-imenu-enable)
      (global-anzu-mode +1)
      (yaml-path-which-func)
      (which-function-mode +1)
@@ -2001,6 +2002,11 @@
        (load "my-org-mode-dependencies-config")
        )
      (add-hook 'org-mode-hook 'loading-org-mode-dependencies)
+
+     ;; https://orgmode.org/manual/Cooperation.html
+     (setq org-imenu-depth +5)
+     (add-hook 'org-mode-hook
+          (lambda () (imenu-add-to-menubar "Imenu")))
    #+END_SRC
 ** ruby mode config
 *** rbenv
