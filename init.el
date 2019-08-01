@@ -104,7 +104,6 @@ There are two things you can do about this warning:
 (setq w-dotfiles-folder-path (w/dotfiles-folder-path))
 (setq w-dotfiles-pakages-folder-path (format "%s/packages" w-dotfiles-folder-path))
 (setq evil-evilified-state-path (format "%s/packages/evil-evilified-state.el" w-dotfiles-folder-path))
-(load (format "%s/packages/yaml-path/yaml-path.el" w-dotfiles-folder-path))
 
 ;; This is only needed once, near the top of the file
 (eval-when-compile

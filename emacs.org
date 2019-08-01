@@ -483,9 +483,10 @@
         "s-k s-f s-l" 'w/copy-relative-file-path-with-line
         "s-k s-f o" 'xah-open-in-chrome
         "s-k s-f s-o" 'xah-open-in-chrome
-        "s-k s-f y" 'yaml-path-at-point
-        "s-k s-f s-y" 'yaml-copy-path-at-point
+        "s-k s-f f" 'z/which-function
+        "s-k s-f s-f" 'z/which-function
         "s-k s-[" 'aj-toggle-fold
+        "s-k s-e" 'z/eval-region
 
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
@@ -1317,7 +1318,7 @@
        (interactive)
        (if-let (file-path (w/projectile-file-path))
            (progn
-             (message file-path)
+             (message "Copied '%s' to clipboard" file-path)
              (kill-new file-path))
          (message "WARNING: Current buffer is not visiting a file!")))
 
@@ -1335,7 +1336,7 @@
        (interactive)
        (if-let (file-path (w/projectile-file-path-with-line))
            (progn
-             (message file-path)
+             (message "Copied '%s' to clipboard" file-path)
              (kill-new file-path))
          (message "WARNING: Current buffer is not visiting a file!")))
 
@@ -1796,7 +1797,6 @@
      (setq anzu-cons-mode-line-p nil)
      (yaml-imenu-enable)
      (global-anzu-mode +1)
-     (yaml-path-which-func)
      (which-function-mode +1)
      (defun w/spaceline-setup ()
        (use-package spaceline-config
@@ -1849,7 +1849,73 @@
        (spaceline-toggle-minor-modes-off)
        )
 
-     (add-hook 'after-init-hook 'w/spaceline-setup)
+     (defun z/which-function ()
+       "Return current function name based on point.
+         Uses `which-func-functions', `imenu--index-alist'
+         or `add-log-current-defun'.
+         If no function name is found, return nil."
+       (interactive)
+       (let ((name
+              ;; Try the `which-func-functions' functions first.
+              (run-hook-with-args-until-success 'which-func-functions)))
+
+         ;; If Imenu is loaded, try to make an index alist with it.
+         (when (and (null name)
+                    (boundp 'imenu--index-alist) (null imenu--index-alist)
+                    (null which-function-imenu-failed))
+           (ignore-errors (imenu--make-index-alist t))
+           (unless imenu--index-alist
+             (set (make-local-variable 'which-function-imenu-failed) t)))
+         ;; If we have an index alist, use it.
+         (when (and (null name)
+                    (boundp 'imenu--index-alist) imenu--index-alist)
+           (let ((alist imenu--index-alist)
+                 (minoffset (point-max))
+                 offset pair mark imstack namestack)
+             ;; Elements of alist are either ("name" . marker), or
+             ;; ("submenu" ("name" . marker) ... ). The list can be
+             ;; arbitrarily nested.
+             (while (or alist imstack)
+               (if (null alist)
+                   (setq alist     (car imstack)
+                         namestack (cdr namestack)
+                         imstack   (cdr imstack))
+
+                 (setq pair (car-safe alist)
+                       alist (cdr-safe alist))
+
+                 (cond
+                  ((atom pair))              ; Skip anything not a cons.
+
+                  ((imenu--subalist-p pair)
+                   (setq imstack   (cons alist imstack)
+                         namestack (cons (car pair) namestack)
+                         alist     (cdr pair)))
+
+                  ((or (number-or-marker-p (setq mark (cdr pair)))
+                       (and (overlayp mark)
+                            (setq mark (overlay-start mark))))
+                   (when (and (>= (setq offset (- (point) mark)) 0)
+                              (< offset minoffset)) ; Find the closest item.
+                     (setq minoffset offset
+                           name (if (null which-func-imenu-joiner-function)
+                                    (car pair)
+                                  (funcall
+                                   which-func-imenu-joiner-function
+                                   (reverse (cons (car pair) namestack))))))))))))
+
+         ;; Try using add-log support.
+         (when (null name)
+           (setq name (add-log-current-defun)))
+         ;; Filter the name if requested.
+         (when name
+           (if which-func-cleanup-function
+               (funcall which-func-cleanup-function name)
+             name))
+         (message "Copied '%s' to clipboard" name)
+         (kill-new name)))
+
+       (add-hook 'after-init-hook 'w/spaceline-setup)
    #+END_SRC
 
 ** indent guide config
@@ -2253,7 +2319,6 @@
 
     (global-set-key (kbd "C-c h") 'hs-hide-block)
     (global-set-key (kbd "C-c s") 'hs-show-block)
-    (global-set-key (kbd "C-c 3") 'z/eval-region)
     (defun z/eval-region(beg end)
       (interactive "r")
       (eval-region beg end)
