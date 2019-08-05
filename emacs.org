@@ -459,7 +459,6 @@
         "s-N" 'w/make-frame
         "s-R" 'delete-trailing-whitespace
         "s-O" 'select-frame-number
-        "s-b s-b" 'toggle-maximize-buffer
         "s-/" 'evilnc-comment-or-uncomment-lines
         "s-l" 'evil-avy-goto-line
         ;lsp-ui-imenu
@@ -495,8 +494,7 @@
 
         "s-k s-j" 'git-gutter:next-hunk
         "s-k s-k" 'git-gutter:previous-hunk
-        "s-b s-j" 'git-gutter:next-hunk
-        "s-b s-k" 'git-gutter:previous-hunk
+        "s-b" 'helm-resume
 
         ;;"s-1" 'customize ;;before, it is "s-,"
         "s-0" '(lambda () (interactive) (neotree-hide) (neotree-project-dir-toggle) (neotree-quick-look))
@@ -1239,6 +1237,21 @@
      (setq helm-mini-default-sources '(helm-source-buffers-list
                                        helm-source-recentf
                                        helm-source-buffer-not-found))
+     (setq helm-split-window-in-side-p t ; open helm buffer inside current window, not occupy whole other window
+           ;helm-display-function #'helm-display-buffer-in-own-frame ;https://github.com/emacs-helm/helm/wiki/frame
+           ;helm-show-completion-display-function #'helm-display-buffer-in-own-frame
+           ;helm-display-buffer-width 90
+           ;helm-display-buffer-height 30
+           helm-actions-inherit-frame-settings t
+           helm-move-to-line-cycle-in-source t ; move to end or beginning of source when reaching top or bottom of source.
+           helm-ff-file-name-history-use-recentf t ;
+           helm-autoresize-max-height 50
+           helm-autoresize-min-height 50
+           helm-candidate-number-limit 200
+           helm-buffers-fuzzy-matching t
+           helm-imenu-fuzzy-match t)
+     (helm-autoresize-mode 1)
+
      (defun w/persp-helm-mini ()
        "As `helm-mini' but restricts visible buffers by perspective."
        (interactive)
@@ -1800,6 +1813,7 @@
    #+BEGIN_SRC emacs-lisp
      (autoload 'tags-tree "tags-tree" "TAGS tree" t)
      (autoload 'imenu-tree "imenu-tree" "Imenu tree" t)
+     (setq imenu-max-item-length +500)
      (setq anzu-cons-mode-line-p nil)
      (setq imenu-auto-rescan t)
      (yaml-imenu-enable)
@@ -2337,6 +2351,20 @@
 
 ** js config
    #+BEGIN_SRC emacs-lisp
+      (require 'web-mode)
+      (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+      (setq web-mode-engines-alist
+            '(("php"    . "\\.phtml\\'")
+              ("blade"  . "\\.blade\\.")
+              ("go"     . "\\.tpl\\'")))
+
      (use-package js2-mode
        :ensure t
        :defer t

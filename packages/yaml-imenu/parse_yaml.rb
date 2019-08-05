@@ -2,13 +2,30 @@ require 'yaml'
 require 'json'
 
 def main
-  parsed =
-    begin
-      parse(YAML.parse(ARGF).children.first) || {}
-    rescue => e
-      STDERR.puts e.message
-      {}
+  parsed_elems = []
+  YAML.parse_stream(ARGF) do |document|
+    parsed =
+      begin
+        parse(document.children.first) || {}
+      rescue => e
+        STDERR.puts e.message
+        {}
+      end
+    parsed_elems << parsed
+  end
+
+  parsed = {}
+  if parsed_elems.length ==  1
+    parsed = parsed_elems.first
+    parsed = Hash[parsed.map {|k, v| ["#{k}:#{v}", v]}]
+  else
+    index = 1
+    parsed_elems.each do |elem|
+      value = Hash[elem.map {|k, v| ["#{index}_#{k}", v]}]
+      parsed.merge!(value)
+      index += 1
     end
+  end
 
   puts JSON.pretty_generate(parsed)
 end
@@ -16,7 +33,7 @@ end
 def parse(node, current_path = nil)
   case node
   when Psych::Nodes::Scalar, Psych::Nodes::Alias
-    nil
+    { current_path => node.start_line }
   when Psych::Nodes::Mapping
     initial =
       if current_path
