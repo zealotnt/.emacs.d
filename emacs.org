@@ -486,7 +486,10 @@
         "s-k s-f f" 'z/which-function
         "s-k s-f s-f" 'z/which-function
         "s-k s-[" 'aj-toggle-fold
-        "s-k s-e" 'z/eval-region
+        "s-k s-e h" 'z/eval-last-sexp
+        "s-k s-e s-h" 'z/eval-last-sexp
+        "s-k s-e e" 'z/eval-region
+        "s-k s-e s-e" 'z/eval-region
 
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
@@ -2344,6 +2347,10 @@
       (interactive "r")
       (eval-region beg end)
       (message "Eval region !!!"))
+    (defun z/eval-last-sexp(eval-last-sexp-arg-internal)
+      (interactive "P")
+      (message "Eval last sexp !!!")
+      (eval-last-sexp eval-last-sexp-arg-internal))
     #+END_SRC
 
     #+RESULTS:

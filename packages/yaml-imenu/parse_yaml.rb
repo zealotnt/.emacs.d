@@ -1,5 +1,14 @@
 require 'yaml'
 require 'json'
+PRESERVE_KEYS = ['kind', 'metadata.name'].freeze
+
+def num_digits(num)
+  Math.log10(num).to_i + 1
+end
+
+def line_num_str(line_num, max_num)
+  sprintf "%#{max_num}d", line_num
+end
 
 def main
   parsed_elems = []
@@ -17,11 +26,12 @@ def main
   parsed = {}
   if parsed_elems.length ==  1
     parsed = parsed_elems.first
-    parsed = Hash[parsed.map {|k, v| ["#{k}:#{v}", v]}]
+    parsed = Hash[parsed.map {|k, v| ["#{line_num_str(v, 1)} #{k}", v]}]
   else
     index = 1
+    max_num = num_digits(parsed_elems.last.values.last)
     parsed_elems.each do |elem|
-      value = Hash[elem.map {|k, v| ["#{index}_#{k}", v]}]
+      value = Hash[elem.map {|k, v| ["#{line_num_str(v, max_num)} #{index}_#{k}", v]}]
       parsed.merge!(value)
       index += 1
     end
@@ -34,6 +44,8 @@ def parse(node, current_path = nil)
   case node
   when Psych::Nodes::Scalar, Psych::Nodes::Alias
     { current_path => node.start_line }
+    current_path = "#{current_path}:'#{node.value}'" if PRESERVE_KEYS.include?(current_path)
+    { current_path => node.start_line + 1 }
   when Psych::Nodes::Mapping
     initial =
       if current_path
