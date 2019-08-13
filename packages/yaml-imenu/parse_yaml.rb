@@ -25,8 +25,9 @@ def main
 
   parsed = {}
   if parsed_elems.length ==  1
+    max_num = num_digits(parsed_elems.last.values.last)
     parsed = parsed_elems.first
-    parsed = Hash[parsed.map {|k, v| ["#{line_num_str(v, 1)} #{k}", v]}]
+    parsed = Hash[parsed.map {|k, v| ["#{line_num_str(v, max_num)} #{k}", v]}]
   else
     index = 1
     max_num = num_digits(parsed_elems.last.values.last)
