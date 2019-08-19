@@ -44,7 +44,6 @@ end
 def parse(node, current_path = nil)
   case node
   when Psych::Nodes::Scalar, Psych::Nodes::Alias
-    { current_path => node.start_line }
     current_path = "#{current_path}:'#{node.value}'" if PRESERVE_KEYS.include?(current_path)
     { current_path => node.start_line + 1 }
   when Psych::Nodes::Mapping

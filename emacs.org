@@ -63,6 +63,11 @@
     (defun create-shell-with-name (name)
       (shell (concat "*" name "*")))
 
+    (defun z/show-message-log ()
+      (interactive)
+      (w/make-current-frame)
+      (switch-to-buffer "*Messages*"))
+
     (defun s/show-buffer-file-path ()
       "Show the full path to the current file in the minibuffer."
       (interactive)
@@ -431,6 +436,7 @@
         "C-a m" 'toggle-maximize-buffer
         "C-a r" 'w/rotate-windows-forward
         "C-a R" 'w/rotate-windows-backward
+        "C-a C-o" 'w/rotate-windows-backward
         "C-a c" 'w/make-frame
         "C-a +" 'w/make-current-frame
         "C-a -" 'z/split-window-below
@@ -461,8 +467,8 @@
         "s-O" 'select-frame-number
         "s-/" 'evilnc-comment-or-uncomment-lines
         "s-l" 'evil-avy-goto-line
-        ;lsp-ui-imenu
-        "s-t" 'helm-imenu
+        "s-t h" 'helm-imenu
+        "s-t l" 'lsp-ui-imenu
         "s-=" 'balance-windows
         "s-m" 'toggle-maximize-buffer
 
@@ -502,7 +508,7 @@
         ;;"s-1" 'customize ;;before, it is "s-,"
         "s-0" '(lambda () (interactive) (neotree-hide) (neotree-project-dir-toggle) (neotree-quick-look))
         "s-, s-," 'z/open-emacs-config-file
-        "s-. s-." 'z/open-emacs-config-file
+        "s-. s-." 'z/show-message-log
 
         ;; 3 key stroke with super
         "<C-s-268632087>" 'delete-other-windows
@@ -1175,6 +1181,11 @@
      ;; Helm
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+     (defun z/helm-switch-other-frame()
+       (interactive)
+       (helm-ff-run-switch-other-frame)
+       (delete-other-windows))
+
      (use-package helm-projectile
        :commands (helm-projectile-configs-load helm-mode helm-projectile-find-file projectile-switch-project)
        :config
@@ -1203,6 +1214,7 @@
                    ;(define-key helm-ag-map (kbd "C-s") 'helm-ext-ff-helm-ag-execute-horizontal-split)
                    ;(define-key helm-ag-map (kbd "C-v") 'helm-ext-ff-helm-ag-execute-vertical-split)
                    (define-key helm-projectile-find-file-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
+                   (define-key helm-map (kbd "<s-return>") 'z/helm-switch-other-frame)
                    (define-key helm-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "C--") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "C-v") 'helm-ext-ff-buffer-execute-vertical-split)
@@ -1210,6 +1222,7 @@
                    (define-key helm-map (kbd "C-d") 'helm-next-page)
                    (define-key helm-map (kbd "C-j") 'helm-next-line)
                    (define-key helm-map (kbd "C-k") 'helm-previous-line)))
+       (helm-add-action-to-source "Helm switch other frame and delete other windows" 'z/helm-switch-other-frame helm-source-projectile-projects)
        (helm-add-action-to-source "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-files-list)
        (helm-add-action-to-source "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-buffers-list)
        (helm-add-action-to-source "Split Horizontal" 'helm-ext-ff-buffer-action-horizontal-split helm-source-projectile-projects)
