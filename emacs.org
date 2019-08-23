@@ -447,6 +447,7 @@
 
         ;; single super key mappings
         ;;"s-p" 'fzf
+        "s-+" 'w/make-current-frame
         "s-p" 'helm-projectile-find-file
         "s-P" 'w/helm-M-x
         "s-w" 'evil-window-delete
@@ -478,6 +479,11 @@
         "<s-return>" 'evil-goto-definition
 
         ;; combination with super+k
+        "s-k s-c" 'smerge-hydra/body
+        "s-k s-g g" 'magit-status ;status here
+        "s-k s-g s-g" 'magit-status ;status here
+        "s-k s-g n" 'z/magit-status ;status in new frame
+        "s-k s-g s-n" 'z/magit-status ;status in new frame
         "s-k s-s"   'neotree-project-dir-toggle
         "s-k s-f n" 's/show-buffer-file-name
         "s-k s-f s-n" 's/show-buffer-file-name
@@ -569,6 +575,14 @@
        (require 'evil)
        (evil-mode t)
        (define-key evil-motion-state-map (kbd "C-u") 'evil-scroll-up)
+
+       ; hover through visual line
+       ; https://github.com/syl20bnr/spacemacs/issues/9557
+       ; or https://github.com/noctuid/evil-guide#global-keybindings-and-evil-states
+       (define-key evil-normal-state-map "j" 'evil-next-visual-line)
+       (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
+       (define-key evil-visual-state-map "j" 'evil-next-visual-line)
+       (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
        (with-eval-after-load "dired" ;"dired mapping"
          ;; vimify some keybinds.
          (define-key dired-mode-map (kbd "j") #'dired-next-line)
@@ -951,7 +965,6 @@
      ;;                )
      ;;            (unless (string= "-" project-name)
      ;;              (format " in [%s] - persp [%s]" project-name persp-name))))))
-     (setq projectile-switch-project-action 'neotree-projectile-action)
 
      (defface frame-number-face
        '((t (:background "black" :foreground "red" )))
@@ -1289,6 +1302,12 @@
          (display-buffer buffer '(display-buffer-pop-up-frame . nil)))
          (toggle-frame-maximized)
          (delete-other-windows))
+
+     (defun z/magit-status ()
+       "Create new frame with magit"
+       (interactive)
+       (w/make-current-frame)
+       (magit-status))
 
      (defun w/projectile-switch-project ()
        (interactive)
@@ -2219,6 +2238,23 @@
         :ensure t
         :defer t
         )
+      (defhydra smerge-hydra (:hint nil)
+        ("n" smerge-next "next hunk" :column "Movement")
+        ("N" smerge-prev "prev hunk")
+        ("k" evil-previous-line "move up")
+        ("j" evil-next-line "move down")
+        ("C-u" evil-scroll-up "scroll up")
+        ("C-d" evil-scroll-down "scroll down")
+        ("b" smerge-keep-base "keep base" :column "Merge action")
+        ("m" smerge-keep-mine "keep mine")
+        ("a" smerge-keep-all "keep all")
+        ("o" smerge-keep-other "keep other")
+        ("c" smerge-keep-current "keep current")
+        ("C" smerge-combine-with-next "combine with next")
+        ("u" undo-tree-undo "undo" :column "Other")
+        ("r" smerge-refine "refine")
+        ("q" nil "quit"))
+
 
       (use-package dap-mode
         :ensure t
