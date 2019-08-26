@@ -447,6 +447,7 @@
 
         ;; single super key mappings
         ;;"s-p" 'fzf
+        "s-Q" 'save-buffers-kill-emacs
         "s-+" 'w/make-current-frame
         "s-p" 'helm-projectile-find-file
         "s-P" 'w/helm-M-x
@@ -826,6 +827,9 @@
    - Frame configs to support switching workspace
    #+BEGIN_SRC emacs-lisp
      ;; Projectile project name as frame title
+     ; https://emacs.stackexchange.com/a/3017
+     (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+     (add-to-list 'default-frame-alist '(fullscreen . maximized))
      (setq frame-title-format
            '((:eval (if (buffer-file-name)
                         (abbreviate-file-name (buffer-file-name))
@@ -1051,11 +1055,8 @@
          (menu-bar-mode -1)
          ;;Disable scrollbar in UI mode
          (tool-bar-mode -1)
-         (scroll-bar-mode -1))
-       )
-     (if (display-graphic-p)
-         (w/setup-font-and-window)
-       )
+         (scroll-bar-mode -1)))
+     (if (display-graphic-p) (w/setup-font-and-window))
      (defun contextual-menubar (&optional frame)
        "Display the menubar in FRAME (default: selected frame) if on a
               graphical display, but hide it if in terminal."
@@ -1277,11 +1278,6 @@
      (defun w/cleanup-after-switch-project ()
        ;;(delete-other-windows)
        (neotree-hide)
-       )
-     ;;TODO
-     (defun w/open-emacs-dotfiles-project
-         (interactive)
-       (message "TODO open emacs dotfiles project")
        )
      (add-hook 'projectile-after-switch-project-hook 'w/cleanup-after-switch-project)
 
