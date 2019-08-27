@@ -160,3 +160,4 @@ There are two things you can do about this warning:
  '(mode-line ((t (:background "black" :foreground "#4499FF"))))
  '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata for Powerline"))))
  '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata for Powerline")))))
+(server-start)
