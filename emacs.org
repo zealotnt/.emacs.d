@@ -1053,7 +1053,7 @@
      (defun w/setup-font-and-window ()
        (progn
          ;;Font size 13pt
-         (set-face-attribute 'default nil :font "Inconsolata for Powerline-14" )
+         ;(set-face-attribute 'default nil :font "Inconsolata for Powerline" )
          (menu-bar-mode -1)
          ;;Disable scrollbar in UI mode
          (tool-bar-mode -1)
