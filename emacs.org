@@ -52,11 +52,12 @@
       (interactive);; "Prompt\n shell name:")
       (let ((shell-name (read-string "shell name: " nil)))
         (shell (concat "*" shell-name "*"))))
+
     (defun z/open-emacs-config-file ()
       "Open the init file."
       (interactive)
       (progn
-        (w/make-current-frame)
+        (select-frame (new-frame))
         (find-file "~/workspace_mine/w_emacs_dotfiles/emacs.org")
         ))
 
@@ -65,8 +66,9 @@
 
     (defun z/show-message-log ()
       (interactive)
-      (w/make-current-frame)
-      (switch-to-buffer "*Messages*"))
+      (progn
+        (select-frame (new-frame))
+        (switch-to-buffer "*Messages*")))
 
     (defun s/show-buffer-file-path ()
       "Show the full path to the current file in the minibuffer."
@@ -296,7 +298,7 @@
         "gb" 'magit-blame
         "gB" 'vc-annotate
         "gm" 'magit-dispatch
-        "gt" 'git-timemachine
+        "gt" 'hydra-git-timemachine-on
         "gs" 'magit-status
         "gy" 'w/git-last-commit-message
         "gf" '(:ignore t :which-key "file")
@@ -438,7 +440,7 @@
         "C-a R" 'w/rotate-windows-backward
         "C-a C-o" 'w/rotate-windows-backward
         "C-a c" 'w/make-frame
-        "C-a +" 'w/make-current-frame
+        "C-a +" 'new-frame
         "C-a -" 'z/split-window-below
         "C-a s" 'z/split-window-below
         "C-a _" 'z/split-window-right
@@ -448,7 +450,7 @@
         ;; single super key mappings
         ;;"s-p" 'fzf
         "s-Q" 'save-buffers-kill-emacs
-        "s-+" 'w/make-current-frame
+        "s-+" 'new-frame
         "s-p" 'helm-projectile-find-file
         "s-P" 'w/helm-M-x
         "s-w" 'evil-window-delete
@@ -480,7 +482,7 @@
         "<s-return>" 'evil-goto-definition
 
         ;; combination with super+k
-        "s-k s-c" 'smerge-hydra/body
+        "s-k s-c" 'hydra-smerge/body
         "s-k s-g g" 'magit-status ;status here
         "s-k s-g s-g" 'magit-status ;status here
         "s-k s-g n" 'z/magit-status ;status in new frame
@@ -1237,12 +1239,6 @@
        (with-persp-buffer-list ()
                                (helm-mini)))
 
-     (defun w/make-current-frame ()
-       (interactive)
-       (make-frame)
-       (toggle-frame-maximized)
-       (delete-other-windows))
-
      (defun w/make-frame ()
        "Create a new frame with a new empty buffer."
        ;; https://stackoverflow.com/questions/25791605/emacs-how-do-i-create-a-new-empty-buffer-whenever-creating-a-new-frame
@@ -1256,8 +1252,10 @@
      (defun z/magit-status ()
        "Create new frame with magit"
        (interactive)
-       (w/make-current-frame)
-       (magit-status))
+       (progn
+         (select-frame (new-frame))
+         (magit-status)
+         ))
 
      (defun w/projectile-switch-project ()
        (interactive)
@@ -2183,7 +2181,27 @@
         :ensure t
         :defer t
         )
-      (defhydra smerge-hydra (:hint nil)
+
+     (defun hydra-git-timemachine-on ()
+       (interactive)
+       (git-timemachine)
+       (hydra-git-timemachine/body))
+
+      (defhydra hydra-git-timemachine
+       (:color pink :hint nil :exit t)
+       ("n" git-timemachine-show-next-revision "Next Revision" :column "Go to")
+       ("p" git-timemachine-show-previous-revision "Next Revision")
+       ("c" git-timemachine-show-current-revision "Current Revision")
+       ("g" git-timemachine-show-nth-revision "Nth Revision")
+       ("t" git-timemachine-show-revision-fuzzy "Search")
+       ("W" git-timemachine-kill-revision "Copy full revision" :column "Actions")
+       ("w" git-timemachine-kill-abbreviated-revision "Copy abbreviated revision" :column "Actions")
+       ("C" git-timemachine-show-commit "Show commit")
+       ("b" git-timemachine-blame "Blame")
+       ("G" git-timemachine-go-to-revision-id "Revision Id")
+       ("q" git-timemachine-quit "cancel" :color blue :column nil))
+
+      (defhydra hydra-smerge (:hint nil)
         ("n" smerge-next "next hunk" :column "Movement")
         ("N" smerge-prev "prev hunk")
         ("k" evil-previous-line "move up")
