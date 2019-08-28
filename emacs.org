@@ -1082,9 +1082,29 @@
      (setq scroll-step 1) ;; keyboard scroll one line at a time
      (setq scroll-conservatively 5)
      ;; Indent
+     (setq custom-tab-width 2)
      (setq-default indent-tabs-mode nil)
      (setq-default tab-width 2)
      (setq-default evil-shift-width 2)
+
+     ;;;;;;;;;;;; some borrow emacs config ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; https://dougie.io/emacs/indentation/
+     ;; Making electric-indent behave sanely
+     (setq-default electric-indent-inhibit t)
+
+     ;; Make the backspace properly erase the tab instead of
+     ;; removing 1 space at a time.
+     (setq backward-delete-char-untabify-method 'hungry)
+
+     ;; (OPTIONAL) Shift width for evil-mode users
+     ;; For the vim-like motions of ">>" and "<<".
+     (setq-default evil-shift-width custom-tab-width)
+
+     ;; WARNING: This will change your life
+     ;; (OPTIONAL) Visualize tabs as a pipe character - "|"
+     ;; This will also show trailing characters as they are useful to spot.
+     (setq whitespace-style '(face tabs tab-mark trailing))
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      (global-visual-line-mode t)
      (setq-default standard-indent 2)
      (setq-default js-indent-level 2)
@@ -1240,14 +1260,8 @@
                                (helm-mini)))
 
      (defun w/make-frame ()
-       "Create a new frame with a new empty buffer."
-       ;; https://stackoverflow.com/questions/25791605/emacs-how-do-i-create-a-new-empty-buffer-whenever-creating-a-new-frame
        (interactive)
-       (let ((buffer (generate-new-buffer "untitled")))
-         (set-buffer-major-mode buffer)
-         (display-buffer buffer '(display-buffer-pop-up-frame . nil)))
-         (toggle-frame-maximized)
-         (delete-other-windows))
+       (select-frame (new-frame)))
 
      (defun z/magit-status ()
        "Create new frame with magit"
@@ -1366,15 +1380,15 @@
         (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node)
         (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
-        (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'neotree-enter))
+        (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'neotree-enter)
+        (custom-set-faces
+        '(cursor ((t (:background "gold" :foreground "#151718"))))
+        '(mode-line ((t (:background "black" :foreground "#4499FF"))))
+        '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 90 :family "Inconsolata"))))
+        '(neo-file-link-face ((t (:foreground "White" :weight normal :height 90 :family "Inconsolata"))))
+        ))
       )
 
-    (custom-set-faces
-    '(cursor ((t (:background "gold" :foreground "#151718"))))
-    '(mode-line ((t (:background "black" :foreground "#4499FF"))))
-    '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata for Powerline"))))
-    '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata for Powerline"))))
-    )
 
     (setq neo-window-fixed-size nil)
     (setq-default neo-show-hidden-files t)
