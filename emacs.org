@@ -500,7 +500,8 @@
         "<s-return>" 'evil-goto-definition
 
         ;; combination with super+k
-        "s-k s-c" 'hydra-smerge/body
+        "s-k s-g c" 'hydra-smerge/body
+        "s-k s-g s-c" 'hydra-smerge/body
         "s-k s-g g" 'magit-status ;status here
         "s-k s-g s-g" 'magit-status ;status here
         "s-k s-g n" 'z/magit-status ;status in new frame
@@ -1132,6 +1133,10 @@
      (define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
      ;;Disable lock file
      ;;Emacs automatically creates a temporary symlink in the same directory as the file being edited
+     ;; reload TAGS file automatically
+     (setq tags-revert-without-query 1)
+     ;; always follow symlink controlled by Git -- don't ask while writing ~/.zshrc file
+     (setq vc-follow-symlinks t)
      (setq create-lockfiles nil)
      ;; Put autosave files (ie #foo#) and backup files (ie foo~) in ~/.emacs.d/.
      (custom-set-variables
@@ -1434,42 +1439,46 @@
 
 ** Neotree config
    #+BEGIN_SRC emacs-lisp
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Neo tree
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;;(use-package all-the-icons)
-    (use-package neotree
-      :commands (neotree-mode)
-      :config
-      (require 'neotree)
-      (message "Loading neotree configs...")
-      (with-eval-after-load 'neotree
-        (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
-        (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
-        (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
-        (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
-        (evil-define-key 'normal neotree-mode-map (kbd "gg") 'evil-goto-first-line)
-        (evil-define-key 'normal neotree-mode-map (kbd "C-g") 'neotree-refresh)
-        (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
-        (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
-        (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
-        (evil-define-key 'normal neotree-mode-map (kbd "T") 'neotree-hidden-file-toggle)
-        (evil-define-key 'normal neotree-mode-map (kbd "m") 'neotree-rename-node)
-        (evil-define-key 'normal neotree-mode-map (kbd "e") 'neotree-rename-node)
-        (evil-define-key 'normal neotree-mode-map (kbd "r") 'neotree-rename-node)
-        (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
-        (evil-define-key 'normal neotree-mode-map (kbd "v") 'neotree-enter-vertical-split)
-        (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
-        (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node)
-        (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
-        (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'neotree-enter)
-        (custom-set-faces
-        '(cursor ((t (:background "gold" :foreground "#151718"))))
-        '(mode-line ((t (:background "black" :foreground "#4499FF"))))
-        '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 90 :family "Inconsolata"))))
-        '(neo-file-link-face ((t (:foreground "White" :weight normal :height 90 :family "Inconsolata"))))
-        ))
-      )
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; Neo tree
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;;(use-package all-the-icons)
+     (use-package neotree
+       :commands (neotree-mode)
+       :config
+       (require 'neotree)
+       (message "Loading neotree configs...")
+       (with-eval-after-load 'neotree
+         (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
+         (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
+         (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
+         (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
+         (evil-define-key 'normal neotree-mode-map (kbd "gg") 'evil-goto-first-line)
+         (evil-define-key 'normal neotree-mode-map (kbd "C-g") 'neotree-refresh)
+         (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
+         (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
+         (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
+         (evil-define-key 'normal neotree-mode-map (kbd "T") 'neotree-hidden-file-toggle)
+         (evil-define-key 'normal neotree-mode-map (kbd "m") 'neotree-rename-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "e") 'neotree-rename-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "r") 'neotree-rename-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "v") 'neotree-enter-vertical-split)
+         (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
+         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'neotree-enter)
+         )
+       )
+
+     (add-hook 'neotree-mode-hook
+               (lambda ()
+                 (custom-set-faces
+                  '(cursor ((t (:background "gold" :foreground "#151718"))))
+                  '(mode-line ((t (:background "black" :foreground "#4499FF"))))
+                  '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 90 :family "Inconsolata"))))
+                  '(neo-file-link-face ((t (:foreground "White" :weight normal :height 90 :family "Inconsolata")))))
+                 ))
 
 
     (setq neo-window-fixed-size nil)
@@ -2299,6 +2308,7 @@
 
       (defhydra hydra-smerge (:hint nil)
         ("n" smerge-next "next hunk" :column "Movement")
+        ("p" smerge-prev "prev hunk")
         ("N" smerge-prev "prev hunk")
         ("k" evil-previous-line "move up")
         ("j" evil-next-line "move down")
