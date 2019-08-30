@@ -353,10 +353,10 @@
         "ws" 'z/split-window-below
         "wd" 'delete-window
         "wm" 'toggle-maximize-buffer
-        "wj" 'evil-window-down
-        "wk" 'evil-window-up
-        "wh" 'evil-window-left
-        "wl" 'evil-window-right
+        "wj" 'tmux-navigate-down
+        "wk" 'tmux-navigate-up
+        "wh" 'tmux-navigate-left
+        "wl" 'tmux-navigate-right
         "wc" 'evil-window-delete
         "wF" 'w/make-frame
         "wo" 'other-frame
@@ -444,14 +444,14 @@
         "g]" 'evil-next-close-bracket
 
         ;; map to be like tmux
-        "C-a h" 'evil-window-left
-        "M-h" 'evil-window-left
-        "C-a j" 'evil-window-down
-        "M-j" 'evil-window-down
-        "C-a k" 'evil-window-up
-        "M-k" 'evil-window-up
-        "C-a l" 'evil-window-right
-        "M-l" 'evil-window-right
+        "C-a h" 'tmux-navigate-left
+        "M-h" 'tmux-navigate-left
+        "C-a j" 'tmux-navigate-down
+        "M-j" 'tmux-navigate-down
+        "C-a k" 'tmux-navigate-up
+        "M-k" 'tmux-navigate-up
+        "C-a l" 'tmux-navigate-right
+        "M-l" 'tmux-navigate-right
         "C-a x" 'evil-quit
         "C-a m" 'toggle-maximize-buffer
         "C-a r" 'w/rotate-windows-forward
