@@ -342,6 +342,7 @@
         "rj" 'jump-to-register
         "rw" 'window-configuration-to-register
         "rl" 'helm-resume
+        "rr" 'revert-buffer
                                              ;Windows
         "w" '(:ignore t :which-key "windows")
         "w=" 'balance-windows
@@ -533,7 +534,9 @@
 
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
-        "s-k s-r" 'z/sync-config
+
+        "s-k s-r c" 'z/sync-config
+        "s-k s-r r" 'revert-buffer
 
         "s-k s-j" 'git-gutter:next-hunk
         "s-k s-k" 'git-gutter:previous-hunk
