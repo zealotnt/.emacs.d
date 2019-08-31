@@ -493,6 +493,8 @@
         "s-t l" 'lsp-ui-imenu
         "s-=" 'balance-windows
         "s-m" 'toggle-maximize-buffer
+        "s-b" 'helm-resume
+        "s-y" 'repeat
 
         ;; navigation
         "M-[" 'evil-jump-backward
@@ -507,6 +509,7 @@
         "s-k s-g n" 'z/magit-status ;status in new frame
         "s-k s-g s-n" 'z/magit-status ;status in new frame
         "s-k s-s"   'neotree-project-dir-toggle
+
         "s-k s-f n" 's/show-buffer-file-name
         "s-k s-f s-n" 's/show-buffer-file-name
         "s-k s-f r"   'w/copy-relative-file-path
@@ -520,6 +523,9 @@
         "s-k s-f f" 'z/which-function
         "s-k s-f s-f" 'z/which-function
         "s-k s-[" 'aj-toggle-fold
+
+        "s-k s-e s" 'shell-command
+        "s-k s-e s-s" 'shell-command
         "s-k s-e h" 'z/eval-last-sexp
         "s-k s-e s-h" 'z/eval-last-sexp
         "s-k s-e e" 'z/eval-region
@@ -531,8 +537,6 @@
 
         "s-k s-j" 'git-gutter:next-hunk
         "s-k s-k" 'git-gutter:previous-hunk
-        "s-b" 'helm-resume
-        "s-y" 'repeat
 
         ;;"s-1" 'customize ;;before, it is "s-,"
         "s-0" '(lambda () (interactive) (neotree-hide) (neotree-project-dir-toggle) (neotree-quick-look))
