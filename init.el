@@ -69,6 +69,21 @@
                       persp-mode ;perspectives for emacs, save/recover sessions
                       osx-clipboard
                       org
+                      ;========================================================
+                      ; Package: Uncategorized - Mine recently added
+                      ;========================================================
+                      anzu
+                      yaml-mode
+                      evil-visualstar
+                      tmux-pane
+                      vimrc-mode
+                      web-mode
+                      helm-ext
+                      json-mode
+                      go-mode
+                      highlight-indent-guides
+                      winum
+                      go-autocomplete
                       ))
 
 ; Add Melpa as the default Emacs Package repository
@@ -159,7 +174,7 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Inconsolata" :foundry "PfEd" :slant normal :weight normal :height 105 :width normal))))
+ '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 90 :width normal))))
  '(cursor ((t (:background "gold" :foreground "#151718"))))
  '(mode-line ((t (:background "black" :foreground "#4499FF"))))
  '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata for Powerline"))))
