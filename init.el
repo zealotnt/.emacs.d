@@ -119,11 +119,6 @@ There are two things you can do about this warning:
 (setq w-dotfiles-folder-path (w/dotfiles-folder-path))
 (setq w-dotfiles-pakages-folder-path (format "%s/packages" w-dotfiles-folder-path))
 (setq evil-evilified-state-path (format "%s/packages/evil-evilified-state.el" w-dotfiles-folder-path))
-(load (format "%s/packages/yaml-imenu/yaml-imenu.el" w-dotfiles-folder-path))
-(load (format "%s/packages/xclip.el" w-dotfiles-folder-path))
-(load (format "%s/packages/navigate.el" w-dotfiles-folder-path))
-(xclip-mode 1)
-(require 'navigate)
 
 ;; This is only needed once, near the top of the file
 (eval-when-compile
@@ -143,7 +138,12 @@ There are two things you can do about this warning:
   (unless (package-installed-p package)
     (package-install package)))
 
-;; (setq use-package-verbose 't) ;Show use-package stat
+(load (format "%s/packages/yaml-imenu/yaml-imenu.el" w-dotfiles-folder-path))
+(load (format "%s/packages/xclip.el" w-dotfiles-folder-path))
+(load (format "%s/packages/navigate.el" w-dotfiles-folder-path))
+(xclip-mode 1)
+(require 'navigate)
+(setq use-package-verbose 't) ;Show use-package stat
 
 ;========================================================
 ; MAIN CONFIGS
