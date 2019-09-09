@@ -394,9 +394,9 @@
        (general-define-key
         :states '(normal visual emacs)
         "C-w +" '((lambda () (interactive) (evil-window-increase-height 15)) :which-key "window-increase-height")
-        "C-w -" '((lambda () (interactive) (evil-window-decrease-height 15)) :which-key "window-increase-height")
-        "C-w >" '((lambda () (interactive) (evil-window-increase-width 15)) :which-key "window-increase-height")
-        "C-w <" '((lambda () (interactive) (evil-window-decrease-width 15)) :which-key "window-increase-height")
+        "C-w -" '((lambda () (interactive) (evil-window-decrease-height 15)) :which-key "window-decrease-height")
+        "C-w >" '((lambda () (interactive) (evil-window-increase-width 15)) :which-key "window-increase-width")
+        "C-w <" '((lambda () (interactive) (evil-window-decrease-width 15)) :which-key "window-decrease-width")
         "C-w r" 'w/rotate-windows-forward
         "C-w R" 'w/rotate-windows-backward
         "C-w m" 'toggle-maximize-buffer
