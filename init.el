@@ -139,6 +139,7 @@ There are two things you can do about this warning:
     (package-install package)))
 
 (load (format "%s/packages/yaml-imenu/yaml-imenu.el" w-dotfiles-folder-path))
+(load (format "%s/packages/go-imenu/go-imenu.el" w-dotfiles-folder-path))
 (load (format "%s/packages/xclip.el" w-dotfiles-folder-path))
 (load (format "%s/packages/navigate.el" w-dotfiles-folder-path))
 (xclip-mode 1)
@@ -167,7 +168,7 @@ There are two things you can do about this warning:
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (helm-ext json-mode go-mode highlight-indent-guides reason-mode rjsx-mode smartparens import-js prettier-js js2-mode evil-leader evil which-key helm-ag helm-projectile autothemer)))
+    (go-imenu helm-describe-modes imenu-list imenu-anywhere helm-xref typescript-mode solarized-theme vala-mode helm-ext json-mode go-mode highlight-indent-guides reason-mode rjsx-mode smartparens import-js prettier-js js2-mode evil-leader evil which-key helm-ag helm-projectile autothemer)))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
