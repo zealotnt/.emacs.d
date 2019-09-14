@@ -84,6 +84,11 @@
                       highlight-indent-guides
                       winum
                       go-autocomplete
+                      evil-collection
+                      pdf-tools
+                      go-imenu
+                      helm-describe-modes
+                      helm-xref
                       ))
 
 ; Add Melpa as the default Emacs Package repository

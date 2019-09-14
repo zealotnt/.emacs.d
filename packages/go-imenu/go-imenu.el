@@ -56,7 +56,7 @@ from https://github.com/lukehoban/go-outline."
   :type '(alist :value-type (group regexp integer))
   :group 'go-imenu)
 
-(defcustom go-imenu-import-p nil
+(defcustom go-imenu-import-p t
   "Export import."
   :type 'boolean
   :group 'go-imenu)

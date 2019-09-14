@@ -443,6 +443,9 @@
         "g)" 'evil-next-close-paren
         "g}" 'evil-next-close-brace
         "g]" 'evil-next-close-bracket
+        "gdd" 'evil-goto-definition
+        "gdv" '(lambda () (interactive) (z/split-window-right) (evil-goto-definition))
+        "gds" '(lambda () (interactive) (z/split-window-below) (evil-goto-definition))
 
         ;; map to be like tmux
         "C-a h" 'tmux-navigate-left
@@ -491,7 +494,9 @@
         "s-/" 'evilnc-comment-or-uncomment-lines
         "s-l" 'evil-avy-goto-line
         "s-t h" 'helm-imenu
-        "s-t l" 'lsp-ui-imenu
+        "s-t t" 'lsp-ui-imenu
+        "s-t l" 'toggle-truncate-lines
+        "s-t a" 'toggle-transparency
         "s-=" 'balance-windows
         "s-m" 'toggle-maximize-buffer
         "s-b" 'helm-resume
@@ -1259,6 +1264,11 @@
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Helm
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+     (require 'helm-xref)
+     (if (< emacs-major-version 27)
+        (setq xref-show-xrefs-function 'helm-xref-show-xrefs)
+        (setq xref-show-xrefs-function 'helm-xref-show-xrefs-27))
 
      (defun z/helm-switch-other-frame()
        (interactive)
@@ -2198,7 +2208,7 @@
                  (add-hook 'ruby-mode-hook 'rbenv-use-corresponding)
                  ))
 
-     (add-hook 'ruby-mode-hook 'global-rbenv-mode)
+     (add-hook 'ruby-mode-hook (lambda () (global-rbenv-mode) (rbenv-use-global)))
    #+END_SRC
 *** inf-ruby and other configs
    #+BEGIN_SRC emacs-lisp
@@ -2481,6 +2491,12 @@
     #+RESULTS:
     : hs-show-block
 
+** go-mode config
+
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
+
 ** js config
    #+BEGIN_SRC emacs-lisp
       (require 'web-mode)
@@ -2543,7 +2559,64 @@
     - Dependencies: lsp-mode
     - To make this config work, you must:
     1. *Run* ~ln -sf ~/w_emacs_dotfiles/reasonml/bin/reason-language-server /usr/local/bin~ and update reason-language-server-path to ~/usr/local/bin/reason-language-server-path~ if you don't use the whole dotfiles
-   #+BEGIN_SRC emacs-lisp
 
+* Experiments
+   #+BEGIN_SRC emacs-lisp
+     (pdf-tools-install)
+     (require 'go-imenu) ;; Don't need to require, if you install by package.el
+     (add-hook 'go-mode-hook 'go-imenu-setup)
+     ;; https://github.com/emacs-evil/evil-collection
+     (setq evil-collection-mode-list nil)
+     (with-eval-after-load 'pdf-tools (require 'evil-collection-pdf) (evil-collection-pdf-setup)) ; why this works ? but below won't ? ; (evil-collection-init 'pdf) ;why this not works ?
+     (evil-collection-init 'help)
+     (evil-collection-init 'occur)
+     (evil-collection-init)
+
+     (defun eab/push-button-on-file-same-window ()
+       "https://emacs.stackexchange.com/questions/24693/make-opening-clickable-filenames-from-help-mode-in-same-window"
+       (interactive)
+       (let ((cwc (current-window-configuration))
+             (hb (current-buffer))
+             (file? (button-get (button-at (point)) 'help-args)))
+         (funcall
+          `(lambda ()
+             (defun eab/push-button-on-file-same-window-internal ()
+               (if (> (length ',file?) 1)
+                   (let ((cb (current-buffer)))
+                     (set-window-configuration ,cwc)
+                     (switch-to-buffer cb)
+                     (kill-buffer ,hb)))))))
+       (call-interactively 'push-button)
+       (run-with-timer 0.01 nil 'eab/push-button-on-file-same-window-internal))
+
+     (evil-collection-define-key 'normal 'help-mode-map
+       ;; The following bindings don't do what they are supposed to. "go" should open
+       ;; in the same window and "gO" should open in a different one.
+       "go" 'eab/push-button-on-file-same-window
+       "gO" 'push-button
+       )
+
+     (evil-collection-define-key 'normal 'pdf-outline-buffer-mode-map
+       (kbd "TAB") 'pdf-outline-toggle-subtree
+       (kbd "C-j") 'outline-forward-same-level
+       (kbd "C-k") 'outline-backward-same-level
+       (kbd "RET") 'pdf-outline-display-link
+       "o"         'pdf-outline-follow-link
+       "O"         'pdf-outline-follow-link-and-quit
+       "A"         'show-all
+       "q"         '(lambda () (interactive) (if (y-or-n-p "Quit outline window ?") (quit-window)))
+       )
+
+     (defun toggle-transparency ()
+       (interactive)
+       (let ((alpha (frame-parameter nil 'alpha)))
+         (set-frame-parameter
+          nil 'alpha
+          (if (eql (cond ((numberp alpha) alpha)
+                         ((numberp (cdr alpha)) (cdr alpha))
+                         ;; Also handle undocumented (<active> <inactive>) form.
+                         ((numberp (cadr alpha)) (cadr alpha)))
+                   100)
+              '(70 . 70) '(100 . 100)))))
 
    #+END_SRC
