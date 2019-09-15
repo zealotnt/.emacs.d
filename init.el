@@ -89,6 +89,7 @@
                       go-imenu
                       helm-describe-modes
                       helm-xref
+                      daemons
                       ))
 
 ; Add Melpa as the default Emacs Package repository

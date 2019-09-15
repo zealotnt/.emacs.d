@@ -275,7 +275,6 @@
         "ts" 'flycheck-toggle
         "tn" 'global-display-line-numbers-mode
         "tl" 'toggle-truncate-lines
-        "tM" '(evil-mc-moe ':which-key "multi cursors(g r)")
 
         "t C-c" 'toggle-camelcase-motion
         "th" '(:ignore t :which-key "highlight")
@@ -1350,7 +1349,7 @@
            ;helm-display-buffer-width 90
            ;helm-display-buffer-height 30
            helm-actions-inherit-frame-settings t
-           helm-move-to-line-cycle-in-source t ; move to end or beginning of source when reaching top or bottom of source.
+           helm-move-to-line-cycle-in-source nil ; dont just cycle through history of helm
            helm-ff-file-name-history-use-recentf t ;
            helm-autoresize-max-height 50
            helm-autoresize-min-height 50
@@ -2526,7 +2525,7 @@
 
 ** Reason mode config
 *** reasonml lang server config
-    - Reason mode for reason react development 🐫
+    - Reason mode for reason react development
     - Dependencies: lsp-mode
     - To make this config work, you must:
     1. *Run* ~ln -sf ~/w_emacs_dotfiles/reasonml/bin/reason-language-server /usr/local/bin~ and update reason-language-server-path to ~/usr/local/bin/reason-language-server-path~ if you don't use the whole dotfiles
@@ -2541,6 +2540,9 @@
      (with-eval-after-load 'pdf-tools (require 'evil-collection-pdf) (evil-collection-pdf-setup)) ; why this works ? but below won't ? ; (evil-collection-init 'pdf) ;why this not works ?
      (evil-collection-init 'help)
      (evil-collection-init 'occur)
+     (evil-collection-init 'daemons)
+     (evil-collection-init 'apropos)
+     (evil-collection-init 'info)
      (evil-collection-init)
 
      (defun eab/push-button-on-file-same-window ()
@@ -2560,9 +2562,12 @@
        (call-interactively 'push-button)
        (run-with-timer 0.01 nil 'eab/push-button-on-file-same-window-internal))
 
+
+     (evil-collection-define-key 'normal 'daemons-mode-map
+       "m" 'tabulated-list-sort
+       )
+
      (evil-collection-define-key 'normal 'help-mode-map
-       ;; The following bindings don't do what they are supposed to. "go" should open
-       ;; in the same window and "gO" should open in a different one.
        "go" 'eab/push-button-on-file-same-window
        "gO" 'push-button
        )
