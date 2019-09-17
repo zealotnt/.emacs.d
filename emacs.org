@@ -8,7 +8,6 @@
   - [[#avy-config][Avy config]]
   - [[#which-key-config][Which key config]]
   - [[#shell-config][Shell config]]
-  - [[#terminal-multi-libvterm-config][Terminal (multi-libvterm) config]]
   - [[#frame-config][Frame config]]
   - [[#clipboard-config][Clipboard config]]
   - [[#setup-theme-config][Setup theme config]]
@@ -855,9 +854,6 @@
            "n" '((lambda () (interactive) (term-send-raw-string "n")) :which-key "_")
            )))
 
-   #+END_SRC
-** Terminal (multi-libvterm) config
-   #+BEGIN_SRC emacs-lisp
    #+END_SRC
 ** Frame config
    - Frame configs to support switching workspace
