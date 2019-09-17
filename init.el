@@ -91,6 +91,7 @@
                       helm-xref
                       daemons
                       evil-anzu
+                      auto-dim-other-buffers
                       ))
 
 ; Add Melpa as the default Emacs Package repository
@@ -182,7 +183,8 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :foundry "PfEd" :slant normal :weight normal :height 90 :width normal))))
+ '(default ((t (:inherit nil :stipple nil :background "gray0" :foreground "#F8F8F2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 90 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
+ '(auto-dim-other-buffers-face ((t (:background "gray22"))))
  '(cursor ((t (:background "gold" :foreground "#151718"))))
  '(mode-line ((t (:background "black" :foreground "#4499FF"))))
  '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata for Powerline"))))

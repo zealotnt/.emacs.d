@@ -274,7 +274,10 @@
         "ti" 'indent-guide-toggle
         "ts" 'flycheck-toggle
         "tn" 'global-display-line-numbers-mode
+        "th" 'helm-imenu
+        "tt" 'lsp-ui-imenu
         "tl" 'toggle-truncate-lines
+        "ta" 'toggle-transparency
 
         "t C-c" 'toggle-camelcase-motion
         "th" '(:ignore t :which-key "highlight")
