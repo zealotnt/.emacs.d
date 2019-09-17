@@ -308,8 +308,6 @@
         "gl" '(:ignore t :which-key "links")
         "gll" 'git-link
 
-        "y" 'repeat
-
         "k" '(:ignore t :which-key "super-k")
         "ks" 'neotree-project-dir-toggle
         "kfn" 's/show-buffer-file-name
@@ -1888,6 +1886,9 @@
      (setq imenu-auto-rescan t)
      (yaml-imenu-enable)
      (global-anzu-mode +1)
+     (with-eval-after-load 'evil
+       (require 'evil-anzu))
+
      (which-function-mode +1)
      (defun w/spaceline-setup ()
        (use-package spaceline-config
@@ -1939,6 +1940,7 @@
            (hud :priority 99)))
        (spaceline-toggle-minor-modes-off)
        )
+     (add-hook 'after-init-hook 'w/spaceline-setup)
 
      (defun z/which-function ()
        "Return current function name based on point.
@@ -2006,7 +2008,7 @@
          (message "Copied '%s' to clipboard" name)
          (kill-new name)))
 
-       (add-hook 'after-init-hook 'w/spaceline-setup)
+
    #+END_SRC
 
 ** indent guide config

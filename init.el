@@ -90,6 +90,7 @@
                       helm-describe-modes
                       helm-xref
                       daemons
+                      evil-anzu
                       ))
 
 ; Add Melpa as the default Emacs Package repository
