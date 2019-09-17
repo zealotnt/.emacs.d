@@ -178,17 +178,30 @@ There are two things you can do about this warning:
    (quote
     (imenu-list imenu-anywhere typescript-mode solarized-theme vala-mode helm-ext json-mode go-mode highlight-indent-guides reason-mode rjsx-mode smartparens import-js prettier-js js2-mode evil-leader evil which-key helm-ag helm-projectile autothemer)))
  '(tool-bar-mode nil))
+
+;; customize monokai theme color
+;; https://github.com/oneKelvinSmith/monokai-emacs#customization
+(setq ;; foreground and background
+      monokai-foreground     "#F8F8F2"
+      monokai-background     "#000000"
+      monokai-gray           "#000000")
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "gray0" :foreground "#F8F8F2" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 90 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 90 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
  '(auto-dim-other-buffers-face ((t (:background "gray22"))))
  '(cursor ((t (:background "gold" :foreground "#151718"))))
- '(mode-line ((t (:background "black" :foreground "#4499FF"))))
+ '(mode-line ((t (:background "black" :foreground "#4499FF" :height 80))))
+ '(mode-line-inactive ((t (:background "black" :foreground "#4499FF" :height 80))))
+ '(mode-line-buffer-id ((t (:background "black" :foreground "#4499FF" :height 80))))
+ '(mode-line-emphasis ((t (:background "black" :foreground "#4499FF" :height 80))))
+ '(mode-line-highlight ((t (:background "black" :foreground "#4499FF" :height 80))))
  '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata for Powerline"))))
  '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata for Powerline")))))
+
 (server-start)
 (setq initial-major-mode 'text-mode)
 (setq initial-scratch-message "")
