@@ -1058,8 +1058,6 @@
    #+BEGIN_SRC emacs-lisp
      (global-display-line-numbers-mode 1)
 
-     ;; welcome screen splash image
-     (setq fancy-splash-image (format "%s/logo.png" w-dotfiles-folder-path))
      ;;ensure environment variables inside Emacs look the same as in the user's shell
      (when (memq window-system '(mac ns x))
        (exec-path-from-shell-initialize))
