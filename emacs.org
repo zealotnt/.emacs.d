@@ -279,8 +279,8 @@
         "ta" 'toggle-transparency
 
         "t C-c" 'toggle-camelcase-motion
-        "th" '(:ignore t :which-key "highlight")
-        "thp" 'highlight-parentheses-mode
+        ;"th" '(:ignore t :which-key "highlight")
+        ;"thp" 'highlight-parentheses-mode
                                              ;Buffer
         "b" '(:ignore t :which-key "buffers")
         "bb" 'w/helm-mini
@@ -1717,12 +1717,14 @@
        (global-evil-mc-mode +1))
 
      (general-define-key
-      :states '(visual)
+      :states '(normal visual)
       "M-a" 'evil-mc-make-all-cursors
-      "M-<escape>" 'evil-mc-undo-all-cursors
+      "M-<escape> <escape>" 'evil-mc-undo-all-cursors
+      "M-q" 'evil-mc-undo-all-cursors
       "M-p" 'evil-mc-skip-and-goto-prev-match
       "M-u" 'evil-mc-undo-last-added-cursor
       "M-n" 'evil-mc-skip-and-goto-next-match
+      "C-j" 'evil-mc-make-cursor-move-next-line
       )
    #+END_SRC
 * My git tools config
@@ -1913,17 +1915,13 @@
            ((flycheck-error flycheck-warning flycheck-info)
             :when active
             :priority 89)
-           (minor-modes :when active
-                        :priority 9)
            (mu4e-alert-segment :when active)
            (erc-track :when active)
-           (version-control :when active
-                            :priority 78)
            (org-pomodoro :when active)
            (org-clock :when active)
            nyan-cat)
          ; right side
-         '(which-function
+         '((which-function :priority: 99)
            (python-pyvenv :fallback python-pyenv)
            (purpose :priority 94)
            (battery :when active)
@@ -2533,6 +2531,10 @@
 
 * Experiments
    #+BEGIN_SRC emacs-lisp
+     (add-hook 'after-init-hook (lambda ()
+                                  (when (fboundp 'auto-dim-other-buffers-mode)
+                                    (auto-dim-other-buffers-mode t))))
+
      (pdf-tools-install)
      (require 'go-imenu) ;; Don't need to require, if you install by package.el
      (add-hook 'go-mode-hook 'go-imenu-setup)
