@@ -456,6 +456,8 @@
         "M-k" 'tmux-navigate-up
         "C-a l" 'tmux-navigate-right
         "M-l" 'tmux-navigate-right
+
+        ;; combination with C-a
         "C-a x" 'evil-quit
         "C-a m" 'toggle-maximize-buffer
         "C-a r" 'w/rotate-windows-forward
@@ -479,11 +481,32 @@
         "s-W" 'evil-quit
         "s-s" 'save-buffer
         "s-j" 'evil-avy-goto-word-or-subword-1
-        "s-d" 'kill-whole-line
         "s-f" 'evil-search-forward
         "s-g" 'evil-search-word-forward
         "s-G" 'evil-search-word-backward
         "s-F" 'helm-do-ag-project-root
+
+        "s-O" 'select-frame-number
+        "s-/" 'evilnc-comment-or-uncomment-lines
+        "s-l" 'evil-avy-goto-line
+        "s-=" 'balance-windows
+        "s-m" 'toggle-maximize-buffer
+        "s-b" 'w/helm-mini
+        "s-R" 'helm-resume
+        "s-y" 'repeat
+
+        ;; navigation
+        "M-[" 'evil-jump-backward
+        "M-]" 'evil-jump-forward
+        "<s-return>" 'evil-goto-definition
+
+        ;; combination with super+t
+        "s-t h" 'helm-imenu
+        "s-t t" 'lsp-ui-imenu
+        "s-t l" 'toggle-truncate-lines
+        "s-t a" 'toggle-transparency
+
+        ;; combination with super+n
         "s-n s-s" 'evil-window-new
         "s-n s" 'evil-window-new
         "s-n s-v" 'evil-window-vnew
@@ -491,23 +514,10 @@
         "s-n n" 'evil-buffer-new
         "s-n s-n" 'evil-buffer-new
         "s-N" 'w/make-frame
-        "s-R" 'delete-trailing-whitespace
-        "s-O" 'select-frame-number
-        "s-/" 'evilnc-comment-or-uncomment-lines
-        "s-l" 'evil-avy-goto-line
-        "s-t h" 'helm-imenu
-        "s-t t" 'lsp-ui-imenu
-        "s-t l" 'toggle-truncate-lines
-        "s-t a" 'toggle-transparency
-        "s-=" 'balance-windows
-        "s-m" 'toggle-maximize-buffer
-        "s-b" 'helm-resume
-        "s-y" 'repeat
 
-        ;; navigation
-        "M-[" 'evil-jump-backward
-        "M-]" 'evil-jump-forward
-        "<s-return>" 'evil-goto-definition
+        ;; combination with super+d
+        "s-d d" 'kill-whole-line
+        "s-d r" 'delete-trailing-whitespace
 
         ;; combination with super+k
         "s-k s-g c" 'hydra-smerge/body

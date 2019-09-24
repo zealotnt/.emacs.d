@@ -179,7 +179,11 @@ There are two things you can do about this warning:
  '(package-selected-packages
    (quote
     (imenu-list imenu-anywhere typescript-mode solarized-theme vala-mode helm-ext json-mode go-mode highlight-indent-guides reason-mode rjsx-mode smartparens import-js prettier-js js2-mode evil-leader evil which-key helm-ag helm-projectile autothemer)))
- '(tool-bar-mode nil))
+ '(tool-bar-mode nil)
+ ; https://stackoverflow.com/questions/11637471/change-emacs-welcome-splash-screen
+ ; -> https://stackoverflow.com/questions/7083181/how-to-load-file-into-buffer-and-switch-to-buffer-on-start-up-in-emacs
+ ; -> https://www.gnu.org/software/emacs/manual/html_node/elisp/Startup-Summary.html
+ '(initial-buffer-choice "~/.emacs.d/init.el"))
 
 ;; customize monokai theme color
 ;; https://github.com/oneKelvinSmith/monokai-emacs#customization
