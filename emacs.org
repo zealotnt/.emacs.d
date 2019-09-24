@@ -489,6 +489,8 @@
         "s-n s" 'evil-window-new
         "s-n s-v" 'evil-window-vnew
         "s-n v" 'evil-window-vnew
+        "s-n n" 'evil-buffer-new
+        "s-n s-n" 'evil-buffer-new
         "s-N" 'w/make-frame
         "s-R" 'delete-trailing-whitespace
         "s-O" 'select-frame-number
@@ -868,10 +870,10 @@
                       "%b")))
            )
 
-    ;; winner mode setup
-    (when (fboundp 'winner-mode)
-      (winner-mode 1))
-    (general-define-key
+     ;; winner mode setup
+     (when (fboundp 'winner-mode)
+       (winner-mode 1))
+     (general-define-key
       :states '(normal visual insert emacs)
       "s-T"   'winner-undo
       "C-c j" 'winner-undo
@@ -883,63 +885,63 @@
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; cause we using spaceline, we need to disable winum to insert to mode-line
      ;; https://github.com/TheBB/spaceline
-     (setq winum-auto-setup-mode-line nil)
-     (general-define-key
-      :states '(normal visual insert emacs)
-      "s-1" 'winum-select-window-1
-      "s-2" 'winum-select-window-2
-      "s-3" 'winum-select-window-3
-      "s-4" 'winum-select-window-4
-      "s-5" 'winum-select-window-5
-      "s-6" 'winum-select-window-6
-      "s-7" 'winum-select-window-7
-      "s-8" 'winum-select-window-8
-      "s-9" 'winum-select-window-9)
-    (require 'winum)
-    (winum-mode)
-    (defun winum-assign-0-to-neotree ()
-      (when (string-match-p (buffer-name) ".*\\*NeoTree\\*.*") 10))
-    (add-to-list 'winum-assign-functions #'winum-assign-0-to-neotree)
-    (setq window-numbering-scope            'global
-          winum-reverse-frame-list          nil
-          winum-auto-assign-0-to-minibuffer t
-          winum-assign-func                 'my-winum-assign-func
-          winum-auto-setup-mode-line        nil
-          winum-format                      " %s "
-          winum-mode-line-position          1
-          winum-ignored-buffers             '(" *which-key*"))
+     ;;  (setq winum-auto-setup-mode-line nil)
+     ;;  (general-define-key
+     ;;   :states '(normal visual insert emacs)
+     ;;   "s-1" 'winum-select-window-1
+     ;;   "s-2" 'winum-select-window-2
+     ;;   "s-3" 'winum-select-window-3
+     ;;   "s-4" 'winum-select-window-4
+     ;;   "s-5" 'winum-select-window-5
+     ;;   "s-6" 'winum-select-window-6
+     ;;   "s-7" 'winum-select-window-7
+     ;;   "s-8" 'winum-select-window-8
+     ;;   "s-9" 'winum-select-window-9)
+     ;; (require 'winum)
+     ;; (winum-mode)
+     ;; (defun winum-assign-0-to-neotree ()
+     ;;   (when (string-match-p (buffer-name) ".*\\*NeoTree\\*.*") 10))
+     ;; (add-to-list 'winum-assign-functions #'winum-assign-0-to-neotree)
+     ;; (setq window-numbering-scope            'global
+     ;;       winum-reverse-frame-list          nil
+     ;;       winum-auto-assign-0-to-minibuffer t
+     ;;       winum-assign-func                 'my-winum-assign-func
+     ;;       winum-auto-setup-mode-line        nil
+     ;;       winum-format                      " %s "
+     ;;       winum-mode-line-position          1
+     ;;       winum-ignored-buffers             '(" *which-key*"))
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; end of winum-mode setup
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    (defun toggle-window-split ()
-      (interactive)
-      (if (= (count-windows) 2)
-          (let* ((this-win-buffer (window-buffer))
-          (next-win-buffer (window-buffer (next-window)))
-          (this-win-edges (window-edges (selected-window)))
-          (next-win-edges (window-edges (next-window)))
-          (this-win-2nd (not (and (<= (car this-win-edges)
-              (car next-win-edges))
-                (<= (cadr this-win-edges)
-              (cadr next-win-edges)))))
-          (splitter
-            (if (= (car this-win-edges)
-            (car (window-edges (next-window))))
-          'split-window-horizontally
-        'split-window-vertically)))
-      (delete-other-windows)
-      (let ((first-win (selected-window)))
-        (funcall splitter)
-        (if this-win-2nd (other-window 1))
-        (set-window-buffer (selected-window) this-win-buffer)
-        (set-window-buffer (next-window) next-win-buffer)
-        (select-window first-win)
-        (if this-win-2nd (other-window 1))))))
-    (define-key ctl-x-4-map "t" 'toggle-window-split)
+     (defun toggle-window-split ()
+       (interactive)
+       (if (= (count-windows) 2)
+           (let* ((this-win-buffer (window-buffer))
+                  (next-win-buffer (window-buffer (next-window)))
+                  (this-win-edges (window-edges (selected-window)))
+                  (next-win-edges (window-edges (next-window)))
+                  (this-win-2nd (not (and (<= (car this-win-edges)
+                                              (car next-win-edges))
+                                          (<= (cadr this-win-edges)
+                                              (cadr next-win-edges)))))
+                  (splitter
+                   (if (= (car this-win-edges)
+                          (car (window-edges (next-window))))
+                       'split-window-horizontally
+                     'split-window-vertically)))
+             (delete-other-windows)
+             (let ((first-win (selected-window)))
+               (funcall splitter)
+               (if this-win-2nd (other-window 1))
+               (set-window-buffer (selected-window) this-win-buffer)
+               (set-window-buffer (next-window) next-win-buffer)
+               (select-window first-win)
+               (if this-win-2nd (other-window 1))))))
+     (define-key ctl-x-4-map "t" 'toggle-window-split)
 
-    ; Text-mode is default mode: https://groups.google.com/forum/#!topic/gnu.emacs.help/AUpnVjsSpfc
-    (setq-default major-mode 'text-mode)
+     ; Text-mode is default mode: https://groups.google.com/forum/#!topic/gnu.emacs.help/AUpnVjsSpfc
+     (setq-default major-mode 'text-mode)
 
      ;; (setq frame-title-format
      ;;       '(""
@@ -1389,7 +1391,7 @@
 
      (defun w/cleanup-after-switch-project ()
        ;;(delete-other-windows)
-       (neotree-hide)
+       ;;(neotree-hide)
        )
      (add-hook 'projectile-after-switch-project-hook 'w/cleanup-after-switch-project)
 
@@ -1468,8 +1470,6 @@
          (evil-define-key 'normal neotree-mode-map (kbd "RET") 'neotree-enter)
          (evil-define-key 'normal neotree-mode-map (kbd "gg") 'evil-goto-first-line)
          (evil-define-key 'normal neotree-mode-map (kbd "C-g") 'neotree-refresh)
-         (evil-define-key 'normal neotree-mode-map (kbd "n") 'neotree-next-line)
-         (evil-define-key 'normal neotree-mode-map (kbd "p") 'neotree-previous-line)
          (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
          (evil-define-key 'normal neotree-mode-map (kbd "T") 'neotree-hidden-file-toggle)
          (evil-define-key 'normal neotree-mode-map (kbd "m") 'neotree-rename-node)
@@ -1883,7 +1883,6 @@
      (setq imenu-max-item-length +500)
      (setq anzu-cons-mode-line-p nil)
      (setq imenu-auto-rescan t)
-     (yaml-imenu-enable)
      (global-anzu-mode +1)
      (with-eval-after-load 'evil
        (require 'evil-anzu))
@@ -2529,11 +2528,22 @@
 
 * Experiments
    #+BEGIN_SRC emacs-lisp
+     (global-hl-line-mode)
+
+     (defun sudo-save ()
+       "https://www.emacswiki.org/emacs/SudoSave
+        https://stackoverflow.com/questions/95631/open-a-file-with-su-sudo-inside-emacs"
+       (interactive)
+       (if (not buffer-file-name)
+           (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
+         (write-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
      (add-hook 'after-init-hook (lambda ()
                                   (when (fboundp 'auto-dim-other-buffers-mode)
                                     (auto-dim-other-buffers-mode t))))
 
      (pdf-tools-install)
+     (yaml-imenu-enable)
      (require 'go-imenu) ;; Don't need to require, if you install by package.el
      (add-hook 'go-mode-hook 'go-imenu-setup)
      ;; https://github.com/emacs-evil/evil-collection

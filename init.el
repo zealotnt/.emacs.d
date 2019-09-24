@@ -92,6 +92,8 @@
                       daemons
                       evil-anzu
                       auto-dim-other-buffers
+                      lua-mode
+                      arduino-mode
                       ))
 
 ; Add Melpa as the default Emacs Package repository
@@ -184,7 +186,7 @@ There are two things you can do about this warning:
 (setq ;; foreground and background
       monokai-foreground     "#F8F8F2"
       monokai-background     "#000000"
-      monokai-gray           "#000000")
+      monokai-gray           "gray20")
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -195,10 +197,10 @@ There are two things you can do about this warning:
  '(auto-dim-other-buffers-face ((t (:background "gray22"))))
  '(cursor ((t (:background "gold" :foreground "#151718"))))
  '(mode-line ((t (:background "black" :foreground "#4499FF" :height 80))))
- '(mode-line-inactive ((t (:background "black" :foreground "#4499FF" :height 80))))
  '(mode-line-buffer-id ((t (:background "black" :foreground "#4499FF" :height 80))))
  '(mode-line-emphasis ((t (:background "black" :foreground "#4499FF" :height 80))))
  '(mode-line-highlight ((t (:background "black" :foreground "#4499FF" :height 80))))
+ '(mode-line-inactive ((t (:background "black" :foreground "#4499FF" :height 80))))
  '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata for Powerline"))))
  '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata for Powerline")))))
 
