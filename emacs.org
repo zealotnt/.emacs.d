@@ -527,6 +527,10 @@
         "s-k s-g n" 'z/magit-status ;status in new frame
         "s-k s-g s-n" 'z/magit-status ;status in new frame
         "s-k s-s"   'neotree-project-dir-toggle
+        "s-k s-g b"   'magit-blame-echo
+        "s-k s-g s-b"   'magit-blame-echo
+        "s-k s-g q"   'magit-blame-quit
+        "s-k s-g s-q"   'magit-blame-quit
 
         "s-k s-f n" 's/show-buffer-file-name
         "s-k s-f s-n" 's/show-buffer-file-name
@@ -1742,6 +1746,7 @@
        (require 'evil-magit)
                                              ;Full screen git status
        (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+       (setq magit-blame-echo-style 'headings)
        (define-key magit-mode-map "\C-j" 'magit-section-forward)
        (define-key magit-mode-map "\C-k" 'magit-section-backward)
        (define-key magit-mode-map "\M-j" 'magit-section-forward-sibling)
