@@ -2590,6 +2590,8 @@
        (kbd "C-k") 'outline-backward-same-level
        (kbd "RET") 'pdf-outline-display-link
        "o"         'pdf-outline-follow-link
+       "-"         '(lambda () (interactive) (evil-window-decrease-height 15) (evil-window-decrease-width 15))
+       "="         '(lambda () (interactive) (evil-window-increase-height 15) (evil-window-increase-width 15))
        "O"         'pdf-outline-follow-link-and-quit
        "A"         'show-all
        "q"         '(lambda () (interactive) (if (y-or-n-p "Quit outline window ?") (quit-window)))
