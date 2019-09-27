@@ -779,24 +779,32 @@
    #+END_SRC
 ** Which key config
    #+BEGIN_SRC emacs-lisp
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    ;; Which key
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    (use-package which-key
-      :commands (which-key-configs-load)
-      :config
-      (defun which-key-configs-load ()
-        t)
-      (run-with-timer 3 nil
-                      (lambda ()
-                        (message "Loading which-key configs...")))
-      (require 'which-key)
-      (require 'tramp)
-      (which-key-mode)
-      (which-key-setup-side-window-bottom)
-      )
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     ;; Which key
+     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+     (use-package which-key
+       :commands (which-key-configs-load)
+       :config
+       (defun which-key-configs-load ()
+         t)
+       (run-with-timer 3 nil
+                       (lambda ()
+                         (message "Loading which-key configs...")))
+       (require 'which-key)
+       (require 'tramp)
+       (which-key-mode)
+       (which-key-setup-side-window-bottom)
+       (set-face-attribute 'which-key-key-face		 nil :height 80)
+       (set-face-attribute 'which-key-separator-face	 nil :height 80)
+       (set-face-attribute 'which-key-note-face	 nil :height 80)
+       (set-face-attribute 'which-key-special-key-face	 nil :height 80)
+       (set-face-attribute 'which-key-group-description-face	 nil :height 80)
+       (set-face-attribute 'which-key-command-description-face	 nil :height 80)
+       (set-face-attribute 'which-key-command-description-face	 nil :height 80)
+       (setq which-key-separator "→" )
+       )
+     (add-hook 'emacs-startup-hook 'which-key-configs-load)
 
-    (add-hook 'emacs-startup-hook 'which-key-configs-load)
    #+END_SRC
 
 ** Shell config
@@ -1161,17 +1169,6 @@
      ;; always follow symlink controlled by Git -- don't ask while writing ~/.zshrc file
      (setq vc-follow-symlinks t)
      (setq create-lockfiles nil)
-     ;; Put autosave files (ie #foo#) and backup files (ie foo~) in ~/.emacs.d/.
-     (custom-set-variables
-      ;; custom-set-variables was added by Custom.
-      ;; If you edit it by hand, you could mess it up, so be careful.
-      ;; Your init file should contain only one such instance.
-      ;; If there is more than one, they won't work right.
-      '(auto-save-file-name-transforms (quote ((".*" "~/.emacs.d/autosaves/\\1" t))))
-      '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/"))))
-      '(package-selected-packages
-        (quote
-         (evil-leader evil which-key helm-ag helm-projectile autothemer))))
 
      ;; create the autosave dir if necessary, since emacs won't.
      (make-directory "~/.emacs.d/autosaves/" t)
@@ -2526,10 +2523,13 @@
 
 * Experiments
    #+BEGIN_SRC emacs-lisp
+     (blink-cursor-mode 0)
      (global-hl-line-mode)
      (helm-mode)
      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
      (global-set-key (kbd "M-x") 'helm-M-x)
+     ;; https://emacs.stackexchange.com/questions/732/how-do-i-list-all-key-bindings-available-in-a-given-buffer
+     (global-set-key (kbd "<f1> b") 'helm-descbinds)
 
      (defun sudo-save ()
        "https://www.emacswiki.org/emacs/SudoSave
@@ -2574,6 +2574,15 @@
        (call-interactively 'push-button)
        (run-with-timer 0.01 nil 'eab/push-button-on-file-same-window-internal))
 
+     (defun z/clone-buffer ()
+             "jue clone current buffer. Useful to have multiple help buffers.
+             https://emacs.stackexchange.com/questions/33156/how-can-i-have-multiple-help-buffers-with-different-content"
+             (interactive)
+             (clone-buffer (concat (buffer-name) "-"                 ; create name from old name and
+                                   (save-excursion                   ; use first word in buffer for new name
+                                       (goto-char 0)
+                                       (thing-at-point 'word t)))
+                           t))                                       ; show cloned buffer now
 
      (evil-collection-define-key 'normal 'daemons-mode-map
        "m" 'tabulated-list-sort
@@ -2582,6 +2591,7 @@
      (evil-collection-define-key 'normal 'help-mode-map
        "go" 'eab/push-button-on-file-same-window
        "gO" 'push-button
+       "c" 'z/clone-buffer
        )
 
      (evil-collection-define-key 'normal 'pdf-outline-buffer-mode-map

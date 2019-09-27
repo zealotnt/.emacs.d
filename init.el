@@ -50,6 +50,7 @@
                       auto-complete
                       evil-nerd-commenter ;comment code
                       evil-surround ;surroundings: parentheses, brackets, quotes, XML tags, and more
+                      evil-leader
                       avy ;jumping to visible text using a char-based decision tree
                       evil-mc
                       ;========================================================
@@ -97,6 +98,8 @@
                       kubernetes-evil
                       kubernetes
                       jsonnet-mode
+                      terraform-mode
+                      helm-descbinds
                       ))
 
 ; Add Melpa as the default Emacs Package repository
@@ -190,7 +193,7 @@ There are two things you can do about this warning:
 (setq ;; foreground and background
       monokai-foreground     "#F8F8F2"
       monokai-background     "#000000"
-      monokai-gray           "gray20")
+      monokai-gray           "gray19")
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -198,7 +201,7 @@ There are two things you can do about this warning:
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 90 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
- '(auto-dim-other-buffers-face ((t (:background "gray22"))))
+ '(auto-dim-other-buffers-face ((t (:background "gray19"))))
  '(cursor ((t (:background "gold" :foreground "#151718"))))
  '(mode-line ((t (:background "black" :foreground "#4499FF" :height 80))))
  '(mode-line-buffer-id ((t (:background "black" :foreground "#4499FF" :height 80))))
