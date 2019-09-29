@@ -1794,6 +1794,12 @@
        :commands (global-git-gutter-mode git-gutter-mode)
        :config
        (progn
+         ;; https://github.com/syohex/emacs-git-gutter/issues/156
+         ;; after setting this, display-line-numbers won't behave weird when modifying code with git-gutter
+         (custom-set-variables
+          '(git-gutter:modified-sign "*")
+          '(git-gutter:added-sign "+")
+          '(git-gutter:deleted-sign "-"))
          (set-face-background 'git-gutter:deleted "#990A1B")
          (set-face-foreground 'git-gutter:modified "#00736F")
          (set-face-foreground 'git-gutter:added "#546E00"))
@@ -2555,6 +2561,7 @@
      (evil-collection-init 'daemons)
      (evil-collection-init 'apropos)
      (evil-collection-init 'info)
+     (evil-collection-init 'man)
      (evil-collection-init)
 
      (defun eab/push-button-on-file-same-window ()
