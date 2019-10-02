@@ -180,6 +180,9 @@ There are two things you can do about this warning:
  ;; If there is more than one, they won't work right.
  '(auto-save-file-name-transforms (quote ((".*" "~/.emacs.d/autosaves/\\1" t))))
  '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backups/"))))
+ '(git-gutter:added-sign "+")
+ '(git-gutter:deleted-sign "-")
+ '(git-gutter:modified-sign "*")
  '(global-display-line-numbers-mode t)
  '(initial-buffer-choice "~/.emacs.d/init.el")
  '(menu-bar-mode nil)

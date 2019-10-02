@@ -1,3 +1,4 @@
+#+STARTUP: showeverything
 #+TITLE: Emacs dotfiles
 * Table of contents                                               :TOC:QUOTE:
 #+BEGIN_QUOTE
@@ -205,11 +206,15 @@
        (modify-syntax-entry ?? "w")
        (modify-syntax-entry ?@ "w")
        (modify-syntax-entry ?! "w"))
+     (defun z/customize-jsonnet-mode-table()
+       (interactive)
+       (modify-syntax-entry ?= "."))
 
      (add-hook 'after-change-major-mode-hook 'z/customize-syntax-table)
      (add-hook 'change-major-mode-hook 'z/customize-syntax-table)
      (add-hook 'emacs-lisp-mode-hook 'z/customize-elisp-syntax-table)
      (add-hook 'ruby-mode-hook 'z/customize-ruby-mode-table)
+     (add-hook 'jsonnet-mode-hook 'z/customize-jsonnet-mode-table)
 
      ;; https://github.com/syl20bnr/spacemacs/issues/9740
      (with-eval-after-load 'evil (defalias #'forward-evil-word #'forward-evil-symbol))
@@ -630,6 +635,17 @@
         )
        )
 
+       (defun z/dired-view-vertical()
+         (interactive)
+         (z/split-window-right)
+         (dired-view-file)
+         )
+       (defun z/dired-view-horizontal()
+         (interactive)
+         (z/split-window-below)
+         (dired-view-file)
+         )
+
      (use-package evil
        :config
        (require 'evil)
@@ -645,6 +661,8 @@
        (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
        (with-eval-after-load "dired" ;"dired mapping"
          ;; vimify some keybinds.
+         (define-key dired-mode-map (kbd "C-s") #'z/dired-view-horizontal)
+         (define-key dired-mode-map (kbd "C-v") #'z/dired-view-vertical)
          (define-key dired-mode-map (kbd "j") #'dired-next-line)
          (define-key dired-mode-map (kbd "k") #'dired-previous-line)
          (define-key dired-mode-map (kbd "n") #'evil-search-next)
@@ -1230,8 +1248,6 @@
                    (require 'dash)
                    (require 's)
 
-                   ;(define-key helm-ag-map (kbd "C-s") 'helm-ext-ff-helm-ag-execute-horizontal-split)
-                   ;(define-key helm-ag-map (kbd "C-v") 'helm-ext-ff-helm-ag-execute-vertical-split)
                    (define-key helm-projectile-find-file-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "<s-return>") 'z/helm-switch-other-frame)
                    (define-key helm-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
@@ -2404,6 +2420,7 @@
       (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.jsonnet\\.erb$" . jsonnet-mode))
       (setq web-mode-engines-alist
             '(("php"    . "\\.phtml\\'")
               ("blade"  . "\\.blade\\.")
@@ -2461,6 +2478,11 @@
      (blink-cursor-mode 0)
      (global-hl-line-mode)
      (helm-mode)
+     (defalias 'elisp-repl 'ielm)
+     (shackle-mode)
+     (neotree-mode)
+     (add-to-list 'shackle-rules '(help-mode :select t :popup t :align right))
+
      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
      (global-set-key (kbd "M-x") 'helm-M-x)
      ;; https://emacs.stackexchange.com/questions/732/how-do-i-list-all-key-bindings-available-in-a-given-buffer
@@ -2491,6 +2513,8 @@
      (evil-collection-init 'apropos)
      (evil-collection-init 'info)
      (evil-collection-init 'man)
+     (evil-collection-init 'debug)
+     (evil-collection-init 'edebug)
      (evil-collection-init)
 
      (defun eab/push-button-on-file-same-window ()
@@ -2554,5 +2578,22 @@
                          ((numberp (cadr alpha)) (cadr alpha)))
                    100)
               '(70 . 70) '(100 . 100)))))
+
+     (defun func-region (start end func)
+       "run a function over the region between START and END in current buffer.
+       ref: https://stackoverflow.com/questions/611831/how-to-url-decode-a-string-in-emacs-lisp"
+       (save-excursion
+         (let ((text (delete-and-extract-region start end)))
+           (insert (funcall func text)))))
+
+     (defun z/url-encode-region (start end)
+       "urlencode the region between START and END in current buffer."
+       (interactive "r")
+       (func-region start end #'url-hexify-string))
+
+     (defun z/url-decode-region (start end)
+       "de-urlencode the region between START and END in current buffer."
+       (interactive "r")
+       (func-region start end #'url-unhex-string))
 
    #+END_SRC
