@@ -511,7 +511,8 @@
 
         ;; combination with super+t
         "s-t h" 'helm-imenu
-        "s-t t" 'lsp-ui-imenu
+        "s-t t" 'imenu-list
+        "s-t u" 'lsp-ui-imenu
         "s-t l" 'toggle-truncate-lines
         "s-t a" 'toggle-transparency
 
@@ -1290,7 +1291,6 @@
 
 
      (setq helm-mini-default-sources '(helm-source-buffers-list
-                                       helm-source-recentf
                                        helm-source-buffer-not-found))
      (setq helm-split-window-in-side-p t ; open helm buffer inside current window, not occupy whole other window
            ;helm-display-function #'helm-display-buffer-in-own-frame ;https://github.com/emacs-helm/helm/wiki/frame
@@ -1408,7 +1408,7 @@
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Neo tree
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-     ;;(use-package all-the-icons)
+     (use-package all-the-icons)
      (use-package neotree
        :commands (neotree-mode)
        :config
@@ -1448,7 +1448,8 @@
     (setq neo-window-fixed-size nil)
     (setq-default neo-show-hidden-files t)
 
-    ;;(setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+    ; use all-the-icons with neotree
+    (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
     (defcustom neo-window-width 30
         "*Specifies the width of the NeoTree window."
@@ -2416,6 +2417,7 @@
 ** js config
    #+BEGIN_SRC emacs-lisp
       (require 'web-mode)
+      (add-to-list 'auto-mode-alist '("\\.rest$" . restclient-mode))
       (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
@@ -2488,6 +2490,8 @@
      (add-to-list 'shackle-rules '(help-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '(special-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '(process-menu-mode :select t :popup t :align right))
+     (add-to-list 'shackle-rules '("*HTTP Response*" :select t :popup t :align right))
+
 
      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
      (global-set-key (kbd "M-x") 'helm-M-x)
@@ -2502,12 +2506,12 @@
            (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
          (write-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
-     (add-hook 'after-init-hook (lambda ()
-                                  (when (fboundp 'auto-dim-other-buffers-mode)
-                                    (auto-dim-other-buffers-mode t))))
+     ;; (add-hook 'after-init-hook (lambda ()
+     ;;                              (when (fboundp 'auto-dim-other-buffers-mode)
+     ;;                                (auto-dim-other-buffers-mode t))))
 
      (pdf-tools-install)
-     (yaml-imenu-enable)
+     ;(yaml-imenu-enable)
      (require 'go-imenu) ;; Don't need to require, if you install by package.el
      (add-hook 'go-mode-hook 'go-imenu-setup)
      ;; https://github.com/emacs-evil/evil-collection
@@ -2521,6 +2525,8 @@
      (evil-collection-init 'man)
      (evil-collection-init 'debug)
      (evil-collection-init 'edebug)
+     (evil-collection-init 'imenu-list)
+     (evil-collection-init 'restclient)
      (evil-collection-init)
 
      (defun eab/push-button-on-file-same-window ()
@@ -2541,18 +2547,36 @@
        (run-with-timer 0.01 nil 'eab/push-button-on-file-same-window-internal))
 
      (defun z/clone-buffer ()
-             "jue clone current buffer. Useful to have multiple help buffers.
-             https://emacs.stackexchange.com/questions/33156/how-can-i-have-multiple-help-buffers-with-different-content"
-             (interactive)
-             (clone-buffer (concat (buffer-name) "-"                 ; create name from old name and
-                                   (save-excursion                   ; use first word in buffer for new name
-                                       (goto-char 0)
-                                       (thing-at-point 'word t)))
-                           t))                                       ; show cloned buffer now
+       "jue clone current buffer. Useful to have multiple help buffers.
+        https://emacs.stackexchange.com/questions/33156/how-can-i-have-multiple-help-buffers-with-different-content"
+       (interactive)
+       (clone-buffer (concat (buffer-name) "-"                 ; create name from old name and
+                             (save-excursion                   ; use first word in buffer for new name
+                               (goto-char 0)
+                               (thing-at-point 'word t)))
+                     t))                                       ; show cloned buffer now
 
-     (evil-collection-define-key 'normal 'daemons-mode-map
-       "m" 'tabulated-list-sort
-       )
+      (evil-collection-define-key 'normal 'daemons-mode-map
+        "m" 'tabulated-list-sort
+        )
+
+      (evil-collection-define-key 'normal 'imenu-list-major-mode-map
+        (kbd "RET") 'imenu-list-display-entry
+        "o" 'imenu-list-goto-entry
+        )
+
+      (evil-collection-define-key 'normal 'restclient-mode-map
+        (kbd "C-c C-o") 'restclient-http-send-current
+        (kbd "RET RET") 'restclient-http-send-current
+        (kbd "s-t") 'helm-restclient
+        (kbd "s-g") 'helm-restclient
+        (kbd "C-j") 'restclient-jump-next
+        (kbd "gn") 'restclient-jump-next
+        (kbd "gj") 'restclient-jump-next
+        (kbd "C-k") 'restclient-jump-prev
+        (kbd "gp") 'restclient-jump-prev
+        (kbd "gk") 'restclient-jump-prev
+        )
 
      (evil-collection-define-key 'normal 'help-mode-map
        "go" 'eab/push-button-on-file-same-window
@@ -2614,5 +2638,23 @@
      (add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
 
      (global-so-long-mode 1)
+     (require 'vlf-setup)
 
+     (autoload 'enable-paredit-mode "paredit"
+       "Turn on pseudo-structural editing of Lisp code."
+       t)
+     (add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
+     (add-hook 'lisp-mode-hook             'enable-paredit-mode)
+     (add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+     (add-hook 'scheme-mode-hook           'enable-paredit-mode)
+     (add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
+
+     ; setup dired-all-the-icon
+     (add-hook 'dired-mode-hook 'all-the-icons-dired-mode)
+     (require 'all-the-icons)
+
+     ; setup restclient-org
+     (org-babel-do-load-languages
+      'org-babel-load-languages
+      '((restclient . t)))
    #+END_SRC
