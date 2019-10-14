@@ -571,6 +571,8 @@
         "s-k s-e s-h" 'z/eval-last-sexp
         "s-k s-e e" 'z/eval-region
         "s-k s-e s-e" 'z/eval-region
+        "s-k s-e p" 'z/eval-paragraph
+        "s-k s-e s-p" 'z/eval-paragraph
 
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
@@ -2681,5 +2683,13 @@
                   ;; (format-time-string "<%Y-%m-%d %a %H:%M:%S %z>" (seconds-to-time (string-to-number str-short)))
                   )
          ))
+
+     (defun z/eval-paragraph(beg end)
+       (interactive "r")
+       (call-interactively 'evil-visual-char)
+       (call-interactively 'evil-inner-paragraph)
+       (call-interactively 'z/eval-region)
+       (message "Eval paragraph region !!!")
+       )
 
    #+END_SRC
