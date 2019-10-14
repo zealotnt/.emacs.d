@@ -2657,4 +2657,5 @@
      (org-babel-do-load-languages
       'org-babel-load-languages
       '((restclient . t)))
+     (require 'figlet)
    #+END_SRC

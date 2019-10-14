@@ -168,6 +168,7 @@ There are two things you can do about this warning:
 (load (format "%s/packages/xclip.el" w-dotfiles-folder-path))
 (load (format "%s/packages/navigate.el" w-dotfiles-folder-path))
 (load (format "%s/packages/so-long.el" w-dotfiles-folder-path))
+(load (format "%s/packages/figlet.el" w-dotfiles-folder-path))
 (xclip-mode 1)
 (require 'navigate)
 (setq use-package-verbose 't) ;Show use-package stat
