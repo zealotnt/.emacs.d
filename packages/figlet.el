@@ -35,13 +35,19 @@
 ;; Warning, leaving large ascii art text in your teams codebase might
 ;; cause an outbreak of physical violence.
 
-(defvar figlet-fonts '())
-(defvar figlet-default-font "small"
+(defvar figlet-fonts '("miniwi" "smslant" "Small Slant" "drpepper" "Ogre" "Doom"  "Stick Letters" "JS Stick Letters"
+                       "Standard" "Slant" "Rounded" "Graceful" "Speed" "larry3d" "Larry 3D 2"    
+                       "3d" "ANSI Regular" "ANSI Shadow" "DOS Rebel"
+                       "Georgia11" "starwars" "Isometric2" "Isometric3"))
+
+
+(defvar figlet-default-font "ANSI Shadow"
   "Default font to use when none is supplied.")
-(defvar figlet-options '()
+
+(defvar figlet-options `("-w" "800" "-d" "/usr/share/figlet/fonts")
   "List of options for the figlet call.
 This is a list of strings, e.g. '(\"-k\").")
-(defvar figlet-font-directory nil
+(defvar figlet-font-directory "/usr/share/figlet/fonts/"
   "Figlet default font directory")
 
 (defun figlet-get-font-dir ()
@@ -111,17 +117,21 @@ result (using `comment-region')"
     (figlet-comment str)))
 
 ;;;###autoload
-(defun figlet-preview-fonts (&optional text)
+(defun figlet-preview-fonts (text)
   "View an example of each font in a new buffer."
-  (interactive)
+  (interactive "sEnter text to preview: ")
   (switch-to-buffer (get-buffer-create "*Figlet Font Examples*"))
   (delete-region (point-min) (point-max))
   (mapconcat (lambda (x)
                (let ((figlet-default-font x))
-                 (insert (concat x ":\n"))
-                 (figlet (or text x))))
+                 (insert (concat x ":\n\n"))
+                 (if (= 0 (length text)) (figlet "The quick brown fox jumps over the lazy dog")
+                   (figlet text))
+                 (insert (concat "\n" "----------End of " x "----------\n\n"))
+                 ))
              (figlet-get-font-list)
              "\n"))
+
 
 (provide 'figlet)
 

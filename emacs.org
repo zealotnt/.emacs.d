@@ -536,9 +536,14 @@
         "s-d r" 'delete-trailing-whitespace
 
         ;; combination with super+k
-        "s-k s-t" 'z/epoch-unix-to-time
-        "s-k t" 'z/epoch-unix-to-time
+        ;"s-k s-t" '(:ignore t :which-key "text stuffs")
+        "s-k s-t" 'figlet-preview-fonts
+        "s-k t" 'figlet-preview-fonts
 
+        "s-k s-u" 'z/epoch-unix-to-time
+        "s-k u" 'z/epoch-unix-to-time
+
+        "s-k s-g" '(:ignore t :which-key "git stuffs")
         "s-k s-g c" 'hydra-smerge/body
         "s-k s-g s-c" 'hydra-smerge/body
         "s-k s-g g" 'magit-status ;status here
@@ -551,6 +556,7 @@
         "s-k s-g q"   'magit-blame-quit
         "s-k s-g s-q"   'magit-blame-quit
 
+        "s-k s-f" '(:ignore t :which-key "files stuffs")
         "s-k s-f n" 's/show-buffer-file-name
         "s-k s-f s-n" 's/show-buffer-file-name
         "s-k s-f r"   'w/copy-relative-file-path
@@ -565,6 +571,7 @@
         "s-k s-f s-f" 'z/which-function
         "s-k s-[" 'aj-toggle-fold
 
+        "s-k s-e" '(:ignore t :which-key "eval-elisp")
         "s-k s-e s" 'shell-command
         "s-k s-e s-s" 'shell-command
         "s-k s-e h" 'z/eval-last-sexp
@@ -577,6 +584,7 @@
         "s-k s-w" 'toggle-truncate-lines
         "s-k s-i" 's/show-buffer-file-name
 
+        "s-k s-r" '(:ignore t :which-key "restart stuffs")
         "s-k s-r c" 'z/sync-config
         "s-k s-r r" 'revert-buffer
 
