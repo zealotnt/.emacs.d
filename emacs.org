@@ -212,6 +212,11 @@
      (defun z/customize-shell-mode-table()
        (interactive)
        (modify-syntax-entry ?/ "."))
+     (defun z/customize-restclient-mode-table()
+       (interactive)
+       (modify-syntax-entry ?& ".")
+       (modify-syntax-entry ?: "w")
+       (modify-syntax-entry ?/ "."))
 
      (add-hook 'after-change-major-mode-hook 'z/customize-syntax-table)
      (add-hook 'change-major-mode-hook 'z/customize-syntax-table)
@@ -219,6 +224,7 @@
      (add-hook 'ruby-mode-hook 'z/customize-ruby-mode-table)
      (add-hook 'jsonnet-mode-hook 'z/customize-jsonnet-mode-table)
      (add-hook 'sh-mode-hook 'z/customize-shell-mode-table)
+     (add-hook 'restclient-mode-hook 'z/customize-restclient-mode-table)
 
      ;; https://github.com/syl20bnr/spacemacs/issues/9740
      (with-eval-after-load 'evil (defalias #'forward-evil-word #'forward-evil-symbol))
@@ -530,6 +536,9 @@
         "s-d r" 'delete-trailing-whitespace
 
         ;; combination with super+k
+        "s-k s-t" 'z/epoch-unix-to-time
+        "s-k t" 'z/epoch-unix-to-time
+
         "s-k s-g c" 'hydra-smerge/body
         "s-k s-g s-c" 'hydra-smerge/body
         "s-k s-g g" 'magit-status ;status here
@@ -2658,4 +2667,19 @@
       'org-babel-load-languages
       '((restclient . t)))
      (require 'figlet)
+
+     (defun z/epoch-unix-to-time(start end)
+       (interactive "r")
+       (let
+           ((str-orig (buffer-substring start end))
+            (str (buffer-substring start end))
+            )
+         (if (> (length str) 10) (setq-local str (substring str 0 10)))
+         (message "Result: %s equal to %s"
+                  str-orig
+                  (format-time-string "<%Y-%m-%d %a %H:%M:%S %z>" (seconds-to-time (string-to-number str)))
+                  ;; (format-time-string "<%Y-%m-%d %a %H:%M:%S %z>" (seconds-to-time (string-to-number str-short)))
+                  )
+         ))
+
    #+END_SRC
