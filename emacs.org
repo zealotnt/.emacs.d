@@ -191,6 +191,7 @@
      (setq w/main-leader-key "SPC")
      (setq w/secondary-leader-key ",")
      (setq confirm-kill-emacs #'y-or-n-p) ; or yes-or-no-p is you're really paranoid
+
      (defun z/customize-syntax-table ()
        (interactive)
        (modify-syntax-entry ?- "w" (standard-syntax-table))
@@ -214,9 +215,12 @@
        (modify-syntax-entry ?/ "."))
      (defun z/customize-restclient-mode-table()
        (interactive)
-       (modify-syntax-entry ?& ".")
+       (modify-syntax-entry ?& "-")
+       (modify-syntax-entry ?= "-")
+       (modify-syntax-entry ?? "-")
        (modify-syntax-entry ?: "w")
-       (modify-syntax-entry ?/ "."))
+       (modify-syntax-entry ?. "w")
+       (modify-syntax-entry ?/ "-"))
 
      (add-hook 'after-change-major-mode-hook 'z/customize-syntax-table)
      (add-hook 'change-major-mode-hook 'z/customize-syntax-table)
@@ -2692,6 +2696,7 @@
                   )
          ))
 
+     (require 'origami)
      (defun z/eval-paragraph(beg end)
        (interactive "r")
        (call-interactively 'evil-visual-char)

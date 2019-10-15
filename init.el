@@ -107,8 +107,11 @@
                       evil-paredit
                       vlf
                       shackle
-                      jsonnet-mode
                       php-mode
+                      dockerfile-mode
+                      origami
+                      shackle
+                      imenu-list
                       ))
 
 ; Add Melpa as the default Emacs Package repository
