@@ -203,7 +203,7 @@ There are two things you can do about this warning:
  '(menu-bar-mode nil)
  '(package-selected-packages
    (quote
-    (imenu-list imenu-anywhere typescript-mode solarized-theme vala-mode helm-ext json-mode go-mode highlight-indent-guides reason-mode rjsx-mode smartparens import-js prettier-js js2-mode evil-leader evil which-key helm-ag helm-projectile autothemer)))
+    (devdocs ts company-restclient dired-sidebar dired-imenu slime nov request systemd helm-systemd php-mode golden-ratio terraform-doc company-terraform discover-my-major kubernetes-evil kubernetes imenu-anywhere typescript-mode solarized-theme vala-mode helm-ext json-mode go-mode highlight-indent-guides reason-mode rjsx-mode smartparens import-js prettier-js js2-mode evil-leader evil which-key helm-ag helm-projectile autothemer)))
  '(tool-bar-mode nil))
 
 ;; customize monokai theme color

@@ -252,9 +252,11 @@
         :prefix w/main-leader-key
         :keymaps 'override
         :non-normal-prefix "M-m"
-                                             ;helm M-x
+
+        ;;One hit
         "SPC" 'w/helm-M-x
-                                             ;File
+
+        ;; File
         "f" '(:ignore t :which-key "Files")
         "ff" 'helm-find-files
         "fy" '(:ignore t :which-key "yank path")
@@ -269,7 +271,8 @@
         "fx" 'evil-quit
         "fe" '(:ignore t :which-key "emacs")
         "fes" 'z/sync-config
-                                             ;Projects
+
+        ;; Projects
         "p" '(:ignore t :which-key "projects")
         "pf" 'helm-projectile-find-file
         "pg" 'find-my-tag
@@ -279,14 +282,16 @@
         "pI" 'projectile-invalidate-cache
         "pp" 'w/projectile-switch-project
         "py" 'w/show-buffer-project-path
-                                             ;Search
+
+        ;; Search
         "s" '(:ignore t :which-key "search/symbol")
         "sf" 'helm-do-ag
         "sp" 'helm-do-ag-project-root
         "sa" '(:ignore t :which-key "ag")
         "saf" 'helm-do-ag
         "saa" 'helm-do-ag-this-file
-                                             ;Toggle
+
+        ;; Toggle
         "t" '(:ignore t :which-key "toggles")
         "ti" 'indent-guide-toggle
         "ts" 'flycheck-toggle
@@ -299,14 +304,15 @@
         "t C-c" 'toggle-camelcase-motion
         ;"th" '(:ignore t :which-key "highlight")
         ;"thp" 'highlight-parentheses-mode
-                                             ;Buffer
-        "b" '(:ignore t :which-key "buffers")
-        "bb" 'w/helm-mini
-        "bR" 'evil-edit
-                                             ;Zoom(Folding)
+
+        ;;Buffer
+        "b" 'w/helm-mini
+
+        ;; Zoom(Folding)
         "z" '(:ignore t :which-key "zoom")
         "zc" 'toggle-selective-display
-                                             ;Applications
+
+        ;; Applications
         "a" '(:ignore t :which-key "applications")
         "ad" 'dired
         "ap" 'list-processes
@@ -314,7 +320,8 @@
         "ait" 'emacs-init-time
         "as" '(:ignore t :which-key "Shell")
         "asn" 'create-shell
-                                             ;Git
+
+        ;; Git
         "g" '(:ignore t :which-key "Git")
         "gb" 'magit-blame
         "gB" 'vc-annotate
@@ -329,6 +336,13 @@
         "gll" 'git-link
 
         "k" '(:ignore t :which-key "super-k")
+        "kt" 'figlet-preview-fonts
+        "ku" ''z/epoch-unix-to-time
+        "kgc" 'hydra-smerge/body
+        "kgg" 'magit-status ;status here
+        "kgn" 'z/magit-status ;status in new frame
+        "kgb" 'magit-blame-echo
+        "kgq" 'magit-blame-quit
         "ks" 'neotree-project-dir-toggle
         "kfn" 's/show-buffer-file-name
         "kfr" 'w/copy-relative-file-path
@@ -337,14 +351,19 @@
         "kfo" 'xah-open-in-chrome
         "keh" 'z/eval-last-sexp
         "kee" 'z/eval-region
+        "kep" 'z/eval-paragraph
         "kex" 'xah-run-current-file
-                                             ;Jump
+        "kj" 'git-gutter:next-hunk
+        "kk" 'git-gutter:previous-hunk
+
+        ;; Jump
         "j" '(:ignore t :which-key "jump")
         "jj" 'evil-avy-goto-char
         "jJ" 'evil-avy-goto-char-2
         "jl" 'evil-avy-goto-line
         "jw" 'evil-avy-goto-word-or-subword-1
-                                             ;Error
+
+        ;; Error
         "e" '(:ignore t :which-key "errors")
         "ef" 'force-run-flycheck
         "el" 'flycheck-list-errors
@@ -352,17 +371,20 @@
         "eN" 'previous-error
         "ep" 'previous-error
         "ec" 'flycheck-clear
-                                             ;Layouts
+
+        ;; Layouts
         "l" '(:ignore t :which-key "layouts")
         "lL" 'w/persp-load-state-from-file
         "ls" 'w/persp-save-state-to-file
-                                             ;Regiters
+
+        ;; Regiters
         "r" '(:ignore t :which-key "registers")
         "rj" 'jump-to-register
         "rw" 'window-configuration-to-register
         "rl" 'helm-resume
         "rr" 'revert-buffer
-                                             ;Windows
+
+        ;; Windows
         "w" '(:ignore t :which-key "windows")
         "w=" 'balance-windows
         "wr" 'w/rotate-windows-forward
@@ -383,7 +405,8 @@
         "wO" 'select-frame-number
         "ww" 'evil-window-delete
         "w C-m" 'toggle-frame-maximized
-                                             ;Text
+
+        ;; Text
         "x" '(:ignore t :which-key "text")
         "xU" 'upcase-region
         "xu" 'downcase-region
@@ -554,11 +577,12 @@
         "s-k s-g s-g" 'magit-status ;status here
         "s-k s-g n" 'z/magit-status ;status in new frame
         "s-k s-g s-n" 'z/magit-status ;status in new frame
-        "s-k s-s"   'neotree-project-dir-toggle
-        "s-k s-g b"   'magit-blame-echo
+        "s-k s-g b" 'magit-blame-echo
         "s-k s-g s-b"   'magit-blame-echo
         "s-k s-g q"   'magit-blame-quit
-        "s-k s-g s-q"   'magit-blame-quit
+        ;"s-k s-g s-q"   'magit-blame-quit
+
+        "s-k s-s"   'neotree-project-dir-toggle
 
         "s-k s-f" '(:ignore t :which-key "files stuffs")
         "s-k s-f n" 's/show-buffer-file-name
@@ -2434,6 +2458,29 @@
 ** go-mode config
 
 #+BEGIN_SRC emacs-lisp
+  ;; (defun my-go-mode-hook ()
+  ;;                                         ; Call Gofmt before saving
+  ;;   (add-hook 'before-save-hook 'gofmt-before-save)
+  ;;                                         ; Customize compile command to run go build
+  ;;   (if (not (string-match "go" compile-command))
+  ;;       (set (make-local-variable 'compile-command)
+  ;;            "go build -v && go test -v && go vet"))
+  ;;                                         ; Godef jump key binding
+  ;;   (local-set-key (kbd "M-.") 'godef-jump)
+  ;;   (local-set-key (kbd "M-*") 'pop-tag-mark)
+  ;;   )
+  ;; (add-hook 'go-mode-hook 'my-go-mode-hook)
+
+  ;; (defun auto-complete-for-go ()
+  ;;   (auto-complete-mode 1))
+
+  ;; (add-hook 'go-mode-hook 'auto-complete-for-go)
+  ;; (add-hook 'before-save-hook 'gofmt-before-save)
+  ;; (defun auto-complete-for-go ()
+  ;;   (auto-complete-mode 1))
+  ;; (add-hook 'go-mode-hook 'auto-complete-for-go)
+  ;; (with-eval-after-load 'go-mode
+  ;;   (require 'go-autocomplete))
 
 #+END_SRC
 
