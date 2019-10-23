@@ -551,6 +551,10 @@
         "s-t l" 'toggle-truncate-lines
         "s-t a" 'toggle-transparency
         "s-t i" 'indent-tools-hydra/body
+        "s-t j" 'indent-tools-hydra/indent-tools-goto-next-sibling
+        "s-t k" 'indent-tools-hydra/indent-tools-goto-previous-sibling
+        "s-t h" 'indent-tools-hydra/indent-tools-goto-parent
+        "s-t l" 'indent-tools-hydra/indent-tools-goto-child
 
         ;; combination with super+n
         "s-n s-s" 'evil-window-new
@@ -2491,8 +2495,36 @@
 
 ** js config
    #+BEGIN_SRC emacs-lisp
-      (require 'web-mode)
+
+      (add-to-list 'auto-mode-alist '("\\.epub$" . nov-mode))
+      (require 'justify-kp)
+      (setq nov-text-width 80)
+      (defun my-nov-window-configuration-change-hook ()
+        (my-nov-post-html-render-hook)
+        (remove-hook 'window-configuration-change-hook
+                    'my-nov-window-configuration-change-hook
+                    t))
+      (defun my-nov-post-html-render-hook ()
+        (if (get-buffer-window)
+            (let ((max-width (pj-line-width))
+                  buffer-read-only)
+              (save-excursion
+                (goto-char (point-min))
+                (while (not (eobp))
+                  (when (not (looking-at "^[[:space:]]*$"))
+                    (goto-char (line-end-position))
+                    (when (> (shr-pixel-column) max-width)
+                      (goto-char (line-beginning-position))
+                      (pj-justify)))
+                  (forward-line 1))))
+          (add-hook 'window-configuration-change-hook
+                    'my-nov-window-configuration-change-hook
+                    nil t)))
+      (add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook)
+
       (add-to-list 'auto-mode-alist '("\\.rest$" . restclient-mode))
+
+      (require 'web-mode)
       (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
       (add-to-list 'auto-mode-alist '("\\.tpl\\'" . web-mode))
@@ -2570,6 +2602,7 @@
 
      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
      (global-set-key (kbd "M-x") 'helm-M-x)
+     (global-set-key (kbd "M-X") 'execute-extended-command)
      ;; https://emacs.stackexchange.com/questions/732/how-do-i-list-all-key-bindings-available-in-a-given-buffer
      (global-set-key (kbd "<f1> b") 'helm-descbinds)
 
@@ -2602,6 +2635,7 @@
      (evil-collection-init 'edebug)
      (evil-collection-init 'imenu-list)
      (evil-collection-init 'restclient)
+     (evil-collection-init 'nov)
      (evil-collection-init)
 
      (defun eab/push-button-on-file-same-window ()
@@ -2750,6 +2784,8 @@
 
      (require 'origami)
      (require 'indent-tools)
+     (setq enable-recursive-minibuffers t)
+     (minibuffer-depth-indicate-mode 1)
      (defun z/eval-paragraph(beg end)
        (interactive "r")
        (call-interactively 'evil-visual-char)
