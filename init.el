@@ -112,6 +112,8 @@
                       origami
                       shackle
                       imenu-list
+                      indent-tools
+                      protobuf-mode
                       ))
 
 ; Add Melpa as the default Emacs Package repository
@@ -233,3 +235,12 @@ There are two things you can do about this warning:
 (setq initial-major-mode 'text-mode)
 (setq initial-scratch-message "")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
+
+(setq z/initial-load-files
+      (vector
+       ))
+(add-hook 'after-init-hook (lambda() (mapcar
+                            (lambda (x)
+                              (find-file x))
+                            z/initial-load-files)) t)
+

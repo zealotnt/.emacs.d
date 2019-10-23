@@ -279,7 +279,7 @@
         "pG" 'projectile-regenerate-tags
         "pD" 'w/projectile-dired
         "pr" 'projectile-recentf
-        "pI" 'projectile-invalidate-cache
+        "pi" 'projectile-invalidate-cache
         "pp" 'w/projectile-switch-project
         "py" 'w/show-buffer-project-path
 
@@ -517,7 +517,6 @@
         ;;"s-p" 'fzf
         "s-Q" 'save-buffers-kill-emacs
         "s-+" 'new-frame
-        "s-p" 'helm-projectile-find-file
         "s-P" 'w/helm-M-x
         "s-w" 'evil-window-delete
         "s-W" 'evil-quit
@@ -537,6 +536,9 @@
         "s-R" 'helm-resume
         "s-y" 'repeat
 
+        ;; combination with super+p, projectile
+        "s-p" 'helm-projectile-find-file
+
         ;; navigation
         "M-[" 'evil-jump-backward
         "M-]" 'evil-jump-forward
@@ -548,6 +550,7 @@
         "s-t u" 'lsp-ui-imenu
         "s-t l" 'toggle-truncate-lines
         "s-t a" 'toggle-transparency
+        "s-t i" 'indent-tools-hydra/body
 
         ;; combination with super+n
         "s-n s-s" 'evil-window-new
@@ -597,6 +600,8 @@
         "s-k s-f s-o" 'xah-open-in-chrome
         "s-k s-f f" 'z/which-function
         "s-k s-f s-f" 'z/which-function
+        "s-k s-f p" 'w/show-buffer-project-path
+        "s-k s-f s-p" 'w/show-buffer-project-path
         "s-k s-[" 'aj-toggle-fold
 
         "s-k s-e" '(:ignore t :which-key "eval-elisp")
@@ -2744,6 +2749,7 @@
          ))
 
      (require 'origami)
+     (require 'indent-tools)
      (defun z/eval-paragraph(beg end)
        (interactive "r")
        (call-interactively 'evil-visual-char)
