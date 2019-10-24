@@ -75,6 +75,21 @@
               'yaml-imenu-source-directory
               (symbol-function 'yaml-imenu-source-directory))))))
 
+(defmacro z/with-output-to-string (&rest body)
+  "Execute BODY, return the text it sent to `standard-output', as a string.
+   origin: https://github.com/emacs-mirror/emacs/blob/30efb8ed6c0968ca486081112f8d4dc147af9e6c/lisp/subr.el#L3536"
+  ;; (declare (indent 0) (debug t))
+  `(let ((standard-output
+          (get-buffer-create (generate-new-buffer-name "*string-output*"))))
+     (unwind-protect
+         (progn
+           (let ((standard-output standard-output))
+             ,@body)
+           (with-current-buffer standard-output
+             (buffer-string)))
+       (progn (switch-to-buffer standard-output) (kill-buffer-and-window))
+       )))
+
 ;;;###autoload
 (defun yaml-imenu-create-index ()
   "Create an imenu index for the current YAML file."
@@ -82,7 +97,7 @@
    (let ((json-object-type 'alist)
          (json-array-type 'list))
      (json-read-from-string
-      (with-output-to-string
+      (z/with-output-to-string
         (shell-command-on-region
          (point-min)
          (point-max)

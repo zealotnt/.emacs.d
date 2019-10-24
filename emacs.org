@@ -8,7 +8,6 @@
   - [[#evil-config][Evil config]]
   - [[#avy-config][Avy config]]
   - [[#which-key-config][Which key config]]
-  - [[#shell-config][Shell config]]
   - [[#frame-config][Frame config]]
   - [[#clipboard-config][Clipboard config]]
   - [[#setup-theme-config][Setup theme config]]
@@ -59,7 +58,7 @@
       "Open the init file."
       (interactive)
       (progn
-        (select-frame (new-frame))
+        (w/make-frame-reuse)
         (find-file "~/workspace_mine/w_emacs_dotfiles/emacs.org")
         ))
 
@@ -69,7 +68,7 @@
     (defun z/show-message-log ()
       (interactive)
       (progn
-        (select-frame (new-frame))
+        (w/make-frame-reuse)
         (switch-to-buffer "*Messages*")))
 
     (defun s/show-buffer-file-path ()
@@ -563,7 +562,7 @@
         "s-n v" 'evil-window-vnew
         "s-n n" 'evil-buffer-new
         "s-n s-n" 'evil-buffer-new
-        "s-N" 'w/make-frame
+        "s-N" 'w/make-frame-reuse
 
         ;; combination with super+d
         "s-d d" 'kill-whole-line
@@ -1369,15 +1368,24 @@
        (with-persp-buffer-list ()
                                (helm-mini)))
 
+     (defun w/make-frame-reuse ()
+       (interactive)
+       (progn
+         (select-frame-set-input-focus (new-frame))
+         (delete-other-windows)))
+
      (defun w/make-frame ()
        (interactive)
-       (select-frame (new-frame)))
+       (progn
+         (select-frame-set-input-focus (new-frame))
+         (evil-window-new 1 nil)
+         (delete-other-windows)))
 
      (defun z/magit-status ()
        "Create new frame with magit"
        (interactive)
        (progn
-         (select-frame (new-frame))
+         (w/make-frame-reuse)
          (magit-status)
          ))
 
@@ -2590,15 +2598,23 @@
    #+BEGIN_SRC emacs-lisp
      (blink-cursor-mode 0)
      (global-hl-line-mode)
+
+     (use-package helm
+       :bind (:map helm-find-files-map
+              ("<tab>"         . helm-execute-persistent-action)
+              ("C-<backspace>" . helm-find-files-up-one-level)
+              :map helm-map
+              ("<tab>"         . helm-execute-persistent-action)))
+
      (helm-mode)
-     (defalias 'elisp-repl 'ielm)
-     (shackle-mode)
      (neotree-mode)
+     (defalias 'elisp-repl 'ielm)
+
+     (shackle-mode)
      (add-to-list 'shackle-rules '(help-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '(special-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '(process-menu-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '("*HTTP Response*" :select t :popup t :align right))
-
 
      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
      (global-set-key (kbd "M-x") 'helm-M-x)
@@ -2614,14 +2630,16 @@
            (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
          (write-file (concat "/sudo:root@localhost:" buffer-file-name))))
 
+     ;; dim other buffers
      ;; (add-hook 'after-init-hook (lambda ()
      ;;                              (when (fboundp 'auto-dim-other-buffers-mode)
      ;;                                (auto-dim-other-buffers-mode t))))
 
      (pdf-tools-install)
-     ;(yaml-imenu-enable)
+     (yaml-imenu-enable)
      (require 'go-imenu) ;; Don't need to require, if you install by package.el
      (add-hook 'go-mode-hook 'go-imenu-setup)
+
      ;; https://github.com/emacs-evil/evil-collection
      (setq evil-collection-mode-list nil)
      (with-eval-after-load 'pdf-tools (require 'evil-collection-pdf) (evil-collection-pdf-setup)) ; why this works ? but below won't ? ; (evil-collection-init 'pdf) ;why this not works ?

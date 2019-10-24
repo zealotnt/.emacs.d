@@ -172,6 +172,7 @@ There are two things you can do about this warning:
 (load (format "%s/packages/go-imenu/go-imenu.el" w-dotfiles-folder-path))
 (load (format "%s/packages/xclip.el" w-dotfiles-folder-path))
 (load (format "%s/packages/navigate.el" w-dotfiles-folder-path))
+(load (format "%s/packages/justify-kp.el" w-dotfiles-folder-path))
 (load (format "%s/packages/so-long.el" w-dotfiles-folder-path))
 (load (format "%s/packages/figlet.el" w-dotfiles-folder-path))
 (xclip-mode 1)
