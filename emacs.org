@@ -432,12 +432,28 @@
          )
        (add-hook 'ruby-mode-hook 'w/remap-ruby-mode-leader-key)
 
+       (defun z/increase-height()
+         (interactive)
+         (evil-window-increase-height 15))
+       (defun z/increase-width()
+         (interactive)
+         (evil-window-increase-width 15))
+       (defun z/decrease-height()
+         (interactive)
+         (evil-window-decrease-height 15))
+       (defun z/decrease-width()
+         (interactive)
+         (evil-window-decrease-width 15))
        (general-define-key
         :states '(normal visual emacs)
-        "C-w +" '((lambda () (interactive) (evil-window-increase-height 15)) :which-key "window-increase-height")
-        "C-w -" '((lambda () (interactive) (evil-window-decrease-height 15)) :which-key "window-decrease-height")
-        "C-w >" '((lambda () (interactive) (evil-window-increase-width 15)) :which-key "window-increase-width")
-        "C-w <" '((lambda () (interactive) (evil-window-decrease-width 15)) :which-key "window-decrease-width")
+        "C--" 'z/decrease-height
+        "C-=" 'z/increase-height
+        "C-." 'z/increase-width
+        "C-," 'z/decrease-width
+        "C-w +" 'z/increase-height
+        "C-w -" 'z/decrease-height
+        "C-w >" 'z/increase-width
+        "C-w <" 'z/decrease-width
         "C-w r" 'w/rotate-windows-forward
         "C-w R" 'w/rotate-windows-backward
         "C-w m" 'toggle-maximize-buffer
@@ -535,6 +551,12 @@
         "s-R" 'helm-resume
         "s-y" 'repeat
 
+        ;; combination with super+e, execute, convert,...
+        "s-e p" 'z/query-prometheus
+        "s-e s-p" 'z/query-prometheus
+        "s-e u" 'z/epoch-unix-to-time
+        "s-e s-u" 'z/epoch-unix-to-time
+
         ;; combination with super+p, projectile
         "s-p" 'helm-projectile-find-file
 
@@ -575,6 +597,8 @@
 
         "s-k s-u" 'z/epoch-unix-to-time
         "s-k u" 'z/epoch-unix-to-time
+        "s-k p" 'z/query-prometheus
+        "s-k s-p" 'z/query-prometheus
 
         "s-k s-g" '(:ignore t :which-key "git stuffs")
         "s-k s-g c" 'hydra-smerge/body
@@ -892,6 +916,7 @@
      ; https://emacs.stackexchange.com/a/3017
      (add-to-list 'initial-frame-alist '(fullscreen . maximized))
      (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
      (setq frame-title-format
            '((:eval (if (buffer-file-name)
                         (abbreviate-file-name (buffer-file-name))
@@ -2610,11 +2635,13 @@
      (neotree-mode)
      (defalias 'elisp-repl 'ielm)
 
+     ;; https://github.com/wasamasa/shackle
      (shackle-mode)
      (add-to-list 'shackle-rules '(help-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '(special-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '(process-menu-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '("*HTTP Response*" :select t :popup t :align right))
+     (add-to-list 'shackle-rules '("\\*Man .*" :regexp t :select t :same t))
 
      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
      (global-set-key (kbd "M-x") 'helm-M-x)
@@ -2811,5 +2838,16 @@
        (call-interactively 'z/eval-region)
        (message "Eval paragraph region !!!")
        )
+
+
+     (defun z/query-prometheus(start end)
+       (interactive "r")
+       (let
+           ((str (url-hexify-string (buffer-substring start end))))
+           (z/query-url (format "https://prometheus.staging.ehrocks.com/graph?g0.range_input=1h&g0.expr=%s&g0.tab=1" str))
+         ))
+
+     (defun z/query-url(query)
+        (shell-command (format "google-chrome \"%s\"" query)))
 
    #+END_SRC

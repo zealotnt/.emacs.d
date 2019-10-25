@@ -110,7 +110,6 @@
                       php-mode
                       dockerfile-mode
                       origami
-                      shackle
                       imenu-list
                       indent-tools
                       protobuf-mode
