@@ -530,6 +530,8 @@
 
         ;; single super key mappings
         ;;"s-p" 'fzf
+        "s--" 'z/split-window-below
+        "s-_" 'z/split-window-right
         "s-Q" 'save-buffers-kill-emacs
         "s-+" 'new-frame
         "s-P" 'w/helm-M-x
@@ -2317,8 +2319,10 @@
 
       (defhydra hydra-git-timemachine
        (:color pink :hint nil :exit t)
-       ("n" git-timemachine-show-next-revision "Next Revision" :column "Go to")
-       ("p" git-timemachine-show-previous-revision "Next Revision")
+       ("n" evil-next-match "Next match" :column "Go to")
+       ("p" evil-previous-match "Prev match" :column "Go to")
+       ("u" git-timemachine-show-next-revision "Next Revision" :column "Go to")
+       ("d" git-timemachine-show-previous-revision "Prev Revision" :column "Go to")
        ("c" git-timemachine-show-current-revision "Current Revision")
        ("g" git-timemachine-show-nth-revision "Nth Revision")
        ("t" git-timemachine-show-revision-fuzzy "Search")

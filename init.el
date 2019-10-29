@@ -238,6 +238,7 @@ There are two things you can do about this warning:
 
 (setq z/initial-load-files
       (vector
+       "~/.emacs.d/init.el"
        ))
 (add-hook 'after-init-hook (lambda() (mapcar
                             (lambda (x)
