@@ -274,13 +274,11 @@
         ;; Projects
         "p" '(:ignore t :which-key "projects")
         "pf" 'helm-projectile-find-file
-        "pg" 'find-my-tag
-        "pG" 'projectile-regenerate-tags
-        "pD" 'w/projectile-dired
-        "pr" 'projectile-recentf
+        "pg" 'projectile-regenerate-tags
+        "pd" 'w/projectile-dired
         "pi" 'projectile-invalidate-cache
         "pp" 'w/projectile-switch-project
-        "py" 'w/show-buffer-project-path
+        "ph" 'w/show-buffer-project-path
 
         ;; Search
         "s" '(:ignore t :which-key "search/symbol")
@@ -534,7 +532,6 @@
         "s-_" 'z/split-window-right
         "s-Q" 'save-buffers-kill-emacs
         "s-+" 'new-frame
-        "s-P" 'w/helm-M-x
         "s-w" 'evil-window-delete
         "s-W" 'evil-quit
         "s-s" 'save-buffer
@@ -561,6 +558,11 @@
 
         ;; combination with super+p, projectile
         "s-p" 'helm-projectile-find-file
+        "s-P g" 'projectile-regenerate-tags
+        "s-P d" 'w/projectile-dired
+        "s-P i" 'projectile-invalidate-cache
+        "s-P p" 'w/projectile-switch-project
+        "s-P h" 'w/show-buffer-project-path
 
         ;; navigation
         "M-[" 'evil-jump-backward
@@ -615,6 +617,7 @@
         ;"s-k s-g s-q"   'magit-blame-quit
 
         "s-k s-s"   'neotree-project-dir-toggle
+        "s-k s-d" 'w/projectile-dired
 
         "s-k s-f" '(:ignore t :which-key "files stuffs")
         "s-k s-f n" 's/show-buffer-file-name
@@ -2854,4 +2857,6 @@
      (defun z/query-url(query)
         (shell-command (format "google-chrome \"%s\"" query)))
 
+     (require 'atomic-chrome)
+     (atomic-chrome-start-server)
    #+END_SRC

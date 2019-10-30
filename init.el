@@ -212,7 +212,7 @@ There are two things you can do about this warning:
 ;; https://github.com/oneKelvinSmith/monokai-emacs#customization
 (setq ;; foreground and background
       monokai-foreground     "#F8F8F2"
-      monokai-background     "#000000"
+      monokai-background     "gray10"
       monokai-gray           "gray19")
 
 (custom-set-faces
