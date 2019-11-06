@@ -334,7 +334,7 @@
 
         "k" '(:ignore t :which-key "super-k")
         "kt" 'figlet-preview-fonts
-        "ku" ''z/epoch-unix-to-time
+        "ku" 'z/epoch-unix-to-time
         "kgc" 'hydra-smerge/body
         "kgg" 'magit-status ;status here
         "kgn" 'z/magit-status ;status in new frame
@@ -2821,16 +2821,19 @@
      (require 'figlet)
 
      (defun z/epoch-unix-to-time(start end)
+     "Ref resources:
+     https://stackoverflow.com/questions/2742435/in-emacs-how-do-i-display-a-message-in-the-minibuffer-with-font-face-properties
+     https://unix.stackexchange.com/questions/27013/displaying-seconds-as-days-hours-mins-seconds"
        (interactive "r")
        (let
            ((str-orig (buffer-substring start end))
             (str (buffer-substring start end))
             )
          (if (> (length str) 10) (setq-local str (substring str 0 10)))
-         (message "Result: %s equal to %s"
-                  str-orig
-                  (format-time-string "<%Y-%m-%d %a %H:%M:%S %z>" (seconds-to-time (string-to-number str)))
-                  ;; (format-time-string "<%Y-%m-%d %a %H:%M:%S %z>" (seconds-to-time (string-to-number str-short)))
+         (message "%s == %s == %s (s) from now"
+                  (propertize str-orig 'face '(:foreground "red"))
+                  (propertize (format-time-string "<%Y-%m-%d %a %H:%M:%S %z>" (seconds-to-time (string-to-number str))) 'face '(:foreground "green"))
+                  (propertize (number-to-string (- (string-to-number (replace-regexp-in-string "\n$" "" (shell-command-to-string "date +%s"))) (string-to-number str))) 'face '(:foreground "yellow"))
                   )
          ))
 
