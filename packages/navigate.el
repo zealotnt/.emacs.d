@@ -37,7 +37,13 @@
     (condition-case nil
         (funcall (read cmd))
       (error
-       (tmux-command direction)))))
+       (unless (display-graphic-p)
+         (progn (tmux-command direction))
+         )
+       )
+      )
+    )
+  )
 
 (defun tmux-command (direction)
   (shell-command-to-string
