@@ -409,9 +409,14 @@
         "xu" 'downcase-region
         "xs" 'toggle-camelcase-underscores
         "xd" '(:ignore t :which-key "delete")
-        "xdw" 'delete-trailing-whitespace
+        "xdw" 'z/delete-trailing-whitespace
         )
 
+       (defun z/delete-trailing-whitespace (beg end)
+         (interactive "r")
+         (message "Trailling whitespace deleled")
+         (delete-trailing-whitespace)
+         )
        (defun z/split-window-right ()
          (interactive)
          (split-window-right)
@@ -502,6 +507,11 @@
         "gdv" '(lambda () (interactive) (z/split-window-right) (evil-goto-definition))
         "gds" '(lambda () (interactive) (z/split-window-below) (evil-goto-definition))
 
+        ;; recenter
+        "C-l" '(lambda () (interactive) (recenter nil))
+        "C-t" '(lambda () (interactive) (recenter 1))
+        "C-b" '(lambda () (interactive) (recenter -2))
+
         ;; map to be like tmux
         "C-a h" 'tmux-navigate-left
         "M-h" 'tmux-navigate-left
@@ -530,6 +540,7 @@
         ;;"s-p" 'fzf
         "s--" 'z/split-window-below
         "s-_" 'z/split-window-right
+        "s-q" 'delete-frame
         "s-Q" 'save-buffers-kill-emacs
         "s-+" 'new-frame
         "s-w" 'evil-window-delete
@@ -592,7 +603,7 @@
 
         ;; combination with super+d
         "s-d d" 'kill-whole-line
-        "s-d r" 'delete-trailing-whitespace
+        "s-d r" 'z/delete-trailing-whitespace
 
         ;; combination with super+k
         ;"s-k s-t" '(:ignore t :which-key "text stuffs")
@@ -655,6 +666,9 @@
 
         "s-k s-j" 'git-gutter:next-hunk
         "s-k s-k" 'git-gutter:previous-hunk
+
+        "s-k c" 'atomic-chrome-close-current-buffer
+        "s-k s-c" 'atomic-chrome-close-current-buffer
 
         ;;"s-1" 'customize ;;before, it is "s-,"
         "s-0" '(lambda () (interactive) (neotree-hide) (neotree-project-dir-toggle) (neotree-quick-look))
@@ -1534,8 +1548,15 @@
                  (custom-set-faces
                   '(cursor ((t (:background "gold" :foreground "#151718"))))
                   '(mode-line ((t (:background "black" :foreground "#4499FF"))))
-                  '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 90 :family "Inconsolata"))))
-                  '(neo-file-link-face ((t (:foreground "White" :weight normal :height 90 :family "Inconsolata")))))
+                  '(neo-dir-link-face ((t (:foreground "deep sky blue"
+                                           :slant normal
+                                           :weight bold
+                                           :height 100
+                                           :family "Inconsolata"))))
+                  '(neo-file-link-face ((t (:foreground "White"
+                                           :weight normal
+                                           :height 100
+                                           :family "Inconsolata")))))
                  ))
 
 
@@ -2497,8 +2518,9 @@
       (message "Eval region !!!"))
     (defun z/eval-last-sexp(eval-last-sexp-arg-internal)
       (interactive "P")
-      (message "Eval last sexp !!!")
-      (eval-last-sexp eval-last-sexp-arg-internal))
+      (eval-last-sexp eval-last-sexp-arg-internal)
+      (message "Eval last sexp !!!"))
+
     #+END_SRC
 
     #+RESULTS:
@@ -2648,6 +2670,7 @@
      (add-to-list 'shackle-rules '(special-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '(process-menu-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '("*HTTP Response*" :select t :popup t :align right))
+     (add-to-list 'shackle-rules '("\\*helm-mode-neotree-.*" :regexp t :select t :popup t :align right))
      (add-to-list 'shackle-rules '("\\*Man .*" :regexp t :select t :same t))
 
      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -2838,6 +2861,7 @@
          ))
 
      (require 'origami)
+     (global-origami-mode)
      (require 'indent-tools)
      (setq enable-recursive-minibuffers t)
      (minibuffer-depth-indicate-mode 1)

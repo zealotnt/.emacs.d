@@ -16,7 +16,7 @@
                       evil ;Vi mode
                       general ;evil leader map
                       bind-map ;keymap available across different “leader keys”
-                      which-key ;key leader guide 
+                      which-key ;key leader guide
                       async ;asynchronous processing in Emacs
                       use-package ;package manager
                       exec-path-from-shell
@@ -39,6 +39,12 @@
                       ;========================================================
                       magit ;git tools
                       magit-popup ;git tools
+                      magit ;git tools
+                      magit-popup ;git tools
+                      evil-magit ;git tools with vi mode
+                      magit ;git tools
+                      magit-popup ;git tools
+                      evil-magit ;git tools with vi mode
                       evil-magit ;git tools with vi mode
                       git-gutter ;indicating inserted, modified or deleted lines
                       git-link ;copy github link
@@ -113,6 +119,8 @@
                       imenu-list
                       indent-tools
                       protobuf-mode
+                      atomic-chrome
+                      gitignore-mode
                       ))
 
 ; Add Melpa as the default Emacs Package repository
@@ -220,7 +228,9 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 90 :width normal :foundry "PfEd" :family "DejaVu Sans Mono"))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil
+                :overline nil :underline nil :slant normal :weight normal :width normal :foundry "PfEd"
+                :family "DejaVu Sans Mono" :height 95))))
  '(auto-dim-other-buffers-face ((t (:background "gray19"))))
  '(cursor ((t (:background "gold" :foreground "#151718"))))
  '(mode-line ((t (:background "black" :foreground "#4499FF" :height 80))))
@@ -228,8 +238,7 @@ There are two things you can do about this warning:
  '(mode-line-emphasis ((t (:background "black" :foreground "#4499FF" :height 80))))
  '(mode-line-highlight ((t (:background "black" :foreground "#4499FF" :height 80))))
  '(mode-line-inactive ((t (:background "black" :foreground "#4499FF" :height 80))))
- '(neo-dir-link-face ((t (:foreground "deep sky blue" :slant normal :weight bold :height 120 :family "Inconsolata for Powerline"))))
- '(neo-file-link-face ((t (:foreground "White" :weight normal :height 120 :family "Inconsolata for Powerline")))))
+ )
 
 (server-start)
 (setq initial-major-mode 'text-mode)
