@@ -121,6 +121,7 @@
                       protobuf-mode
                       atomic-chrome
                       gitignore-mode
+                      image+
                       ))
 
 ; Add Melpa as the default Emacs Package repository

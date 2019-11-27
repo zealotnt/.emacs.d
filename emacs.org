@@ -509,8 +509,8 @@
 
         ;; recenter
         "C-l" '(lambda () (interactive) (recenter nil))
-        "C-t" '(lambda () (interactive) (recenter 1))
-        "C-b" '(lambda () (interactive) (recenter -2))
+        "C-t" '(lambda () (interactive) (recenter 2))
+        "C-b" '(lambda () (interactive) (recenter -1))
 
         ;; map to be like tmux
         "C-a h" 'tmux-navigate-left
@@ -1098,7 +1098,7 @@
                   (quit-message
                    (format "You must select a number between 1 and %s." total-frames)))
              (signal 'quit `(,quit-message ))))
-         (select-frame chosen-frame)
+         (select-frame-set-input-focus chosen-frame)
          (raise-frame chosen-frame)
          chosen-frame)
        )
@@ -1552,11 +1552,11 @@
                                            :slant normal
                                            :weight bold
                                            :height 100
-                                           :family "Inconsolata"))))
+                                           :family "Inconsolata for Powerline"))))
                   '(neo-file-link-face ((t (:foreground "White"
                                            :weight normal
-                                           :height 100
-                                           :family "Inconsolata")))))
+                                           :height 90
+                                           :family "Inconsolata for Powerline")))))
                  ))
 
 
@@ -1566,7 +1566,7 @@
     ; use all-the-icons with neotree
     (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
 
-    (defcustom neo-window-width 30
+    (defcustom neo-window-width 50
         "*Specifies the width of the NeoTree window."
         :type 'integer
         :group 'neotree)
@@ -2672,6 +2672,7 @@
      (add-to-list 'shackle-rules '("*HTTP Response*" :select t :popup t :align right))
      (add-to-list 'shackle-rules '("\\*helm-mode-neotree-.*" :regexp t :select t :popup t :align right))
      (add-to-list 'shackle-rules '("\\*Man .*" :regexp t :select t :same t))
+     (add-to-list 'shackle-rules '(pdf-outline-buffer-mode :select t :popup t :align bottom :size 0.22))
 
      (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
      (global-set-key (kbd "M-x") 'helm-M-x)
@@ -2699,7 +2700,10 @@
 
      ;; https://github.com/emacs-evil/evil-collection
      (setq evil-collection-mode-list nil)
-     (with-eval-after-load 'pdf-tools (require 'evil-collection-pdf) (evil-collection-pdf-setup)) ; why this works ? but below won't ? ; (evil-collection-init 'pdf) ;why this not works ?
+     (with-eval-after-load 'pdf-tools
+       (require 'evil-collection-pdf)
+       (evil-collection-pdf-setup)) ; why this works ? but below won't ?
+       ; (evil-collection-init 'pdf) ;why this not works ?
      (evil-collection-init 'help)
      (evil-collection-init 'occur)
      (evil-collection-init 'daemons)
@@ -2711,6 +2715,8 @@
      (evil-collection-init 'imenu-list)
      (evil-collection-init 'restclient)
      (evil-collection-init 'nov)
+     (evil-collection-init 'image)
+     (evil-collection-init 'image+)
      (evil-collection-init)
 
      (defun eab/push-button-on-file-same-window ()
@@ -2768,6 +2774,12 @@
        "c" 'z/clone-buffer
        )
 
+     (evil-collection-define-key 'normal 'pdf-view-mode-map
+       "h" 'pdf-history-backward
+       "l" 'pdf-history-forward
+       "f" 'pdf-links-action-perform
+       )
+
      (evil-collection-define-key 'normal 'pdf-outline-buffer-mode-map
        (kbd "TAB") 'pdf-outline-toggle-subtree
        (kbd "C-j") 'outline-forward-same-level
@@ -2777,7 +2789,9 @@
        "-"         '(lambda () (interactive) (evil-window-decrease-height 15) (evil-window-decrease-width 15))
        "="         '(lambda () (interactive) (evil-window-increase-height 15) (evil-window-increase-width 15))
        "O"         'pdf-outline-follow-link-and-quit
-       "A"         'show-all
+       "u"         'pdf-outline-up-heading
+       "a"         'show-all
+       "A"         'outline-hide-other
        "q"         '(lambda () (interactive) (if (y-or-n-p "Quit outline window ?") (quit-window)))
        )
 
@@ -2886,4 +2900,40 @@
 
      (require 'atomic-chrome)
      (atomic-chrome-start-server)
+     (eval-after-load 'image '(require 'image+))
+     (setq dired-listing-switches "-ahlt --group-directories-first")
+
+     (defun tail-f-msgs ()
+       "Go to the end of Messages buffer."
+       (let ((msg-window (get-buffer-window "*Messages*")))
+         (if msg-window
+             (with-current-buffer (window-buffer msg-window)
+               (set-window-point msg-window (point-max))))))
+     ;; Make the Messages buffer stick to the end.
+     (add-hook 'post-command-hook 'tail-f-msgs)
+
+     (add-hook 'pdf-view-mode-hook (lambda()
+       (pdf-view-fit-page-to-window)
+       (pdf-view-midnight-minor-mode t)
+       (display-line-numbers-mode 0)))
+
+     (defun z/describe-keymap (keymap)
+       "Describe a keymap using `substitute-command-keys'.
+       https://stackoverflow.com/questions/3480173/show-keys-in-emacs-keymap-value
+       https://stackoverflow.com/a/36994486"
+       (interactive
+        (list (completing-read
+               "Keymap: " (let (maps)
+                            (mapatoms (lambda (sym)
+                                        (and (boundp sym)
+                                             (keymapp (symbol-value sym))
+                                             (push sym maps))))
+                            maps)
+               nil t)))
+       (with-output-to-temp-buffer (format "*keymap: %s*" keymap)
+         (princ (format "%s\n\n" keymap))
+         (princ (substitute-command-keys (format "\\{%s}" keymap)))
+         (with-current-buffer standard-output ;; temp buffer
+           (setq help-xref-stack-item (list #'my-describe-keymap keymap)))))
+
    #+END_SRC
