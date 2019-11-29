@@ -1537,6 +1537,9 @@
        (require 'neotree)
        (message "Loading neotree configs...")
        (with-eval-after-load 'neotree
+         (evil-define-key 'normal neotree-mode-map (kbd "C-k") 'neotree-select-previous-sibling-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "C-j") 'neotree-select-next-sibling-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "u") 'neotree-select-up-node)
          (evil-define-key 'normal neotree-mode-map (kbd "TAB") 'neotree-enter)
          (evil-define-key 'normal neotree-mode-map (kbd "SPC") 'neotree-quick-look)
          (evil-define-key 'normal neotree-mode-map (kbd "q") 'neotree-hide)
@@ -1551,15 +1554,17 @@
          (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
          (evil-define-key 'normal neotree-mode-map (kbd "v") 'neotree-enter-vertical-split)
          (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
-         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-delete-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-select-down-node)
          (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
          (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'neotree-enter)
+         (evil-define-key 'normal neotree-mode-map (kbd "O") (neotree-make-executor :dir-fn  'neo-open-dir-recursive))
          )
        )
 
      (add-hook 'neotree-mode-hook
                (lambda ()
                  (display-line-numbers-mode 0)
+                 (toggle-truncate-lines 1)
                  (custom-set-faces
                   '(cursor ((t (:background "gold" :foreground "#151718"))))
                   '(mode-line ((t (:background "black" :foreground "#4499FF"))))
@@ -2779,6 +2784,12 @@
         "o" 'imenu-list-goto-entry
         )
 
+      (add-hook 'imenu-list-update-hook     (lambda () (with-current-buffer "*Ilist*" (toggle-truncate-lines 1))) t)
+      (add-hook 'imenu-list-after-jump-hook (lambda () (with-current-buffer "*Ilist*" (toggle-truncate-lines 1))) t)
+      (add-hook 'imenu-list-minor-mode-hook (lambda () (with-current-buffer "*Ilist*" (toggle-truncate-lines 1))) t)
+      (add-hook 'imenu-list-major-mode-hook (lambda () (with-current-buffer "*Ilist*" (toggle-truncate-lines 1))) t)
+
+
       (evil-collection-define-key 'normal 'restclient-mode-map
         (kbd "C-c C-o") 'restclient-http-send-current
         (kbd "RET RET") 'restclient-http-send-current
@@ -2952,5 +2963,8 @@
          (princ (substitute-command-keys (format "\\{%s}" keymap)))
          (with-current-buffer standard-output ;; temp buffer
            (setq help-xref-stack-item (list #'my-describe-keymap keymap)))))
+
+     (setq mouse-wheel-scroll-amount '(5))
+     (setq mouse-wheel-progressive-speed nil)
 
    #+END_SRC
