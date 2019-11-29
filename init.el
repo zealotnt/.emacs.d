@@ -176,13 +176,24 @@ There are two things you can do about this warning:
   (unless (package-installed-p package)
     (package-install package)))
 
-(load (format "%s/packages/yaml-imenu/yaml-imenu.el" w-dotfiles-folder-path))
-(load (format "%s/packages/go-imenu/go-imenu.el" w-dotfiles-folder-path))
-(load (format "%s/packages/xclip.el" w-dotfiles-folder-path))
-(load (format "%s/packages/navigate.el" w-dotfiles-folder-path))
-(load (format "%s/packages/justify-kp.el" w-dotfiles-folder-path))
-(load (format "%s/packages/so-long.el" w-dotfiles-folder-path))
-(load (format "%s/packages/figlet.el" w-dotfiles-folder-path))
+;; load packages in this local repository
+(setq z/initial-load-files
+      (vector
+       "yaml-imenu/yaml-imenu.el"
+       "go-imenu/go-imenu.el"
+       "xclip.el"
+       "navigate.el"
+       "justify-kp.el"
+       "so-long.el"
+       "figlet.el"
+       "eval-pulse.el"
+       ))
+(mapcar
+ (lambda (x)
+   (message x)
+   (load (format "%s/packages/%s" w-dotfiles-folder-path x)))
+ z/initial-load-files)
+
 (xclip-mode 1)
 (require 'navigate)
 (setq use-package-verbose 't) ;Show use-package stat
@@ -246,12 +257,15 @@ There are two things you can do about this warning:
 (setq initial-scratch-message "")
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 
-(setq z/initial-load-files
+(setq z/initial-open-files
       (vector
+       "/home/zealot/dotfiles/.zshrc"
+       "/home/zealot/dotfiles/.tmux.conf.local"
+       "/home/zealot/dotfiles/.bashrc-func"
        "~/.emacs.d/init.el"
        ))
 (add-hook 'after-init-hook (lambda() (mapcar
                             (lambda (x)
                               (find-file x))
-                            z/initial-load-files)) t)
+                            z/initial-open-files)) t)
 
