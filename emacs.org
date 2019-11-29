@@ -1293,10 +1293,10 @@
 
 
      (defun xah-open-in-chrome ()
-       "Open the current file or `dired' marked files in Mac's Safari browser.
-      If the file is not saved, save it first.
-      URL "http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html"
-      Version 2018-02-26"
+       "Open the current file or `dired' marked files in Google Chrome browser.
+     Work in Windows, macOS, linux.
+     URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+     Version 2019-11-10"
        (interactive)
        (let* (
               ($file-list
@@ -1311,21 +1311,27 @@
             ((string-equal system-type "darwin")
              (mapc
               (lambda ($fpath)
-                (when (buffer-modified-p )
-                  (save-buffer))
                 (shell-command
-                 (format "open -a 'Google Chrome' \"%s\"" $fpath))) $file-list)))
-           (cond
+                 (format "open -a /Applications/Google\\ Chrome.app \"%s\"" $fpath)))
+              $file-list))
+            ((string-equal system-type "windows-nt")
+             ;; "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" 2019-11-09
+             (let ((process-connection-type nil))
+               (mapc
+                (lambda ($fpath)
+                  (start-process "" nil "powershell" "start-process" "chrome" $fpath ))
+                $file-list)))
             ((string-equal system-type "gnu/linux")
              (mapc
               (lambda ($fpath)
-                (when (buffer-modified-p )
-                  (save-buffer))
-                (shell-command
-                 (format "google-chrome \"%s\"" $fpath))) $file-list)))
-           )))
+                (shell-command (format "google-chrome-stable \"%s\"" $fpath)))
+              $file-list))))))
+
+   #+END_SRC
+
 * My search configs
 ** Helm config
+
    #+BEGIN_SRC emacs-lisp
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1553,6 +1559,7 @@
 
      (add-hook 'neotree-mode-hook
                (lambda ()
+                 (display-line-numbers-mode 0)
                  (custom-set-faces
                   '(cursor ((t (:background "gold" :foreground "#151718"))))
                   '(mode-line ((t (:background "black" :foreground "#4499FF"))))
@@ -2520,9 +2527,18 @@
 
     (global-set-key (kbd "C-c h") 'hs-hide-block)
     (global-set-key (kbd "C-c s") 'hs-show-block)
+
+    (defun z/eval-paragraph(beg end)
+      (interactive "r")
+      (call-interactively 'evil-visual-char)
+      (call-interactively 'evil-inner-paragraph)
+      (call-interactively 'z/eval-region)
+      (message "Eval paragraph region !!!")
+      )
     (defun z/eval-region(beg end)
       (interactive "r")
       (eval-region beg end)
+      (evil-exit-visual-state)
       (message "Eval region !!!"))
     (defun z/eval-last-sexp(eval-last-sexp-arg-internal)
       (interactive "P")
@@ -2887,13 +2903,6 @@
      (require 'indent-tools)
      (setq enable-recursive-minibuffers t)
      (minibuffer-depth-indicate-mode 1)
-     (defun z/eval-paragraph(beg end)
-       (interactive "r")
-       (call-interactively 'evil-visual-char)
-       (call-interactively 'evil-inner-paragraph)
-       (call-interactively 'z/eval-region)
-       (message "Eval paragraph region !!!")
-       )
 
 
      (defun z/query-prometheus(start end)
