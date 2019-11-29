@@ -346,6 +346,7 @@
         "kfa" 'z/absolute-path
         "kfl" 'w/copy-relative-file-path-with-line
         "kfo" 'xah-open-in-chrome
+        "kfd" 'xah-show-in-desktop
         "keh" 'z/eval-last-sexp
         "kee" 'z/eval-region
         "kep" 'z/eval-paragraph
@@ -641,6 +642,8 @@
         "s-k s-f s-l" 'w/copy-relative-file-path-with-line
         "s-k s-f o" 'xah-open-in-chrome
         "s-k s-f s-o" 'xah-open-in-chrome
+        "s-k s-f d" 'xah-show-in-desktop
+        "s-k s-f s-d" 'xah-show-in-desktop
         "s-k s-f f" 'z/which-function
         "s-k s-f s-f" 'z/which-function
         "s-k s-f p" 'w/show-buffer-project-path
@@ -1295,10 +1298,13 @@
        "Show current file in desktop.
         (Mac Finder, Windows Explorer, Linux file manager)
         This command can be called when in a file or in `dired'.
-        URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+        URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html`
+        more ref: https://www.emacswiki.org/emacs/ExecuteExternalCommand
         Version 2019-11-04"
        (interactive)
-       (let (($path (if (buffer-file-name) (buffer-file-name) default-directory )))
+       (let (($path (file-name-directory
+                     (expand-file-name
+                      (if (buffer-file-name) (buffer-file-name) default-directory )))))
          (cond
           ((string-equal system-type "windows-nt")
            (w32-shell-execute "open" default-directory))
@@ -1311,13 +1317,9 @@
              (shell-command
               (concat "open -R " $path))))
           ((string-equal system-type "gnu/linux")
-           (let (
-                 (process-connection-type nil)
-                 (openFileProgram (if (file-exists-p "/usr/bin/gvfs-open")
-                                      "/usr/bin/gvfs-open"
-                                    "/usr/bin/xdg-open")))
-             (start-process "" nil openFileProgram $path))
-           ;; (shell-command "xdg-open .") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
+             (call-process "/usr/bin/xdg-open" nil nil nil $path)
+             ;; (start-process "" nil openFileProgram $path))
+             ;; (shell-command "xdg-open . &")) ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
            ))))
 
      (defun xah-open-in-chrome ()
