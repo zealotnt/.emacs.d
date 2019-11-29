@@ -2931,14 +2931,22 @@
      (eval-after-load 'image '(require 'image+))
      (setq dired-listing-switches "-ahlt --group-directories-first")
 
+     (defun toggle-tail-f-msgs()
+       (interactive)
+       (if tail-f-msgs-p
+         (setq tail-f-msgs-p nil)
+         (setq tail-f-msgs-p t)))
+     (setq tail-f-msgs-p t)
      (defun tail-f-msgs ()
        "Go to the end of Messages buffer."
+       (if tail-f-msgs-p
        (let ((msg-window (get-buffer-window "*Messages*")))
          (if msg-window
              (with-current-buffer (window-buffer msg-window)
-               (set-window-point msg-window (point-max))))))
+               (set-window-point msg-window (point-max)))))))
      ;; Make the Messages buffer stick to the end.
      (add-hook 'post-command-hook 'tail-f-msgs)
+     (evil-define-key 'normal messages-buffer-mode-map (kbd "t") 'toggle-tail-f-msgs)
 
      (add-hook 'pdf-view-mode-hook (lambda()
        (pdf-view-fit-page-to-window)
