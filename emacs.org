@@ -1328,10 +1328,14 @@
      (defun z/open-using-desktop-association ()
        "An improvement of xah-show-in-desktop, mostly use for dired-open-file"
        (interactive)
-       (let ((target-path (if (eq major-mode 'dired-mode)
-                              (substring (format "%s" (dired-get-marked-files)) 1 -1)
-                            (expand-file-name
-                             (if (buffer-file-name) (buffer-file-name) default-directory)))))
+       (let ((target-path (cond
+                           ((eq major-mode 'dired-mode)
+                            (substring (format "%s" (dired-get-marked-files)) 1 -1))
+                           ((eq major-mode 'neotree-mode)
+                            (neo-buffer--get-filename-current-line))
+                           (t expand-file-name
+                            (if (buffer-file-name) (buffer-file-name) default-directory))
+                           )))
          (cond
           ((string-equal system-type "darwin")
            (if (eq major-mode 'dired-mode)
@@ -1639,7 +1643,7 @@
          (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
          (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-select-down-node)
          (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
-         (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'neotree-enter)
+         (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'z/open-using-desktop-association)
          (evil-define-key 'normal neotree-mode-map (kbd "O") (neotree-make-executor :dir-fn  'neo-open-dir-recursive))
          )
        )
