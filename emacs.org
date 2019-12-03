@@ -197,21 +197,32 @@
        (modify-syntax-entry ?- "w" (syntax-table))
        (modify-syntax-entry ?_ "w" (standard-syntax-table))
        (modify-syntax-entry ?_ "w" (syntax-table)))
+     (add-hook 'after-change-major-mode-hook 'z/customize-syntax-table)
+     (add-hook 'change-major-mode-hook 'z/customize-syntax-table)
+
      (defun z/customize-elisp-syntax-table ()
        (interactive)
        (modify-syntax-entry ?- "w")
        (modify-syntax-entry ?/ "w"))
+     (add-hook 'emacs-lisp-mode-hook 'z/customize-elisp-syntax-table)
+
      (defun z/customize-ruby-mode-table()
        (interactive)
        (modify-syntax-entry ?? "w")
        (modify-syntax-entry ?@ "w")
        (modify-syntax-entry ?! "w"))
+     (add-hook 'ruby-mode-hook 'z/customize-ruby-mode-table)
+
      (defun z/customize-jsonnet-mode-table()
        (interactive)
        (modify-syntax-entry ?= "."))
+     (add-hook 'jsonnet-mode-hook 'z/customize-jsonnet-mode-table)
+
      (defun z/customize-shell-mode-table()
        (interactive)
        (modify-syntax-entry ?/ "."))
+     (add-hook 'sh-mode-hook 'z/customize-shell-mode-table)
+
      (defun z/customize-restclient-mode-table()
        (interactive)
        (modify-syntax-entry ?& "-")
@@ -220,17 +231,20 @@
        (modify-syntax-entry ?: "w")
        (modify-syntax-entry ?. "w")
        (modify-syntax-entry ?/ "-"))
-
-     (add-hook 'after-change-major-mode-hook 'z/customize-syntax-table)
-     (add-hook 'change-major-mode-hook 'z/customize-syntax-table)
-     (add-hook 'emacs-lisp-mode-hook 'z/customize-elisp-syntax-table)
-     (add-hook 'ruby-mode-hook 'z/customize-ruby-mode-table)
-     (add-hook 'jsonnet-mode-hook 'z/customize-jsonnet-mode-table)
-     (add-hook 'sh-mode-hook 'z/customize-shell-mode-table)
      (add-hook 'restclient-mode-hook 'z/customize-restclient-mode-table)
+
+     (defun z/customize-text-mode-syntax-table ()
+       (interactive)
+       (modify-syntax-entry ?: "w" (standard-syntax-table))
+       (modify-syntax-entry ?: "w" (syntax-table))
+       (modify-syntax-entry ?. "w" (standard-syntax-table))
+       (modify-syntax-entry ?. "w" (syntax-table)))
+     (add-hook 'text-mode-hook 'z/customize-text-mode-syntax-table)
 
      ;; https://github.com/syl20bnr/spacemacs/issues/9740
      (with-eval-after-load 'evil (defalias #'forward-evil-word #'forward-evil-symbol))
+     (with-eval-after-load 'evil
+       (evil-ex-define-cmd "E" '(lambda () (interactive) (evil-edit nil t))))
 
      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
      ;; Evil
@@ -606,6 +620,9 @@
         "s-d d" 'kill-whole-line
         "s-d r" 'z/delete-trailing-whitespace
 
+        ;; combination with super+b
+        "s-k s-b" 'z/visual-by-boundary
+
         ;; combination with super+k
         ;"s-k s-t" '(:ignore t :which-key "text stuffs")
         "s-k s-t" 'figlet-preview-fonts
@@ -724,6 +741,11 @@
         "h" 'w/dired-go-to-home-folder
         "f" 'helm-find-files
         "F" 'find-name-dired
+        "p" '(lambda ()
+               (interactive)
+               (let ((dir-name (expand-file-name default-directory)))
+               (message dir-name)
+               (kill-new dir-name)))
                                              ;Actions
         "a" '(:ignore t :which-key "Actions")
         "af" '(:ignore t :which-key "Files")
@@ -1318,8 +1340,8 @@
               (concat "open -R " $path))))
           ((string-equal system-type "gnu/linux")
              (call-process "/usr/bin/xdg-open" nil nil nil $path)
-             ;; (start-process "" nil openFileProgram $path))
-             ;; (shell-command "xdg-open . &")) ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
+             ;; (start-process "" nil openFileProgram $path)
+             ;; (shell-command "xdg-open . &") ;; 2013-02-10 this sometimes froze emacs till the folder is closed. eg with nautilus
            ))))
 
      (defun xah-open-in-chrome ()
@@ -1567,6 +1589,7 @@
        (require 'neotree)
        (message "Loading neotree configs...")
        (with-eval-after-load 'neotree
+         (evil-define-key 'normal neotree-mode-map (kbd "yy") 'z/neotree-yank-file-name)
          (evil-define-key 'normal neotree-mode-map (kbd "C-k") 'neotree-select-previous-sibling-node)
          (evil-define-key 'normal neotree-mode-map (kbd "C-j") 'neotree-select-next-sibling-node)
          (evil-define-key 'normal neotree-mode-map (kbd "u") 'neotree-select-up-node)
@@ -2839,6 +2862,11 @@
        "c" 'z/clone-buffer
        )
 
+     (evil-collection-define-key 'normal 'Man-mode-map
+       "u" 'evil-scroll-up
+       "d" 'evil-scroll-down
+       )
+
      (evil-collection-define-key 'normal 'pdf-view-mode-map
        "h" 'pdf-history-backward
        "l" 'pdf-history-forward
@@ -3004,5 +3032,25 @@
 
      (setq mouse-wheel-scroll-amount '(5))
      (setq mouse-wheel-progressive-speed nil)
+
+     (defun z/visual-by-boundary(text)
+       (interactive "sEnter boundary text to select: ")
+       (evil-force-normal-state)
+       (re-search-backward (format "^%s$" text) nil t)
+       (evil-visual-char)
+       (re-search-forward (format "^%s$" text) nil t)
+       (re-search-forward (format "^%s$" text) nil t)
+       )
+
+      (defun z/text-to-clipboard(text &optional arg)
+        (interactive)
+        (message text)
+        (kill-new text))
+      (defun z/neotree-yank-file-name (&optional arg)
+        (interactive "P")
+        (neo-buffer--execute arg
+          'z/text-to-clipboard)
+          'z/text-to-clipboard
+        )
 
    #+END_SRC
