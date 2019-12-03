@@ -38,6 +38,7 @@
                       ; Package: GIT
                       ;========================================================
                       magit ;git tools
+                      forge
                       magit-popup ;git tools
                       magit ;git tools
                       magit-popup ;git tools

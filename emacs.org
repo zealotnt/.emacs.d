@@ -2334,6 +2334,8 @@
        (load "my-org-mode-dependencies-config")
        )
      (add-hook 'org-mode-hook 'loading-org-mode-dependencies)
+     (setq org-src-window-setup 'other-frame)
+     (add-hook 'org-src-mode-hook 'delete-other-windows)
 
      ;; https://orgmode.org/manual/Cooperation.html
      ;; (setq org-imenu-depth +5)
