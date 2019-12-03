@@ -54,6 +54,14 @@
       (let ((shell-name (read-string "shell name: " nil)))
         (shell (concat "*" shell-name "*"))))
 
+    (defun z/disable-truncate-line (buffer-name)
+      (interactive)
+      (if (seq-filter (lambda (buf) (string-prefix-p buffer-name (buffer-name buf)))
+          (buffer-list))
+      (save-current-buffer
+        (set-buffer buffer-name)
+        (toggle-truncate-lines 1))))
+
     (defun z/open-emacs-config-file ()
       "Open the init file."
       (interactive)
@@ -1636,10 +1644,16 @@
          )
        )
 
+     (add-hook 'neo-after-create-hook
+               (lambda (&rest _)
+                 (interactive)
+                 (z/disable-truncate-line " *NeoTree*")
+                 (display-line-numbers-mode 0)))
+
      (add-hook 'neotree-mode-hook
                (lambda ()
-                 (display-line-numbers-mode 0)
-                 (toggle-truncate-lines 1)
+                 (interactive)
+                 (z/disable-truncate-line " *NeoTree*")
                  (custom-set-faces
                   '(cursor ((t (:background "gold" :foreground "#151718"))))
                   '(mode-line ((t (:background "black" :foreground "#4499FF"))))
@@ -2859,10 +2873,10 @@
         "o" 'imenu-list-goto-entry
         )
 
-      (add-hook 'imenu-list-update-hook     (lambda () (with-current-buffer "*Ilist*" (toggle-truncate-lines 1))) t)
-      (add-hook 'imenu-list-after-jump-hook (lambda () (with-current-buffer "*Ilist*" (toggle-truncate-lines 1))) t)
-      (add-hook 'imenu-list-minor-mode-hook (lambda () (with-current-buffer "*Ilist*" (toggle-truncate-lines 1))) t)
-      (add-hook 'imenu-list-major-mode-hook (lambda () (with-current-buffer "*Ilist*" (toggle-truncate-lines 1))) t)
+      (add-hook 'imenu-list-update-hook     (apply-partially #'z/disable-truncate-line "*Ilist*") t)
+      (add-hook 'imenu-list-after-jump-hook (apply-partially #'z/disable-truncate-line "*Ilist*") t)
+      (add-hook 'imenu-list-minor-mode-hook (apply-partially #'z/disable-truncate-line "*Ilist*") t)
+      (add-hook 'imenu-list-major-mode-hook (apply-partially #'z/disable-truncate-line "*Ilist*") t)
 
 
       (evil-collection-define-key 'normal 'restclient-mode-map
