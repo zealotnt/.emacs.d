@@ -789,6 +789,7 @@
        (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
        (with-eval-after-load "dired" ;"dired mapping"
          ;; vimify some keybinds.
+         (define-key dired-mode-map (kbd "<s-return>") #'z/open-using-desktop-association)
          (define-key dired-mode-map (kbd "C-s") #'z/dired-view-horizontal)
          (define-key dired-mode-map (kbd "C-v") #'z/dired-view-vertical)
          (define-key dired-mode-map (kbd "j") #'dired-next-line)
@@ -1315,6 +1316,27 @@
                (message "No recognized program file suffix for this file."))))))
      (global-set-key (kbd "s-k s-e s-x") 'xah-run-current-file)
      (global-set-key (kbd "s-k s-e x") 'xah-run-current-file)
+
+     (defun z/open-using-desktop-association ()
+       "An improvement of xah-show-in-desktop, mostly use for dired-open-file"
+       (interactive)
+       (let ((target-path (if (eq major-mode 'dired-mode)
+                              (substring (format "%s" (dired-get-marked-files)) 1 -1)
+                            (expand-file-name
+                             (if (buffer-file-name) (buffer-file-name) default-directory)))))
+         (cond
+          ((string-equal system-type "darwin")
+           (if (eq major-mode 'dired-mode)
+               (let (($files (dired-get-marked-files)))
+                 (if (eq (length $files) 0)
+                     (shell-command (concat "open " default-directory))
+                   (shell-command (concat "open -R " (shell-quote-argument (car (dired-get-marked-files )))))))
+             (shell-command
+              (concat "open -R " target-path))))
+          ((string-equal system-type "gnu/linux")
+           (message "%s" target-path)
+           (call-process "/usr/bin/xdg-open" nil (get-buffer "*new*") nil target-path)
+           ))))
 
      (defun xah-show-in-desktop ()
        "Show current file in desktop.
