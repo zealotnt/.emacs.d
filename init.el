@@ -261,10 +261,12 @@ There are two things you can do about this warning:
 
 (setq z/initial-open-files
       (vector
-       "/home/zealot/dotfiles/.zshrc"
-       "/home/zealot/dotfiles/.tmux.conf.local"
-       "/home/zealot/dotfiles/.bashrc-func"
+       "~/dotfiles/.zshrc"
+       "~/dotfiles/.tmux.conf.local"
+       "~/dotfiles/.bashrc-func"
        "~/.emacs.d/init.el"
+       "~/notes.md"
+       "~/dotfiles/fresh_install.sh"
        ))
 (add-hook 'after-init-hook (lambda() (mapcar
                             (lambda (x)

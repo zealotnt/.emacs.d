@@ -800,6 +800,19 @@
          ;; H: previously: dired-do-hardlink
          (define-key dired-mode-map (kbd "H") #'evil-digit-argument-or-evil-beginning-of-line)
          ;; L: previously: dired-do-load
+         (define-key dired-mode-map (kbd "T") #'dired-toggle-marks) ; previously: dired-do-touch
+         (define-key dired-mode-map (kbd "t") #'dired-show-file-type) ; previously: dired-toggle-marks
+         (define-key dired-mode-map (kbd "y") nil)
+         (define-key dired-mode-map (kbd "yn") #'dired-copy-filename-as-kill)
+         (define-key dired-mode-map (kbd "yy")
+           #'(lambda ()
+               (interactive)
+               (z/text-to-clipboard (substring (format "%s" (dired-get-marked-files)) 1 -1)))) ; dired-show-file-type
+
+         (define-key dired-mode-map (kbd "s-c") #'dired-copy-paste-do-copy)
+         (define-key dired-mode-map (kbd "s-v") #'dired-copy-paste-do-paste)
+         (define-key dired-mode-map (kbd "s-x") #'dired-copy-paste-do-cut)
+
          (define-key dired-mode-map (kbd "C-o") #'evil-jump-backward) ; previously: dired-display-file
          (define-key dired-mode-map (kbd "L") #'evil-end-of-line)
          (define-key dired-mode-map (kbd "q") #'keyboard-quit)
@@ -3120,9 +3133,6 @@
         (kill-new text))
       (defun z/neotree-yank-file-name (&optional arg)
         (interactive "P")
-        (neo-buffer--execute arg
-          'z/text-to-clipboard)
-          'z/text-to-clipboard
-        )
+        (z/text-to-clipboard (neo-buffer--get-filename-current-line)))
 
    #+END_SRC
