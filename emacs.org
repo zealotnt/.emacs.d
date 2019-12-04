@@ -809,6 +809,7 @@
                (interactive)
                (z/text-to-clipboard (substring (format "%s" (dired-get-marked-files)) 1 -1)))) ; dired-show-file-type
 
+         (define-key dired-mode-map (kbd "s-d") #'dired-do-delete)
          (define-key dired-mode-map (kbd "s-c") #'dired-copy-paste-do-copy)
          (define-key dired-mode-map (kbd "s-v") #'dired-copy-paste-do-paste)
          (define-key dired-mode-map (kbd "s-x") #'dired-copy-paste-do-cut)
@@ -819,7 +820,13 @@
          (define-key dired-mode-map (kbd "C-g") #'dired-do-redisplay)
          (define-key dired-mode-map (kbd "R") #'(dired-do-delete :which-key "Delete(Shift + d)"))
          (define-key dired-mode-map (kbd "r") #'(dired-do-rename :which-key "Rename(Shift + r)"))
-         (define-key dired-mode-map (kbd "<s-return>") #'z/open-using-desktop-association)
+         (define-key dired-mode-map (kbd "<s-return>")
+           #'(lambda ()
+               (interactive)
+               (progn
+                 (w/make-frame-reuse)
+                 (dired-find-file))))
+         (define-key dired-mode-map (kbd "<S-s-return>") #'z/open-using-desktop-association)
          (define-key dired-mode-map (kbd "C-s") #'z/dired-view-horizontal)
          (define-key dired-mode-map (kbd "s") #'z/dired-view-horizontal)
          (define-key dired-mode-map (kbd "C-v") #'z/dired-view-vertical)
@@ -1666,6 +1673,8 @@
        (require 'neotree)
        (message "Loading neotree configs...")
        (with-eval-after-load 'neotree
+         (evil-define-key 'normal neotree-mode-map (kbd "s-d") 'neotree-delete-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "s-c") 'neotree-copy-node)
          (evil-define-key 'normal neotree-mode-map (kbd "yy") 'z/neotree-yank-file-name)
          (evil-define-key 'normal neotree-mode-map (kbd "C-k") 'neotree-select-previous-sibling-node)
          (evil-define-key 'normal neotree-mode-map (kbd "C-j") 'neotree-select-next-sibling-node)
@@ -1686,10 +1695,20 @@
          (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
          (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-select-down-node)
          (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
-         (evil-define-key 'normal neotree-mode-map (kbd "<s-return>") 'z/open-using-desktop-association)
+         (evil-define-key 'normal neotree-mode-map (kbd "<s-return>")
+           '(lambda ()
+              (interactive)
+              (progn
+                (let ((file-path (z/neotree-yank-file-name)))
+                  (progn
+                  (select-frame-set-input-focus (new-frame))
+                  (other-window 1)
+                  (delete-other-windows)
+                  (find-file file-path)))
+              )))
+         (evil-define-key 'normal neotree-mode-map (kbd "<S-s-return>") 'z/open-using-desktop-association)
          (evil-define-key 'normal neotree-mode-map (kbd "O") (neotree-make-executor :dir-fn  'neo-open-dir-recursive))
-         )
-       )
+       ))
 
      (add-hook 'neo-after-create-hook
                (lambda (&rest _)
