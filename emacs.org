@@ -797,9 +797,20 @@
        (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
        (with-eval-after-load "dired" ;"dired mapping"
          ;; vimify some keybinds.
+         ;; H: previously: dired-do-hardlink
+         (define-key dired-mode-map (kbd "H") #'evil-digit-argument-or-evil-beginning-of-line)
+         ;; L: previously: dired-do-load
+         (define-key dired-mode-map (kbd "C-o") #'evil-jump-backward) ; previously: dired-display-file
+         (define-key dired-mode-map (kbd "L") #'evil-end-of-line)
+         (define-key dired-mode-map (kbd "q") #'keyboard-quit)
+         (define-key dired-mode-map (kbd "C-g") #'dired-do-redisplay)
+         (define-key dired-mode-map (kbd "R") #'(dired-do-delete :which-key "Delete(Shift + d)"))
+         (define-key dired-mode-map (kbd "r") #'(dired-do-rename :which-key "Rename(Shift + r)"))
          (define-key dired-mode-map (kbd "<s-return>") #'z/open-using-desktop-association)
          (define-key dired-mode-map (kbd "C-s") #'z/dired-view-horizontal)
+         (define-key dired-mode-map (kbd "s") #'z/dired-view-horizontal)
          (define-key dired-mode-map (kbd "C-v") #'z/dired-view-vertical)
+         (define-key dired-mode-map (kbd "v") #'z/dired-view-vertical) ; previously: dired-view-file
          (define-key dired-mode-map (kbd "j") #'dired-next-line)
          (define-key dired-mode-map (kbd "k") #'dired-previous-line)
          (define-key dired-mode-map (kbd "n") #'evil-search-next)
@@ -1185,7 +1196,26 @@
          (highlight-parentheses-mode t)))
      (global-highlight-parentheses-mode t)
      (global-auto-revert-mode 1)
+
+     (defun z/rename-dired-buffer ()
+     "C-o C-i dont work with dired buffer, this will fix it, ref below
+      https://emacs.stackexchange.com/questions/42060/add-dired-buffers-to-evil-jump-list"
+       (interactive)
+       (unless (string-match-p "Dired:" (buffer-name))
+         (rename-buffer (concat "Dired:" (buffer-name)) t)))
+     (add-hook 'dired-mode-hook 'z/rename-dired-buffer)
+     (setq evil--jumps-buffer-targets "\\(\\*\\(\\new\\|scratch\\)\\*\\|Dired:.+\\)")
+     (evil-add-command-properties #'dired-find-file :jump t)
+
      (add-hook 'dired-mode-hook 'auto-revert-mode)
+     (add-hook 'dired-mode-hook '(lambda ()
+                                   (interactive)
+                                   (toggle-truncate-lines 1)
+                                   (display-line-numbers-mode 0)))
+     (add-hook 'dired-after-readin-hook '(lambda ()
+                                   (interactive)
+                                   (toggle-truncate-lines 1)))
+
      (defun w/setup-font-and-window ()
        (progn
          ;;Font size 13pt
