@@ -3096,7 +3096,8 @@
      (require 'atomic-chrome)
      (atomic-chrome-start-server)
      (eval-after-load 'image '(require 'image+))
-     (setq dired-listing-switches "-ahlt --group-directories-first")
+     ;; ref: https://unix.stackexchange.com/questions/103114/what-do-the-fields-in-ls-al-output-mean
+     (setq dired-listing-switches "-gGahlt --group-directories-first")
 
      (defun toggle-tail-f-msgs()
        (interactive)
