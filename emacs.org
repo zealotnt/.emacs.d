@@ -3165,4 +3165,83 @@
         (interactive "P")
         (z/text-to-clipboard (neo-buffer--get-filename-current-line)))
 
+      (defun z/ascii-table ()
+        "Display basic ASCII table (0 thru 128).
+         combination of 2 version in below ref
+         https://www.emacswiki.org/emacs/AsciiTable"
+        (interactive)
+        (switch-to-buffer "*ASCII*")
+        (erase-buffer)
+        (setq buffer-read-only nil)        ;; Not need to edit the content, just read mode (added)
+        (local-set-key "q" 'bury-buffer)   ;; Nice to have the option to bury the buffer (added)
+        (setq lower32 '("nul" "soh" "stx" "etx" "eot" "enq" "ack" "bel"
+                        "bs" "ht" "nl" "vt" "np" "cr" "so" "si"
+                        "dle" "dc1" "dc2" "dc3" "dc4" "nak" "syn" "etb"
+                        "can" "em" "sub" "esc" "fs" "gs" "rs" "us"
+                        ))
+        (save-excursion (let ((i -1))
+
+                          (insert " Hex  Dec  ch1  ch2 |  Hex  Dec  Char|  Hex  Dec  Char|  Hex  Dec  Char\n")
+                          (while (< i 31)
+                            (insert (format "%4x %4d %4s %4s | %4x %4d %4s | %4x %4d %4s | %4x %4d %4s\n"
+                                            (setq i (+ 1  i)) i (elt lower32 i) (single-key-description i)
+                                            (setq i (+ 32 i)) i (single-key-description i)
+                                            (setq i (+ 32 i)) i (single-key-description i)
+                                            (setq i (+ 32 i)) i (single-key-description i)))
+                            (setq i (- i 96))))))
+
+      (defvar ebcdic-ascii-xlate-tbl
+        '( #x00  #x01  #x02  #x03  #x9c  #x09  #x86  #x7f
+           #x97  #x8d  #x8e  #x0b  #x0c  #x0d  #x0e  #x0f
+           #x10  #x11  #x12  #x13  #x9d  #x85  #x08  #x87
+           #x18  #x19  #x92  #x8f  #x1c  #x1d  #x1e  #x1f
+           #x80  #x81  #x82  #x83  #x84  #x0a  #x17  #x1b
+           #x88  #x89  #x8a  #x8b  #x8c  #x05  #x06  #x07
+           #x90  #x91  #x16  #x93  #x94  #x95  #x96  #x04
+           #x98  #x99  #x9a  #x9b  #x14  #x15  #x9e  #x1a
+           #x20  #xa0  #xa1  #xa2  #xa3  #xa4  #xa5  #xa6
+           #xa7  #xa8  #x5b  #x2e  #x3c  #x28  #x2b  #x21
+           #x26  #xa9  #xaa  #xab  #xac  #xad  #xae  #xaf
+           #xb0  #xb1  #x5d  #x24  #x2a  #x29  #x3b  #x5e
+           #x2d  #x2f  #xb2  #xb3  #xb4  #xb5  #xb6  #xb7
+           #xb8  #xb9  #x7c  #x2c  #x25  #x5f  #x3e  #x3f
+           #xba  #xbb  #xbc  #xbd  #xbe  #xbf  #xc0  #xc1
+           #xc2  #x60  #x3a  #x23  #x40  #x27  #x3d  #x22
+           #xc3  #x61  #x62  #x63  #x64  #x65  #x66  #x67
+           #x68  #x69  #xc4  #xc5  #xc6  #xc7  #xc8  #xc9
+           #xca  #x6a  #x6b  #x6c  #x6d  #x6e  #x6f  #x70
+           #x71  #x72  #xcb  #xcc  #xcd  #xce  #xcf  #xd0
+           #xd1  #x7e  #x73  #x74  #x75  #x76  #x77  #x78
+           #x78  #x7a  #xd2  #xd3  #xd4  #xd5  #xd6  #xd7
+           #xd8  #xd9  #xda  #xdb  #xdc  #xdd  #xde  #xdf
+           #xe0  #xe1  #xe2  #xe3  #xe4  #xe5  #xe6  #xe7
+           #x7b  #x41  #x42  #x43  #x44  #x45  #x46  #x47
+           #x48  #x49  #xe8  #xe9  #xea  #xeb  #xec  #xed
+           #x7d  #x4a  #x4b  #x4c  #x4d  #x4e  #x4f  #x50
+           #x51  #x52  #xee  #xef  #xf0  #xf1  #xf2  #xf3
+           #x5c  #x9f  #x53  #x54  #x55  #x56  #x57  #x58
+           #x59  #x5a  #xf4  #xf5  #xf6  #xf7  #xf8  #xf9
+           #x30  #x31  #x32  #x33  #x34  #x35  #x36  #x37
+           #x38  #x39  #xfa  #xfb  #xfc  #xfd  #xfe  #xff  ))
+      (defun ebcdic-table ()
+        "Display ebcdic table (0 thru 255).
+         ref: https://www.emacswiki.org/emacs/EbcdicTable"
+        (interactive)
+        (switch-to-buffer "*EBCDIC*")
+        (erase-buffer)
+        (save-excursion
+          (let ((i -1)
+                (j 64))
+            (insert "EBCDIC characters 0 thru 255.\n\n")
+            (insert " Hex  Dec  Char | Hex  Dec  Char | Hex  Dec  Char | Hex  Dec  Char\n")
+            (while (< i (1- j))
+              (insert
+               (format
+                "%4x %4d %4s  |%4x %4d %4s  |%4x %4d %4s  |%4x %4d %4s\n"
+                (setq i (+ 1 i)) i (single-key-description (elt ebcdic-ascii-xlate-tbl i))
+                (setq i (+ j i)) i (single-key-description (elt ebcdic-ascii-xlate-tbl i))
+                (setq i (+ j i)) i (single-key-description (elt ebcdic-ascii-xlate-tbl i))
+                (setq i (+ j i)) i (single-key-description (elt ebcdic-ascii-xlate-tbl i))))
+              (setq i (- i (* 3 j)))))))
+
    #+END_SRC
