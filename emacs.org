@@ -657,6 +657,8 @@
         "s-k s-d" 'w/projectile-dired
 
         "s-k s-f" '(:ignore t :which-key "files stuffs")
+        "s-k s-f b" 'magit-open-repo
+        "s-k s-f s-b" 'magit-open-repo
         "s-k s-f n" 's/show-buffer-file-name
         "s-k s-f s-n" 's/show-buffer-file-name
         "s-k s-f r"   'w/copy-relative-file-path
@@ -797,7 +799,10 @@
        (define-key evil-visual-state-map "k" 'evil-previous-visual-line)
        (with-eval-after-load "dired" ;"dired mapping"
          ;; vimify some keybinds.
+         (define-key dired-mode-map (kbd "g") nil) ; this remove all mc key bindings
          (define-key dired-mode-map (kbd "gg") 'evil-goto-first-line)
+         (define-key dired-mode-map (kbd "gG") 'evil-goto-line)
+         (define-key dired-mode-map (kbd "G") 'evil-goto-line) ; previously: dired-do-chgrp
          (define-key dired-mode-map ")" 'dired-git-info-mode)
          (define-key dired-mode-map (kbd ".") nil) ; previously: dired-clean-directory
          (define-key dired-mode-map (kbd "..") 'dired-up-directory)
@@ -3244,5 +3249,32 @@
                 (setq i (+ j i)) i (single-key-description (elt ebcdic-ascii-xlate-tbl i))
                 (setq i (+ j i)) i (single-key-description (elt ebcdic-ascii-xlate-tbl i))))
               (setq i (- i (* 3 j)))))))
+
+      (defun parse-url (url)
+        "convert a git remote location as a HTTP URL"
+        (if (string-match "^http" url)
+            url
+          (replace-regexp-in-string "\\(.*\\)@\\(.*\\):\\(.*\\)\\(\\.git?\\)"
+                                    "https://\\2/\\3"
+                                    url)))
+      (defun magit-open-repo ()
+        "open remote repo URL
+         https://gist.github.com/dotemacs/9a0433341e75e01461c9"
+        (interactive)
+        (let ((url (magit-get "remote" "origin" "url")))
+          (progn
+            (browse-url (parse-url url))
+            (message "opening repo %s" url))))
+      (defun z/magit-open-commit-in-browser ()
+        (interactive)
+         (let* ((url (magit-get "remote" "origin" "url"))
+               (fullref (magit-commit-p (magit-commit-at-point)))
+               (full-url (format "%s/commit/%s" (parse-url url) fullref)))
+             (progn
+               (browse-url full-url)
+               (message "opening repo-url %s" full-url))))
+      (add-hook 'magit-mode-hook
+                (lambda ()
+                  (local-set-key (kbd "<s-return>") 'z/magit-open-commit-in-browser)) t)
 
    #+END_SRC
