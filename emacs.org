@@ -3268,7 +3268,11 @@
       (defun z/magit-open-commit-in-browser ()
         (interactive)
          (let* ((url (magit-get "remote" "origin" "url"))
-               (fullref (magit-commit-p (magit-commit-at-point)))
+               (fullref (cond
+                 ((magit-commit-p (magit-commit-at-point))
+                  (magit-commit-p (magit-commit-at-point)))
+                 ((magit-blame-mode) (magit-blame-copy-hash))
+                 ))
                (full-url (format "%s/commit/%s" (parse-url url) fullref)))
              (progn
                (browse-url full-url)
