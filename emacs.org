@@ -651,6 +651,9 @@
         "s-k s-g b" 'magit-blame-echo
         "s-k s-g s-b"   'magit-blame-echo
         "s-k s-g q"   'magit-blame-quit
+        "s-k s-g t" 'hydra-git-timemachine-on
+        "s-k s-g s-t" 'hydra-git-timemachine-on
+
         ;"s-k s-g s-q"   'magit-blame-quit
 
         "s-k s-s"   'neotree-project-dir-toggle
@@ -830,6 +833,7 @@
          (define-key dired-mode-map (kbd "C-o") #'evil-jump-backward) ; previously: dired-display-file
          (define-key dired-mode-map (kbd "q") #'(lambda ()(interactive)(revert-buffer)(keyboard-quit)))
          (define-key dired-mode-map (kbd "C-g") #'(lambda()(interactive)(dired-do-redisplay)(revert-buffer)))
+         (define-key dired-mode-map (kbd "<escape>") #'(lambda()(interactive)(evil-force-normal-state)(revert-buffer)))
          (define-key dired-mode-map (kbd "R") #'(dired-do-delete :which-key "Delete(Shift + d)"))
          (define-key dired-mode-map (kbd "r") #'(dired-do-rename :which-key "Rename(Shift + r)"))
          (define-key dired-mode-map (kbd "<s-return>")
