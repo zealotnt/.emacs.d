@@ -31,7 +31,11 @@ def main
   else
     index = 1
     max_num = num_digits(parsed_elems.last.values.last)
+    doc_size = parsed_elems.size
     parsed_elems.each do |elem|
+      first_line_of_section = elem.values.min
+      parsed.merge!({" "*index => first_line_of_section})
+      parsed.merge!({"Doc#{index}/#{doc_size}" => first_line_of_section})
       value = Hash[elem.map {|k, v| ["#{line_num_str(v, max_num)} #{index}_#{k}", v]}]
       parsed.merge!(value)
       index += 1

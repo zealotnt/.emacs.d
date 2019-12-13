@@ -111,6 +111,7 @@
                       restclient-helm
                       ob-restclient
                       all-the-icons-dired
+                      dired-narrow
                       evil-paredit
                       vlf
                       shackle

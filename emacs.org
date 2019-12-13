@@ -627,6 +627,10 @@
         ;; combination with super+d
         "s-d d" 'kill-whole-line
         "s-d r" 'z/delete-trailing-whitespace
+        "s-d 6" 'base64-decode-region
+        "s-d s-6" 'base64-decode-region
+        "s-d u" 'z/epoch-unix-to-time
+        "s-d s-u" 'z/epoch-unix-to-time
 
         ;; combination with super+b
         "s-k s-b" 'z/visual-by-boundary
@@ -657,7 +661,14 @@
         ;"s-k s-g s-q"   'magit-blame-quit
 
         "s-k s-s"   'neotree-project-dir-toggle
-        "s-k s-d" 'w/projectile-dired
+
+        "s-k s-d" '(:ignore t :which-key "decoding stuffs")
+        "s-k s-d u" 'z/epoch-unix-to-time
+        "s-k s-d s-u" 'z/epoch-unix-to-time
+        "s-k s-d d" 'base64-decode-region
+        "s-k s-d s-d" 'base64-decode-region
+        "s-k s-d 6" 'base64-decode-region
+        "s-k s-d s-6" 'base64-decode-region
 
         "s-k s-f" '(:ignore t :which-key "files stuffs")
         "s-k s-f b" 'magit-open-repo
@@ -705,8 +716,10 @@
 
         ;;"s-1" 'customize ;;before, it is "s-,"
         "s-0" '(lambda () (interactive) (neotree-hide) (neotree-project-dir-toggle) (neotree-quick-look))
-        "s-, s-," 'z/open-emacs-config-file
-        "s-. s-." 'z/show-message-log
+        "s-, c" 'z/open-emacs-config-file
+        "s-, s-c" 'z/open-emacs-config-file
+        "s-, l" 'z/show-message-log
+        "s-, s-l" 'z/show-message-log
 
         ;; 3 key stroke with super
         "<C-s-268632087>" 'delete-other-windows
