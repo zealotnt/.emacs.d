@@ -40,12 +40,6 @@
                       magit ;git tools
                       forge
                       magit-popup ;git tools
-                      magit ;git tools
-                      magit-popup ;git tools
-                      evil-magit ;git tools with vi mode
-                      magit ;git tools
-                      magit-popup ;git tools
-                      evil-magit ;git tools with vi mode
                       evil-magit ;git tools with vi mode
                       git-gutter ;indicating inserted, modified or deleted lines
                       git-link ;copy github link

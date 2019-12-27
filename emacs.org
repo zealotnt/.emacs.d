@@ -60,6 +60,7 @@
           (buffer-list))
       (save-current-buffer
         (set-buffer buffer-name)
+        (display-line-numbers-mode 0)
         (toggle-truncate-lines 1))))
 
     (defun z/open-emacs-config-file ()
@@ -625,6 +626,7 @@
         "s-N" 'w/make-frame-reuse
 
         ;; combination with super+d
+        "s-d c" 'replace-regexp
         "s-d d" 'kill-whole-line
         "s-d r" 'z/delete-trailing-whitespace
         "s-d 6" 'base64-decode-region
@@ -804,6 +806,8 @@
        :config
        (require 'evil)
        (evil-mode t)
+       (setq evil-vsplit-window-right t)
+       (setq evil-split-window-below t)
        (define-key evil-motion-state-map (kbd "C-u") 'evil-scroll-up)
 
        ; hover through visual line
@@ -1247,6 +1251,7 @@
      (global-auto-revert-mode 1)
 
      (use-package dired-narrow
+       :config (require 'dired)
        :ensure t
        :bind (:map dired-mode-map
                    ("/" . dired-narrow)))
@@ -1740,6 +1745,7 @@
                   (find-file file-path)))
               )))
          (evil-define-key 'normal neotree-mode-map (kbd "<S-s-return>") 'z/open-using-desktop-association)
+         (evil-define-key 'normal neotree-mode-map (kbd "<backtab>") (neotree-make-executor :dir-fn  'neo-open-dir-recursive))
          (evil-define-key 'normal neotree-mode-map (kbd "O") (neotree-make-executor :dir-fn  'neo-open-dir-recursive))
        ))
 
