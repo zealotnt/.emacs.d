@@ -683,6 +683,7 @@
         "s-k s-f s-a"  'z/absolute-path
         "s-k s-f l"   'w/copy-relative-file-path-with-line
         "s-k s-f s-l" 'w/copy-relative-file-path-with-line
+        "s-k s-f O" 'z/open-file-in-remote-git
         "s-k s-f o" 'xah-open-in-chrome
         "s-k s-f s-o" 'xah-open-in-chrome
         "s-k s-f d" 'xah-show-in-desktop
@@ -2895,6 +2896,7 @@
      (add-to-list 'shackle-rules '(special-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '(process-menu-mode :select t :popup t :align right))
      (add-to-list 'shackle-rules '("*HTTP Response*" :select t :popup t :align right))
+     (add-to-list 'shackle-rules '("*Backtrace*" :select t :popup t :align right))
      (add-to-list 'shackle-rules '("\\*helm-mode-neotree-.*" :regexp t :select t :popup t :align right))
      (add-to-list 'shackle-rules '("\\*Man .*" :regexp t :select t :same t))
      (add-to-list 'shackle-rules '(pdf-outline-buffer-mode :select t :popup t :align bottom :size 0.22))
@@ -3303,5 +3305,14 @@
       (add-hook 'magit-mode-hook
                 (lambda ()
                   (local-set-key (kbd "<s-return>") 'z/magit-open-commit-in-browser)) t)
+      (defun z/open-file-in-remote-git ()
+              (interactive)
+              (if-let* ((url (magit-get "remote" "origin" "url"))
+                        (file-path (w/projectile-file-path))
+                        (full-url (format "%s/blob/master/%s" (parse-url url) file-path)))
+                  (progn
+                    (browse-url full-url)
+                    (message "opening file %s on remote host" full-url))
+                  (message "WARNING: Current buffer is not visiting a file!")))
 
    #+END_SRC
