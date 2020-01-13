@@ -268,3 +268,4 @@ There are two things you can do about this warning:
                               (find-file x))
                             z/initial-open-files)) t)
 
+(fset 'b64-decode [escape ?v ?i ?w ?\s-k ?\s-d ?6])
