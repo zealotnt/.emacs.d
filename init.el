@@ -119,6 +119,8 @@
                       gitignore-mode
                       image+
                       dash-functional
+                      cmake-mode
+                      rust-mode
                       ))
 
 ; Add Melpa as the default Emacs Package repository
@@ -191,6 +193,21 @@ There are two things you can do about this warning:
    (load (format "%s/packages/%s" w-dotfiles-folder-path x)))
  z/initial-load-files)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(load (format "%s/packages/tty-format.el" w-dotfiles-folder-path))
+
+(require 'tty-format)
+(defun z/display-ansi-colors ()
+  "https://stackoverflow.com/a/37193279"
+  (interactive)
+  (format-decode-buffer 'ansi-colors))
+
+;; decode ANSI color escape sequences for *.txt or README files
+;; (add-hook 'find-file-hooks 'tty-format-guess)
+;; decode ANSI color escape sequences for .log files
+(add-to-list 'auto-mode-alist '("\\.log\\'" . display-ansi-colors))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (xclip-mode 1)
 (require 'navigate)
 (setq use-package-verbose 't) ;Show use-package stat
@@ -252,7 +269,7 @@ There are two things you can do about this warning:
 (server-start)
 (setq initial-major-mode 'text-mode)
 (setq initial-scratch-message "")
-(add-hook 'text-mode-hook 'turn-on-auto-fill)
+(add-hook 'text-mode-hook 'turn-on-auto-fill) ; disable auto line breaking, more info: search auto-fill-mode
 
 (setq z/initial-open-files
       (vector
@@ -262,10 +279,12 @@ There are two things you can do about this warning:
        "~/.emacs.d/init.el"
        "~/notes.md"
        "~/dotfiles/fresh_install.sh"
+       "~/dotfiles/install_dotfiles_w_deps.sh"
        ))
 (add-hook 'after-init-hook (lambda() (mapcar
                             (lambda (x)
                               (find-file x))
                             z/initial-open-files)) t)
 
-(fset 'b64-decode [escape ?v ?i ?w ?\s-k ?\s-d ?6])
+(defalias 'insert-named-kbd-macro 'insert-kbd-macro)
+(fset 'mtm-b64-decode [escape ?v ?i ?w ?\s-k ?\s-d ?6])

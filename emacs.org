@@ -288,7 +288,7 @@
         "fyN" 'w/show-buffer-file-name-base
         "fyl" 'w/show-buffer-file-path-with-line
         "fyL" 'w/copy-relative-file-path-with-line
-        "ft" 'neotree-project-dir-toggle
+        "ft" 'z/neotree-project-dir-toggle
         "fw" 'save-buffer
         "fx" 'evil-quit
         "fe" '(:ignore t :which-key "emacs")
@@ -363,7 +363,7 @@
         "kgn" 'z/magit-status ;status in new frame
         "kgb" 'magit-blame-echo
         "kgq" 'magit-blame-quit
-        "ks" 'neotree-project-dir-toggle
+        "ks" 'z/neotree-project-dir-toggle
         "kfn" 's/show-buffer-file-name
         "kfr" 'w/copy-relative-file-path
         "kfa" 'z/absolute-path
@@ -662,7 +662,7 @@
 
         ;"s-k s-g s-q"   'magit-blame-quit
 
-        "s-k s-s"   'neotree-project-dir-toggle
+        "s-k s-s"   'z/neotree-project-dir-toggle
 
         "s-k s-d" '(:ignore t :which-key "decoding stuffs")
         "s-k s-d u" 'z/epoch-unix-to-time
@@ -718,7 +718,7 @@
         "s-k s-c" 'atomic-chrome-close-current-buffer
 
         ;;"s-1" 'customize ;;before, it is "s-,"
-        "s-0" '(lambda () (interactive) (neotree-hide) (neotree-project-dir-toggle) (neotree-quick-look))
+        "s-0" '(lambda () (interactive) (neotree-hide) (z/neotree-project-dir-toggle) (neotree-quick-look))
         "s-, c" 'z/open-emacs-config-file
         "s-, s-c" 'z/open-emacs-config-file
         "s-, l" 'z/show-message-log
@@ -1114,6 +1114,7 @@
 
      ; Text-mode is default mode: https://groups.google.com/forum/#!topic/gnu.emacs.help/AUpnVjsSpfc
      (setq-default major-mode 'text-mode)
+     (add-hook 'text-mode-hook 'turn-off-auto-fill)
 
      ;; (setq frame-title-format
      ;;       '(""
@@ -1542,6 +1543,9 @@
                    (require 'dash)
                    (require 's)
 
+                   (define-key helm-map (kbd "s-m") 'helm-toggle-full-frame)
+                   (define-key helm-map (kbd "C-e") 'helm-toggle-visible-mark)
+                   (define-key helm-map (kbd "M-v") 'helm-copy-to-buffer)
                    (define-key helm-projectile-find-file-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
                    (define-key helm-map (kbd "<s-return>") 'z/helm-switch-other-frame)
                    (define-key helm-map (kbd "C-s") 'helm-ext-ff-buffer-execute-horizontal-split)
@@ -1787,7 +1791,7 @@
         :type 'integer
         :group 'neotree)
 
-    (defun neotree-project-dir-toggle ()
+    (defun z/neotree-project-dir-toggle ()
       "Open NeoTree using the project root, using find-file-in-project,
       or the current buffer directory."
       (interactive)
@@ -2029,6 +2033,8 @@
        (define-key magit-mode-map "\C-k" 'magit-section-backward)
        (define-key magit-mode-map "\M-j" 'magit-section-forward-sibling)
        (define-key magit-mode-map "\M-k" 'magit-section-backward-sibling)
+       (define-key magit-mode-map "J" 'magit-section-forward)
+       (define-key magit-mode-map "K" 'magit-section-up)
        )
 
      (general-define-key
