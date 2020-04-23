@@ -80,7 +80,7 @@
         (w/make-frame-reuse)
         (switch-to-buffer "*Messages*")))
 
-    (defun s/show-buffer-file-path ()
+    (defun z/show-copy-absolute-path ()
       "Show the full path to the current file in the minibuffer."
       (interactive)
       (let ((file-name (buffer-file-name)))
@@ -90,7 +90,23 @@
               (kill-new file-name))
           (error "Buffer not visiting a file"))))
 
-    (defalias 'z/absolute-path 's/show-buffer-file-path)
+    (defun z/show-copy-containing-folder-path ()
+      "Show current file in desktop.
+            (Mac Finder, Windows Explorer, Linux file manager)
+            This command can be called when in a file or in `dired'.
+            URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html`
+            more ref: https://www.emacswiki.org/emacs/ExecuteExternalCommand
+            Version 2019-11-04"
+      (interactive)
+      (let (($path (file-name-directory
+                    (expand-file-name
+                     (if (buffer-file-name) (buffer-file-name) default-directory )))))
+        (if $path
+            (progn
+              (message $path)
+              (kill-new $path))
+          (error "Buffer not visiting a file"))
+        ))
 
     (defun w/show-buffer-project-path ()
       "Show the full path to the current project in the minibuffer."
@@ -102,23 +118,13 @@
               (kill-new project-path))
           (error "Buffer not visiting a project"))))
 
-    (defun s/show-buffer-file-name ()
+    (defun s/show-copy-buffer-file-name ()
       "Show the full path to the current file in the minibuffer."
       (interactive)
       (let ((file-name (file-name-nondirectory(buffer-file-name))))
         (if file-name
             (progn
-              (message file-name)
-              (kill-new file-name))
-          (error "Buffer not visiting a file"))))
-
-    (defun w/show-buffer-file-name-base ()
-      "Show current file name base in the minibuffer."
-      (interactive)
-      (let ((file-name (file-name-base(buffer-file-name))))
-        (if file-name
-            (progn
-              (message file-name)
+              (message "Copied '%s' to clipboard" file-name)
               (kill-new file-name))
           (error "Buffer not visiting a file"))))
 
@@ -131,7 +137,7 @@
       (when-let (file-path (buffer-file-name))
         (concat file-path ":" (number-to-string (line-number-at-pos)))))
 
-    (defun w/show-buffer-file-path-with-line ()
+    (defun w/show-copy-buffer-file-path-with-line ()
       "Show current file name base in the minibuffer."
       (interactive)
       (let ((file-name (w/file-path-with-line)))
@@ -282,12 +288,11 @@
         "f" '(:ignore t :which-key "Files")
         "ff" 'helm-find-files
         "fy" '(:ignore t :which-key "yank path")
-        "fyY" 'w/copy-relative-file-path
-        "fyy" 's/show-buffer-file-path
-        "fyn" 's/show-buffer-file-name
-        "fyN" 'w/show-buffer-file-name-base
-        "fyl" 'w/show-buffer-file-path-with-line
-        "fyL" 'w/copy-relative-file-path-with-line
+        "fyY" 'w/show-copy-relative-file-path
+        "fyy" 'z/show-copy-absolute-path
+        "fyn" 's/show-copy-buffer-file-name
+        "fyl" 'w/show-copy-buffer-file-path-with-line
+        "fyL" 'w/show-copy-relative-file-path-with-line
         "ft" 'z/neotree-project-dir-toggle
         "fw" 'save-buffer
         "fx" 'evil-quit
@@ -364,10 +369,10 @@
         "kgb" 'magit-blame-echo
         "kgq" 'magit-blame-quit
         "ks" 'z/neotree-project-dir-toggle
-        "kfn" 's/show-buffer-file-name
-        "kfr" 'w/copy-relative-file-path
-        "kfa" 'z/absolute-path
-        "kfl" 'w/copy-relative-file-path-with-line
+        "kfn" 's/show-copy-buffer-file-name
+        "kfr" 'w/show-copy-relative-file-path
+        "kfa" 'z/show-copy-absolute-path
+        "kfl" 'w/show-copy-relative-file-path-with-line
         "kfo" 'xah-open-in-chrome
         "kfd" 'xah-show-in-desktop
         "keh" 'z/eval-last-sexp
@@ -659,6 +664,8 @@
         "s-k s-g q"   'magit-blame-quit
         "s-k s-g t" 'hydra-git-timemachine-on
         "s-k s-g s-t" 'hydra-git-timemachine-on
+        "s-k s-g l" 'magit-log-buffer-file
+        "s-k s-g s-l" 'magit-log-buffer-file
 
         ;"s-k s-g s-q"   'magit-blame-quit
 
@@ -675,19 +682,21 @@
         "s-k s-f" '(:ignore t :which-key "files stuffs")
         "s-k s-f b" 'magit-open-repo
         "s-k s-f s-b" 'magit-open-repo
-        "s-k s-f n" 's/show-buffer-file-name
-        "s-k s-f s-n" 's/show-buffer-file-name
-        "s-k s-f r"   'w/copy-relative-file-path
-        "s-k s-f s-r" 'w/copy-relative-file-path
-        "s-k s-f a"    'z/absolute-path
-        "s-k s-f s-a"  'z/absolute-path
-        "s-k s-f l"   'w/copy-relative-file-path-with-line
-        "s-k s-f s-l" 'w/copy-relative-file-path-with-line
+        "s-k s-f n" 's/show-copy-buffer-file-name
+        "s-k s-f s-n" 's/show-copy-buffer-file-name
+        "s-k s-f r"   'w/show-copy-relative-file-path
+        "s-k s-f s-r" 'w/show-copy-relative-file-path
+        "s-k s-f a"    'z/show-copy-absolute-path
+        "s-k s-f s-a"  'z/show-copy-absolute-path
+        "s-k s-f l"   'w/show-copy-relative-file-path-with-line
+        "s-k s-f s-l" 'w/show-copy-relative-file-path-with-line
         "s-k s-f O" 'z/open-file-in-remote-git
         "s-k s-f o" 'xah-open-in-chrome
         "s-k s-f s-o" 'xah-open-in-chrome
-        "s-k s-f d" 'xah-show-in-desktop
-        "s-k s-f s-d" 'xah-show-in-desktop
+        "s-k s-f d" 'z/show-copy-containing-folder-path
+        "s-k s-f s-d" 'z/show-copy-containing-folder-path
+        "s-k s-f D" 'xah-show-in-desktop
+        "s-k s-f s-D" 'xah-show-in-desktop
         "s-k s-f f" 'z/which-function
         "s-k s-f s-f" 'z/which-function
         "s-k s-f p" 'w/show-buffer-project-path
@@ -705,7 +714,7 @@
         "s-k s-e s-p" 'z/eval-paragraph
 
         "s-k s-w" 'toggle-truncate-lines
-        "s-k s-i" 's/show-buffer-file-name
+        "s-k s-i" 's/show-copy-buffer-file-name
 
         "s-k s-r" '(:ignore t :which-key "restart stuffs")
         "s-k s-r c" 'z/sync-config
@@ -845,6 +854,7 @@
 
          (define-key dired-mode-map (kbd "s-C") #'dired-do-compress-to)
          (define-key dired-mode-map (kbd "s-d") #'dired-do-delete)
+         (define-key dired-mode-map (kbd "<deletechar>") #'dired-do-delete)
          (define-key dired-mode-map (kbd "s-c") #'dired-copy-paste-do-copy)
          (define-key dired-mode-map (kbd "s-v") #'dired-copy-paste-do-paste)
          (define-key dired-mode-map (kbd "s-x") #'dired-copy-paste-do-cut)
@@ -1676,7 +1686,7 @@
        (when-let (file-name (buffer-file-name))
          (file-relative-name (file-truename file-name) (projectile-project-root))))
 
-     (defun w/copy-relative-file-path ()
+     (defun w/show-copy-relative-file-path ()
        "Copy and show the file path relative to project root."
        (interactive)
        (if-let (file-path (w/projectile-file-path))
@@ -1694,7 +1704,7 @@
        (when-let (file-path (w/projectile-file-path))
          (concat file-path ":" (number-to-string (line-number-at-pos)))))
 
-     (defun w/copy-relative-file-path-with-line ()
+     (defun w/show-copy-relative-file-path-with-line ()
        "Copy and show the file path relative to project root."
        (interactive)
        (if-let (file-path (w/projectile-file-path-with-line))
@@ -1718,8 +1728,10 @@
        (message "Loading neotree configs...")
        (with-eval-after-load 'neotree
          (evil-define-key 'normal neotree-mode-map (kbd "s-d") 'neotree-delete-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "<deletechar>") 'neotree-delete-node)
          (evil-define-key 'normal neotree-mode-map (kbd "s-c") 'neotree-copy-node)
-         (evil-define-key 'normal neotree-mode-map (kbd "yy") 'z/neotree-yank-file-name)
+         (evil-define-key 'normal neotree-mode-map (kbd "yy") 'z/neotree-yank-file-path)
+         (evil-define-key 'normal neotree-mode-map (kbd "yn") 'z/neotree-yank-file-name)
          (evil-define-key 'normal neotree-mode-map (kbd "C-k") 'neotree-select-previous-sibling-node)
          (evil-define-key 'normal neotree-mode-map (kbd "C-j") 'neotree-select-next-sibling-node)
          (evil-define-key 'normal neotree-mode-map (kbd "u") 'neotree-select-up-node)
@@ -1731,19 +1743,19 @@
          (evil-define-key 'normal neotree-mode-map (kbd "C-g") 'neotree-refresh)
          (evil-define-key 'normal neotree-mode-map (kbd "A") 'neotree-stretch-toggle)
          (evil-define-key 'normal neotree-mode-map (kbd "T") 'neotree-hidden-file-toggle)
-         (evil-define-key 'normal neotree-mode-map (kbd "m") 'neotree-rename-node)
-         (evil-define-key 'normal neotree-mode-map (kbd "e") 'neotree-rename-node)
          (evil-define-key 'normal neotree-mode-map (kbd "r") 'neotree-rename-node)
          (evil-define-key 'normal neotree-mode-map (kbd "c") 'neotree-create-node)
          (evil-define-key 'normal neotree-mode-map (kbd "v") 'neotree-enter-vertical-split)
          (evil-define-key 'normal neotree-mode-map (kbd "s") 'neotree-enter-horizontal-split)
          (evil-define-key 'normal neotree-mode-map (kbd "d") 'neotree-select-down-node)
-         (evil-define-key 'normal neotree-mode-map (kbd "R") 'neotree-delete-node)
+         (evil-define-key 'normal neotree-mode-map (kbd "O") '(lambda (&optional arg) (interactive "P")
+            (neo-global--select-window) (neo-buffer--execute arg (lambda (&rest _)) (quote neo-open-dir-recursive))))
+
          (evil-define-key 'normal neotree-mode-map (kbd "<s-return>")
            '(lambda ()
               (interactive)
               (progn
-                (let ((file-path (z/neotree-yank-file-name)))
+                (let ((file-path (z/neotree-yank-file-path)))
                   (progn
                   (select-frame-set-input-focus (new-frame))
                   (other-window 1)
@@ -2029,12 +2041,12 @@
                                              ;Full screen git status
        (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
        (setq magit-blame-echo-style 'headings)
-       (define-key magit-mode-map "\C-j" 'magit-section-forward)
-       (define-key magit-mode-map "\C-k" 'magit-section-backward)
-       (define-key magit-mode-map "\M-j" 'magit-section-forward-sibling)
-       (define-key magit-mode-map "\M-k" 'magit-section-backward-sibling)
+       (define-key magit-mode-map "\C-j" 'magit-section-forward-sibling)
+       (define-key magit-mode-map "\C-k" 'magit-section-backward-sibling)
+       (define-key magit-mode-map "\M-j" 'magit-section-forward)
+       (define-key magit-mode-map "\M-k" 'magit-section-up)
        (define-key magit-mode-map "J" 'magit-section-forward)
-       (define-key magit-mode-map "K" 'magit-section-up)
+       (define-key magit-mode-map "K" 'magit-section-backward)
        )
 
      (general-define-key
@@ -2579,6 +2591,8 @@
        ("C" git-timemachine-show-commit "Show commit")
        ("b" git-timemachine-blame "Blame")
        ("G" git-timemachine-go-to-revision-id "Revision Id")
+       ("r" git-timemachine-kill-remote-url "Remote revision url")
+       ("s-r" git-timemachine-open-remote-url-in-browser "Open remote revision url in browser")
        ("q" git-timemachine-quit "cancel" :color blue :column nil))
 
       (defhydra hydra-smerge (:hint nil)
@@ -3199,9 +3213,12 @@
         (interactive)
         (message text)
         (kill-new text))
-      (defun z/neotree-yank-file-name (&optional arg)
+      (defun z/neotree-yank-file-path (&optional arg)
         (interactive "P")
         (z/text-to-clipboard (neo-buffer--get-filename-current-line)))
+      (defun z/neotree-yank-file-name (&optional arg)
+        (interactive "P")
+        (z/text-to-clipboard (file-name-nondirectory (neo-buffer--get-filename-current-line))))
 
       (defun z/ascii-table ()
         "Display basic ASCII table (0 thru 128).
@@ -3322,4 +3339,13 @@
                     (message "opening file %s on remote host" full-url))
                   (message "WARNING: Current buffer is not visiting a file!")))
 
+      (defun jqip ()
+        (interactive)
+        (let ((file-name (buffer-file-name)))
+          (if file-name
+              (progn
+                (message "jqip %s" file-name)
+                (shell-command
+                  (format "jq . %s | sponge %s" file-name file-name)))
+            (error "Buffer not visiting a file"))))
    #+END_SRC
