@@ -2919,6 +2919,7 @@
      (add-to-list 'shackle-rules '("*HTTP Response*" :select t :popup t :align right))
      (add-to-list 'shackle-rules '("*Backtrace*" :select t :popup t :align right))
      (add-to-list 'shackle-rules '("\\*helm-mode-neotree-.*" :regexp t :select t :popup t :align right))
+     (add-to-list 'shackle-rules '("magit-log.*" :regexp t :select t :popup t :align right))
      (add-to-list 'shackle-rules '("\\*Man .*" :regexp t :select t :same t))
      (add-to-list 'shackle-rules '(pdf-outline-buffer-mode :select t :popup t :align bottom :size 0.22))
 
@@ -3034,6 +3035,8 @@
        )
 
      (evil-collection-define-key 'normal 'pdf-view-mode-map
+       (kbd "C-i") 'pdf-view-midnight-minor-mode
+       (kbd "<f9>") 'pdf-outline
        "h" 'pdf-history-backward
        "l" 'pdf-history-forward
        "f" 'pdf-links-action-perform
@@ -3044,6 +3047,7 @@
        (kbd "C-j") 'outline-forward-same-level
        (kbd "C-k") 'outline-backward-same-level
        (kbd "RET") 'pdf-outline-display-link
+       (kbd "<f9>") 'pdf-outline-quit
        "o"         'pdf-outline-follow-link
        "-"         '(lambda () (interactive) (evil-window-decrease-height 15) (evil-window-decrease-width 15))
        "="         '(lambda () (interactive) (evil-window-increase-height 15) (evil-window-increase-width 15))
@@ -3278,7 +3282,7 @@
            #x59  #x5a  #xf4  #xf5  #xf6  #xf7  #xf8  #xf9
            #x30  #x31  #x32  #x33  #x34  #x35  #x36  #x37
            #x38  #x39  #xfa  #xfb  #xfc  #xfd  #xfe  #xff  ))
-      (defun ebcdic-table ()
+      (defun z/ansi-ebcdic-table ()
         "Display ebcdic table (0 thru 255).
          ref: https://www.emacswiki.org/emacs/EbcdicTable"
         (interactive)

@@ -278,6 +278,10 @@ There are two things you can do about this warning:
        "~/dotfiles/.bashrc-func"
        "~/.emacs.d/init.el"
        "~/notes.md"
+       "~/.ssh/config"
+       "~/.zprofile"
+       "~/Dropbox/Book-Document/Books/"
+       "~/dotfiles/dconf/dconf.dump.conf"
        "~/dotfiles/fresh_install.sh"
        "~/dotfiles/install_dotfiles_w_deps.sh"
        ))
