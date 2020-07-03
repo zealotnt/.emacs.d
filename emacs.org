@@ -640,91 +640,91 @@
         "s-d s-u" 'z/epoch-unix-to-time
 
         ;; combination with super+b
-        "s-k s-b" 'z/visual-by-boundary
+        "s-; s-b" 'z/visual-by-boundary
 
         ;; combination with super+k
-        ;"s-k s-t" '(:ignore t :which-key "text stuffs")
-        "s-k s-t" 'figlet-preview-fonts
-        "s-k t" 'figlet-preview-fonts
+        ;"s-; s-t" '(:ignore t :which-key "text stuffs")
+        "s-; s-t" 'figlet-preview-fonts
+        "s-; t" 'figlet-preview-fonts
 
-        "s-k s-u" 'z/epoch-unix-to-time
-        "s-k u" 'z/epoch-unix-to-time
-        "s-k p" 'z/query-prometheus
-        "s-k s-p" 'z/query-prometheus
+        "s-; s-u" 'z/epoch-unix-to-time
+        "s-; u" 'z/epoch-unix-to-time
+        "s-; p" 'z/query-prometheus
+        "s-; s-p" 'z/query-prometheus
 
-        "s-k s-g" '(:ignore t :which-key "git stuffs")
-        "s-k s-g c" 'hydra-smerge/body
-        "s-k s-g s-c" 'hydra-smerge/body
-        "s-k s-g g" 'magit-status ;status here
-        "s-k s-g s-g" 'magit-status ;status here
-        "s-k s-g n" 'z/magit-status ;status in new frame
-        "s-k s-g s-n" 'z/magit-status ;status in new frame
-        "s-k s-g b" 'magit-blame-echo
-        "s-k s-g s-b"   'magit-blame-echo
-        "s-k s-g q"   'magit-blame-quit
-        "s-k s-g t" 'hydra-git-timemachine-on
-        "s-k s-g s-t" 'hydra-git-timemachine-on
-        "s-k s-g l" 'magit-log-buffer-file
-        "s-k s-g s-l" 'magit-log-buffer-file
+        "s-; s-g" '(:ignore t :which-key "git stuffs")
+        "s-; s-g c" 'hydra-smerge/body
+        "s-; s-g s-c" 'hydra-smerge/body
+        "s-; s-g g" 'magit-status ;status here
+        "s-; s-g s-g" 'magit-status ;status here
+        "s-; s-g n" 'z/magit-status ;status in new frame
+        "s-; s-g s-n" 'z/magit-status ;status in new frame
+        "s-; s-g b" 'magit-blame-echo
+        "s-; s-g s-b"   'magit-blame-echo
+        "s-; s-g q"   'magit-blame-quit
+        "s-; s-g t" 'hydra-git-timemachine-on
+        "s-; s-g s-t" 'hydra-git-timemachine-on
+        "s-; s-g l" 'magit-log-buffer-file
+        "s-; s-g s-l" 'magit-log-buffer-file
 
-        ;"s-k s-g s-q"   'magit-blame-quit
+        ;"s-; s-g s-q"   'magit-blame-quit
 
-        "s-k s-s"   'z/neotree-project-dir-toggle
+        "s-; s-s"   'z/neotree-project-dir-toggle
 
-        "s-k s-d" '(:ignore t :which-key "decoding stuffs")
-        "s-k s-d u" 'z/epoch-unix-to-time
-        "s-k s-d s-u" 'z/epoch-unix-to-time
-        "s-k s-d d" 'base64-decode-region
-        "s-k s-d s-d" 'base64-decode-region
-        "s-k s-d 6" 'base64-decode-region
-        "s-k s-d s-6" 'base64-decode-region
+        "s-; s-d" '(:ignore t :which-key "decoding stuffs")
+        "s-; s-d u" 'z/epoch-unix-to-time
+        "s-; s-d s-u" 'z/epoch-unix-to-time
+        "s-; s-d d" 'base64-decode-region
+        "s-; s-d s-d" 'base64-decode-region
+        "s-; s-d 6" 'base64-decode-region
+        "s-; s-d s-6" 'base64-decode-region
 
-        "s-k s-f" '(:ignore t :which-key "files stuffs")
-        "s-k s-f b" 'magit-open-repo
-        "s-k s-f s-b" 'magit-open-repo
-        "s-k s-f n" 's/show-copy-buffer-file-name
-        "s-k s-f s-n" 's/show-copy-buffer-file-name
-        "s-k s-f r"   'w/show-copy-relative-file-path
-        "s-k s-f s-r" 'w/show-copy-relative-file-path
-        "s-k s-f a"    'z/show-copy-absolute-path
-        "s-k s-f s-a"  'z/show-copy-absolute-path
-        "s-k s-f l"   'w/show-copy-relative-file-path-with-line
-        "s-k s-f s-l" 'w/show-copy-relative-file-path-with-line
-        "s-k s-f O" 'z/open-file-in-remote-git
-        "s-k s-f o" 'xah-open-in-chrome
-        "s-k s-f s-o" 'xah-open-in-chrome
-        "s-k s-f d" 'z/show-copy-containing-folder-path
-        "s-k s-f s-d" 'z/show-copy-containing-folder-path
-        "s-k s-f D" 'xah-show-in-desktop
-        "s-k s-f s-D" 'xah-show-in-desktop
-        "s-k s-f f" 'z/which-function
-        "s-k s-f s-f" 'z/which-function
-        "s-k s-f p" 'w/show-buffer-project-path
-        "s-k s-f s-p" 'w/show-buffer-project-path
-        "s-k s-[" 'aj-toggle-fold
+        "s-; s-f" '(:ignore t :which-key "files stuffs")
+        "s-; s-f b" 'magit-open-repo
+        "s-; s-f s-b" 'magit-open-repo
+        "s-; s-f n" 's/show-copy-buffer-file-name
+        "s-; s-f s-n" 's/show-copy-buffer-file-name
+        "s-; s-f r"   'w/show-copy-relative-file-path
+        "s-; s-f s-r" 'w/show-copy-relative-file-path
+        "s-; s-f a"    'z/show-copy-absolute-path
+        "s-; s-f s-a"  'z/show-copy-absolute-path
+        "s-; s-f l"   'w/show-copy-relative-file-path-with-line
+        "s-; s-f s-l" 'w/show-copy-relative-file-path-with-line
+        "s-; s-f O" 'z/open-file-in-remote-git
+        "s-; s-f o" 'xah-open-in-chrome
+        "s-; s-f s-o" 'xah-open-in-chrome
+        "s-; s-f d" 'z/show-copy-containing-folder-path
+        "s-; s-f s-d" 'z/show-copy-containing-folder-path
+        "s-; s-f D" 'xah-show-in-desktop
+        "s-; s-f s-D" 'xah-show-in-desktop
+        "s-; s-f f" 'z/which-function
+        "s-; s-f s-f" 'z/which-function
+        "s-; s-f p" 'w/show-buffer-project-path
+        "s-; s-f s-p" 'w/show-buffer-project-path
+        "s-; s-[" 'aj-toggle-fold
 
-        "s-k s-e" '(:ignore t :which-key "eval-elisp")
-        "s-k s-e s" 'shell-command
-        "s-k s-e s-s" 'shell-command
-        "s-k s-e h" 'z/eval-last-sexp
-        "s-k s-e s-h" 'z/eval-last-sexp
-        "s-k s-e e" 'z/eval-region
-        "s-k s-e s-e" 'z/eval-region
-        "s-k s-e p" 'z/eval-paragraph
-        "s-k s-e s-p" 'z/eval-paragraph
+        "s-; s-e" '(:ignore t :which-key "eval-elisp")
+        "s-; s-e s" 'shell-command
+        "s-; s-e s-s" 'shell-command
+        "s-; s-e h" 'z/eval-last-sexp
+        "s-; s-e s-h" 'z/eval-last-sexp
+        "s-; s-e e" 'z/eval-region
+        "s-; s-e s-e" 'z/eval-region
+        "s-; s-e p" 'z/eval-paragraph
+        "s-; s-e s-p" 'z/eval-paragraph
 
-        "s-k s-w" 'toggle-truncate-lines
-        "s-k s-i" 's/show-copy-buffer-file-name
+        "s-; s-w" 'toggle-truncate-lines
+        "s-; s-i" 's/show-copy-buffer-file-name
 
-        "s-k s-r" '(:ignore t :which-key "restart stuffs")
-        "s-k s-r c" 'z/sync-config
-        "s-k s-r r" 'revert-buffer
+        "s-; s-r" '(:ignore t :which-key "restart stuffs")
+        "s-; s-r c" 'z/sync-config
+        "s-; s-r r" 'revert-buffer
 
-        "s-k s-j" 'git-gutter:next-hunk
-        "s-k s-k" 'git-gutter:previous-hunk
+        "s-; s-j" 'git-gutter:next-hunk
+        "s-; s-k" 'git-gutter:previous-hunk
 
-        "s-k c" 'atomic-chrome-close-current-buffer
-        "s-k s-c" 'atomic-chrome-close-current-buffer
+        "s-; c" 'atomic-chrome-close-current-buffer
+        "s-; s-c" 'atomic-chrome-close-current-buffer
 
         ;;"s-1" 'customize ;;before, it is "s-,"
         "s-0" '(lambda () (interactive) (neotree-hide) (z/neotree-project-dir-toggle) (neotree-quick-look))
@@ -1423,8 +1423,8 @@
                    (message "Running…")
                    (shell-command -cmd-str "*xah-run-current-file output*" ))
                (message "No recognized program file suffix for this file."))))))
-     (global-set-key (kbd "s-k s-e s-x") 'xah-run-current-file)
-     (global-set-key (kbd "s-k s-e x") 'xah-run-current-file)
+     (global-set-key (kbd "s-; s-e s-x") 'xah-run-current-file)
+     (global-set-key (kbd "s-; s-e x") 'xah-run-current-file)
 
      (defun z/open-using-desktop-association ()
        "An improvement of xah-show-in-desktop, mostly use for dired-open-file"
@@ -1783,11 +1783,11 @@
                   '(neo-dir-link-face ((t (:foreground "deep sky blue"
                                            :slant normal
                                            :weight bold
-                                           :height 100
+                                           :height 80
                                            :family "Inconsolata for Powerline"))))
                   '(neo-file-link-face ((t (:foreground "White"
                                            :weight normal
-                                           :height 90
+                                           :height 80
                                            :family "Inconsolata for Powerline")))))
                  ))
 
