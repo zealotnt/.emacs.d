@@ -575,7 +575,7 @@
         "s-w" 'evil-window-delete
         "s-W" 'evil-quit
         "s-s" 'save-buffer
-        "s-j" 'evil-avy-goto-word-or-subword-1
+        ;"s-j" 'evil-avy-goto-word-or-subword-1
         "s-f" 'evil-search-forward
         "s-g" 'evil-search-word-forward
         "s-G" 'evil-search-word-backward
@@ -583,7 +583,7 @@
 
         "s-O" 'select-frame-number
         "s-/" 'evilnc-comment-or-uncomment-lines
-        "s-l" 'evil-avy-goto-line
+        ;"s-l" 'evil-avy-goto-line
         "s-=" 'balance-windows
         "s-m" 'toggle-maximize-buffer
         "s-b" 'w/helm-mini
