@@ -1045,6 +1045,7 @@
      ; https://emacs.stackexchange.com/a/3017
      (add-to-list 'initial-frame-alist '(fullscreen . maximized))
      (add-to-list 'default-frame-alist '(fullscreen . maximized))
+     (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
      (setq frame-title-format
            '((:eval (if (buffer-file-name)
@@ -2898,7 +2899,10 @@
 * Experiments
    #+BEGIN_SRC emacs-lisp
      (blink-cursor-mode 0)
-     (global-hl-line-mode)
+     (use-package hl-line+
+       :config
+       (hl-line-when-idle-interval 0.3)
+       (toggle-hl-line-when-idle 1))
 
      (use-package helm
        :bind (:map helm-find-files-map
