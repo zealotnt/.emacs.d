@@ -616,6 +616,7 @@
         "s-t l" 'toggle-truncate-lines
         "s-t a" 'toggle-transparency
         "s-t i" 'indent-tools-hydra/body
+        "s-t s-i" 'indent-tools-hydra/body
         "s-t j" 'indent-tools-hydra/indent-tools-goto-next-sibling
         "s-t k" 'indent-tools-hydra/indent-tools-goto-previous-sibling
         "s-t h" 'indent-tools-hydra/indent-tools-goto-parent
@@ -3014,6 +3015,7 @@
       (add-hook 'imenu-list-major-mode-hook (apply-partially #'z/disable-truncate-line "*Ilist*") t)
 
 
+      (setq restclient-same-buffer-response nil)
       (evil-collection-define-key 'normal 'restclient-mode-map
         (kbd "C-c C-o") 'restclient-http-send-current
         (kbd "RET RET") 'restclient-http-send-current
